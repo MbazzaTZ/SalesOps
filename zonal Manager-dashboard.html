@@ -1,24 +1,21 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zonal Manager Portal</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
+        /* Status badges */
         .status-badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -57,11 +54,15 @@
             background-color: #991b1b;
             color: white;
         }
+
+        /* Chart container styling for responsiveness */
         .chart-container {
             position: relative;
             height: 300px;
             width: 100%;
         }
+
+        /* Progress bar */
         .progress-bar {
             height: 8px;
             border-radius: 4px;
@@ -72,15 +73,21 @@
             height: 100%;
             border-radius: 4px;
         }
+
+        /* Content section display */
         .content-section {
             display: none;
         }
         .content-section.active {
             display: block;
         }
+
+        /* Navigation item active state */
         .nav-item.active {
             background-color: #1e40af;
         }
+
+        /* Badges */
         .badge {
             padding: 2px 8px;
             border-radius: 12px;
@@ -103,10 +110,14 @@
             background-color: #fee2e2;
             color: #991b1b;
         }
+
+        /* Tab button active state */
         .tab-button.active {
             background-color: #1e40af;
             color: white;
         }
+
+        /* Modal styling */
         .modal {
             display: none;
             position: fixed;
@@ -126,6 +137,8 @@
             max-width: 800px;
             max-height: 90vh;
             overflow-y: auto;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
@@ -136,7 +149,7 @@
             <div class="flex items-center justify-between mb-8 mt-4">
                 <h1 class="text-xl font-bold">Zonal Manager</h1>
             </div>
-            
+
             <!-- Profile -->
             <div class="bg-blue-700 p-4 rounded-lg mb-6">
                 <div class="flex items-center mb-3">
@@ -151,46 +164,56 @@
                     <span class="text-sm">Eastern Zone</span>
                 </div>
             </div>
-            
+
             <nav>
                 <ul>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700 active" onclick="showSection('dashboard')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700 active" onclick="showSection(event, 'dashboard')">
                             <i class="fas fa-tachometer-alt mr-2"></i> Zone Dashboard
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('account-developers')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'account-developers')">
                             <i class="fas fa-user-shield mr-2"></i> Account Developers
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('aggregators')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'aggregators')">
                             <i class="fas fa-users mr-2"></i> Aggregators
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('asrs')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'asrs')">
                             <i class="fas fa-user-tie mr-2"></i> ASRs
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('agents')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'agents')">
                             <i class="fas fa-user-friends mr-2"></i> Agents
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('merchants')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'merchants')">
                             <i class="fas fa-store mr-2"></i> Merchants
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('performance')">
-                            <i class="fas fa-chart-line mr-2"></i> Performance
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'sales-team-overview')">
+                            <i class="fas fa-chart-line mr-2"></i> Sales Team
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('reports')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'freelancer-performance')">
+                            <i class="fas fa-user-tag mr-2"></i> Freelancers
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'performance')">
+                            <i class="fas fa-chart-line mr-2"></i> Performance Metrics
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'reports')">
                             <i class="fas fa-file-alt mr-2"></i> Reports
                         </a>
                     </li>
@@ -209,14 +232,14 @@
                             <span class="text-gray-500 mr-2">Zone:</span>
                             <span class="font-medium">Eastern Zone</span>
                         </div>
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="logout()">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
                         </button>
                     </div>
                 </header>
 
                 <!-- Zone Performance Summary -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
                     <div class="bg-white p-4 rounded-xl shadow">
                         <p class="text-gray-500">Total Transactions</p>
                         <p class="text-2xl font-bold mt-1">12,842</p>
@@ -239,6 +262,14 @@
                         <div class="flex items-center mt-2">
                             <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 8%</span>
                             <span class="text-sm text-gray-500">from last month</span>
+                        </div>
+                    </div>
+                     <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Total Registrations</p>
+                        <p class="text-2xl font-bold mt-1">7,540</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 15%</span>
+                            <span class="text-sm text-gray-500">vs last month</span>
                         </div>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow">
@@ -275,7 +306,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
                             <h4 class="font-medium mb-3">Network Composition</h4>
                             <div class="bg-gray-50 p-4 rounded-lg">
@@ -299,7 +330,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
                             <h4 class="font-medium mb-3">Monthly Performance Trend</h4>
                             <div class="chart-container">
@@ -358,7 +389,7 @@
                                     <p class="font-bold">4.2/5</p>
                                 </div>
                                 <div>
-                                    <p class="text-gray-500 text-sm">Transactions</p>
+                                    <p class="text-5m text-gray-500">Transactions</p>
                                     <p class="font-bold">3,150</p>
                                 </div>
                                 <div>
@@ -468,7 +499,7 @@
                             <option>Inactive</option>
                         </select>
                     </div>
-                    
+
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse">
                             <thead>
@@ -544,7 +575,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="flex justify-between items-center mt-4">
                         <span class="text-sm text-gray-500">Showing 1 to 3 of 4 account developers</span>
                         <div class="flex space-x-2">
@@ -583,7 +614,7 @@
                             <option>Inactive</option>
                         </select>
                     </div>
-                    
+
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse">
                             <thead>
@@ -659,7 +690,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="flex justify-between items-center mt-4">
                         <span class="text-sm text-gray-500">Showing 1 to 3 of 12 aggregators</span>
                         <div class="flex space-x-2">
@@ -700,7 +731,7 @@
                             <option>Inactive</option>
                         </select>
                     </div>
-                    
+
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse">
                             <thead>
@@ -772,7 +803,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="flex justify-between items-center mt-4">
                         <span class="text-sm text-gray-500">Showing 1 to 3 of 48 ASRs</span>
                         <div class="flex space-x-2">
@@ -813,7 +844,7 @@
                             <option>Inactive</option>
                         </select>
                     </div>
-                    
+
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse">
                             <thead>
@@ -879,7 +910,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="flex justify-between items-center mt-4">
                         <span class="text-sm text-gray-500">Showing 1 to 3 of 428 agents</span>
                         <div class="flex space-x-2">
@@ -920,7 +951,7 @@
                             <option>Inactive</option>
                         </select>
                     </div>
-                    
+
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse">
                             <thead>
@@ -986,7 +1017,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="flex justify-between items-center mt-4">
                         <span class="text-sm text-gray-500">Showing 1 to 3 of 156 merchants</span>
                         <div class="flex space-x-2">
@@ -996,6 +1027,206 @@
                             <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">3</button>
                             <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Next</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Team Overview Section -->
+            <div id="sales-team-overview" class="content-section">
+                <header class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">Sales Team Overview</h2>
+                    <div class="flex items-center space-x-4">
+                        <select class="bg-gray-100 p-2 rounded-lg border">
+                            <option>This Month</option>
+                            <option>Last Month</option>
+                            <option>This Quarter</option>
+                        </select>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-download mr-2"></i> Export Report
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Sales Team KPIs -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Total Registrations</p>
+                        <p class="text-2xl font-bold mt-1">7,540</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 15%</span>
+                            <span class="text-sm text-gray-500">vs last month</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Active Subscriptions</p>
+                        <p class="text-2xl font-bold mt-1">6,800</p>
+                        <p class="text-sm text-gray-500 mt-2">90% active rate</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Avg. Reg per Rep</p>
+                        <p class="text-2xl font-bold mt-1">45</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 8%</span>
+                            <span class="text-sm text-gray-500">vs target</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Conversion Rate</p>
+                        <p class="text-2xl font-bold mt-1">28.5%</p>
+                        <p class="text-sm text-gray-500 mt-2">From leads to active subs</p>
+                    </div>
+                </div>
+
+                <!-- Sales Team Performance Chart -->
+                <div class="bg-white p-6 rounded-xl shadow mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Sales Team Performance (Registrations)</h3>
+                    <div class="chart-container">
+                        <canvas id="salesTeamRegistrationsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Sales Team Details Table -->
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <h3 class="text-xl font-semibold mb-4">Sales Team Details</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Team Name</th>
+                                    <th class="p-3 text-left">Manager</th>
+                                    <th class="p-3 text-left">Total Registrations</th>
+                                    <th class="p-3 text-left">Active Subscriptions</th>
+                                    <th class="p-3 text-left">Conversion Rate</th>
+                                    <th class="p-3 text-left">Target Achieved</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Alpha Team</td>
+                                    <td class="p-3">John Doe</td>
+                                    <td class="p-3">2,100</td>
+                                    <td class="p-3">1,900</td>
+                                    <td class="p-3">30%</td>
+                                    <td class="p-3"><span class="status-badge status-active">105%</span></td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Beta Team</td>
+                                    <td class="p-3">Jane Smith</td>
+                                    <td class="p-3">1,800</td>
+                                    <td class="p-3">1,620</td>
+                                    <td class="p-3">28%</td>
+                                    <td class="p-3"><span class="status-badge status-good">90%</span></td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Gamma Team</td>
+                                    <td class="p-3">Peter Jones</td>
+                                    <td class="p-3">1,500</td>
+                                    <td class="p-3">1,350</td>
+                                    <td class="p-3">25%</td>
+                                    <td class="p-3"><span class="status-badge status-average">85%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Freelancer Performance Section -->
+            <div id="freelancer-performance" class="content-section">
+                <header class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">Freelancer Performance</h2>
+                    <div class="flex items-center space-x-4">
+                        <select class="bg-gray-100 p-2 rounded-lg border">
+                            <option>This Month</option>
+                            <option>Last Month</option>
+                            <option>This Quarter</option>
+                        </select>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-download mr-2"></i> Export Report
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Freelancer KPIs -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Total Freelancers</p>
+                        <p class="text-2xl font-bold mt-1">187</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 5%</span>
+                            <span class="text-sm text-gray-500">new this month</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Active Freelancers</p>
+                        <p class="text-2xl font-bold mt-1">142</p>
+                        <p class="text-sm text-gray-500 mt-2">76% active rate</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Avg. Registrations</p>
+                        <p class="text-2xl font-bold mt-1">28</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 10%</span>
+                            <span class="text-sm text-gray-500">vs last month</span>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Total Commissions</p>
+                        <p class="text-2xl font-bold mt-1">$15,200</p>
+                        <p class="text-sm text-gray-500 mt-2">This month</p>
+                    </div>
+                </div>
+
+                <!-- Freelancer Registration Trend Chart -->
+                <div class="bg-white p-6 rounded-xl shadow mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Freelancer Registration Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="freelancerRegistrationTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Performing Freelancers Table -->
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <h3 class="text-xl font-semibold mb-4">Top Performing Freelancers (Registrations)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Freelancer Name</th>
+                                    <th class="p-3 text-left">Freelancer ID</th>
+                                    <th class="p-3 text-left">Total Registrations</th>
+                                    <th class="p-3 text-left">Active Subscriptions</th>
+                                    <th class="p-3 text-left">Commission Earned</th>
+                                    <th class="p-3 text-left">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Alex Johnson</td>
+                                    <td class="p-3">FL-1001</td>
+                                    <td class="p-3">128</td>
+                                    <td class="p-3">115</td>
+                                    <td class="p-3">$1,280</td>
+                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Sarah Williams</td>
+                                    <td class="p-3">FL-1002</td>
+                                    <td class="p-3">115</td>
+                                    <td class="p-3">105</td>
+                                    <td class="p-3">$1,142</td>
+                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Michael Brown</td>
+                                    <td class="p-3">FL-1003</td>
+                                    <td class="p-3">98</td>
+                                    <td class="p-3">82</td>
+                                    <td class="p-3">$980</td>
+                                    <td class="p-3"><span class="status-badge status-inactive">Inactive</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -1038,7 +1269,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-white p-6 rounded-xl shadow">
                         <h3 class="text-lg font-semibold mb-4">Last Month</h3>
                         <p class="text-3xl font-bold">$36,692</p>
@@ -1054,7 +1285,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-white p-6 rounded-xl shadow">
                         <h3 class="text-lg font-semibold mb-4">Agent Activity</h3>
                         <p class="text-3xl font-bold">428</p>
@@ -1071,13 +1302,13 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white p-6 rounded-xl shadow">
                     <h3 class="text-xl font-semibold mb-4">Zone Performance by Region</h3>
                     <div class="chart-container mb-6">
-                        <canvas id="zonePerformanceChart"></canvas>
+                        <canvas id="zonePerformanceReportChart"></canvas>
                     </div>
-                    
+
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse">
                             <thead>
@@ -1141,9 +1372,9 @@
                     <h2 class="text-2xl font-bold text-gray-800">Reports</h2>
                     <div class="flex items-center space-x-4">
                         <div class="flex bg-gray-100 rounded-lg p-1">
-                            <button class="px-3 py-1 rounded-lg tab-button active" onclick="changeReportTab('zone-performance')">Zone Performance</button>
-                            <button class="px-3 py-1 rounded-lg tab-button" onclick="changeReportTab('fraud-analysis')">Fraud Analysis</button>
-                            <button class="px-3 py-1 rounded-lg tab-button" onclick="changeReportTab('agent-growth')">Agent Growth</button>
+                            <button class="px-3 py-1 rounded-lg tab-button active" onclick="changeReportTab(event, 'zone-performance-report')">Zone Performance</button>
+                            <button class="px-3 py-1 rounded-lg tab-button" onclick="changeReportTab(event, 'fraud-analysis')">Fraud Analysis</button>
+                            <button class="px-3 py-1 rounded-lg tab-button" onclick="changeReportTab(event, 'agent-growth')">Agent Growth</button>
                         </div>
                         <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                             <i class="fas fa-download mr-2"></i> Export
@@ -1173,14 +1404,14 @@
                     </div>
                 </div>
 
-                <!-- Zone Performance Tab -->
-                <div id="zone-performance" class="report-tab active">
+                <!-- Report Tabs Content -->
+                <div id="zone-performance-report" class="report-tab active">
                     <div class="bg-white p-6 rounded-xl shadow">
                         <h3 class="text-xl font-semibold mb-4">Zone Performance Report</h3>
                         <div class="chart-container mb-6">
                             <canvas id="zonePerformanceReportChart"></canvas>
                         </div>
-                        
+
                         <div class="overflow-x-auto">
                             <table class="w-full border-collapse">
                                 <thead>
@@ -1249,7 +1480,7 @@
                         <div class="chart-container mb-6">
                             <canvas id="fraudAnalysisChart"></canvas>
                         </div>
-                        
+
                         <div class="overflow-x-auto">
                             <table class="w-full border-collapse">
                                 <thead>
@@ -1306,7 +1537,7 @@
                         <div class="chart-container mb-6">
                             <canvas id="agentGrowthChart"></canvas>
                         </div>
-                        
+
                         <div class="overflow-x-auto">
                             <table class="w-full border-collapse">
                                 <thead>
@@ -1365,53 +1596,139 @@
         </div>
     </div>
 
+    <!-- Custom Modal Structure (for alerts) -->
+    <div id="customModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle"></h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500" id="modalMessage"></p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="modalCloseButton" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script>
-        // Navigation functionality
-        function showSection(sectionId) {
-            // Hide all sections
+        // Global Chart instances to prevent re-initialization issues
+        let zonePerformanceChartInstance = null;
+        let zonePerformanceReportChartInstance = null;
+        let fraudAnalysisChartInstance = null;
+        let agentGrowthChartInstance = null;
+        let salesTeamRegistrationsChartInstance = null; // New chart instance for sales team
+        let freelancerRegistrationTrendChartInstance = null; // New chart instance for freelancer
+
+        /**
+         * Displays a custom modal instead of a native alert.
+         * @param {string} title - The title of the modal.
+         * @param {string} message - The message content of the modal.
+         */
+        function showCustomModal(title, message) {
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            modal.classList.remove('hidden');
+
+            // Close modal when OK button is clicked
+            document.getElementById('modalCloseButton').onclick = function() {
+                modal.classList.add('hidden');
+            };
+
+            // Close modal when clicking outside (optional)
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            };
+        }
+
+        /**
+         * Handles navigation by showing the selected section and updating active nav item.
+         * @param {Event} event - The click event.
+         * @param {string} sectionId - The ID of the section to show.
+         */
+        function showSection(event, sectionId) {
+            // Prevent default anchor behavior
+            event.preventDefault();
+
+            // Hide all content sections
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
             });
-            
-            // Show selected section
+
+            // Show the selected section
             document.getElementById(sectionId).classList.add('active');
-            
+
             // Update active nav item
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             event.currentTarget.classList.add('active');
-            
-            // Initialize charts when section is shown
+
+            // Initialize charts specific to the section when it becomes active
             if (sectionId === 'dashboard') {
                 initZonePerformanceChart();
             } else if (sectionId === 'performance') {
-                initZonePerformanceReportChart();
+                initZonePerformanceReportChart(); // This chart is also used in reports, so it's here too
             } else if (sectionId === 'reports') {
-                initReportCharts();
+                // When reports section is shown, initialize the default active tab's chart
+                const activeReportTab = document.querySelector('.report-tab.active');
+                if (activeReportTab) {
+                    initReportCharts(activeReportTab.id);
+                }
+            } else if (sectionId === 'sales-team-overview') {
+                initSalesTeamRegistrationsChart();
+            } else if (sectionId === 'freelancer-performance') {
+                initFreelancerRegistrationTrendChart();
             }
         }
 
-        // Report tab switching
-        function changeReportTab(tabId) {
+        /**
+         * Handles switching between report tabs and initializes the corresponding chart.
+         * @param {Event} event - The click event.
+         * @param {string} tabId - The ID of the report tab to show.
+         */
+        function changeReportTab(event, tabId) {
+            // Prevent default anchor behavior if applicable
+            if (event) {
+                event.preventDefault();
+            }
+
+            // Hide all report tabs
             document.querySelectorAll('.report-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
+            // Show selected report tab
             document.getElementById(tabId).classList.add('active');
-            
+
+            // Update active tab button
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.classList.remove('active');
             });
-            event.currentTarget.classList.add('active');
-            
-            initReportCharts();
+            if (event) {
+                event.currentTarget.classList.add('active');
+            }
+
+            // Initialize the chart for the newly active tab
+            initReportCharts(tabId);
         }
 
-        // Initialize Zone Performance Chart
+        /**
+         * Initializes the Zone Performance Chart on the Dashboard.
+         */
         function initZonePerformanceChart() {
+            // Destroy existing chart instance if it exists
+            if (zonePerformanceChartInstance) {
+                zonePerformanceChartInstance.destroy();
+            }
+
             const ctx = document.getElementById('zonePerformanceChart').getContext('2d');
-            new Chart(ctx, {
+            zonePerformanceChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -1422,7 +1739,7 @@
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.3,
                         fill: true,
-                        yAxisID: 'y'
+                        yAxisID: 'y-value' // Unique ID for value axis
                     }, {
                         label: 'Active Agents',
                         data: [320, 350, 368, 382, 395, 408, 428],
@@ -1430,7 +1747,16 @@
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         tension: 0.3,
                         fill: false,
-                        yAxisID: 'y1'
+                        yAxisID: 'y-agents' // Unique ID for agents axis
+                    },
+                    {
+                        label: 'Registrations', // New dataset for registrations
+                        data: [500, 550, 600, 650, 700, 750, 800], // Sample data for registrations
+                        borderColor: '#8b5cf6', // Purple color for registrations
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.3,
+                        fill: false,
+                        yAxisID: 'y-registrations' // Unique ID for registrations axis
                     }]
                 },
                 options: {
@@ -1447,7 +1773,7 @@
                                     if (label) {
                                         label += ': ';
                                     }
-                                    if (context.dataset.yAxisID === 'y') {
+                                    if (context.dataset.yAxisID === 'y-value') {
                                         label += '$' + context.raw.toLocaleString();
                                     } else {
                                         label += context.raw;
@@ -1458,7 +1784,7 @@
                         }
                     },
                     scales: {
-                        y: {
+                        'y-value': { // Left axis for Transaction Value
                             type: 'linear',
                             display: true,
                             position: 'left',
@@ -1472,7 +1798,7 @@
                                 }
                             }
                         },
-                        y1: {
+                        'y-agents': { // Right axis for Active Agents
                             type: 'linear',
                             display: true,
                             position: 'right',
@@ -1483,16 +1809,37 @@
                             grid: {
                                 drawOnChartArea: false
                             }
+                        },
+                        'y-registrations': { // New right axis for Registrations
+                            type: 'linear',
+                            display: true,
+                            position: 'right', // Position on the right side
+                            title: {
+                                display: true,
+                                text: 'Registrations'
+                            },
+                            grid: {
+                                drawOnChartArea: false // Do not draw grid lines for this axis
+                            },
+                            // Offset this axis slightly if it overlaps with y-agents
+                            // offset: true // This can help with overlap
                         }
                     }
                 }
             });
         }
 
-        // Initialize Zone Performance Report Chart
+        /**
+         * Initializes the Zone Performance Report Chart.
+         */
         function initZonePerformanceReportChart() {
+            // Destroy existing chart instance if it exists
+            if (zonePerformanceReportChartInstance) {
+                zonePerformanceReportChartInstance.destroy();
+            }
+
             const ctx = document.getElementById('zonePerformanceReportChart').getContext('2d');
-            new Chart(ctx, {
+            zonePerformanceReportChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ['Eastern Region', 'Northern Region', 'Western Region'],
@@ -1504,6 +1851,11 @@
                         label: 'Cash Out',
                         data: [580000, 450000, 380000],
                         backgroundColor: '#3b82f6'
+                    },
+                    {
+                        label: 'Registrations', // Add registrations to this chart as well
+                        data: [2500, 2000, 1500], // Sample registration data per region
+                        backgroundColor: '#8b5cf6' // Purple color
                     }]
                 },
                 options: {
@@ -1535,12 +1887,27 @@
             });
         }
 
-        // Initialize Report Charts
-        function initReportCharts() {
-            // Initialize Fraud Analysis Chart if active
-            if (document.getElementById('fraudAnalysisChart') && document.getElementById('fraud-analysis').classList.contains('active')) {
+        /**
+         * Initializes charts specific to the Reports section based on the active tab.
+         * @param {string} activeTabId - The ID of the currently active report tab.
+         */
+        function initReportCharts(activeTabId) {
+            // Destroy all report chart instances to ensure only the active one is drawn
+            if (fraudAnalysisChartInstance) {
+                fraudAnalysisChartInstance.destroy();
+                fraudAnalysisChartInstance = null;
+            }
+            if (agentGrowthChartInstance) {
+                agentGrowthChartInstance.destroy();
+                agentGrowthChartInstance = null;
+            }
+            // zonePerformanceReportChartInstance is handled by initZonePerformanceReportChart()
+
+            if (activeTabId === 'zone-performance-report') {
+                initZonePerformanceReportChart();
+            } else if (activeTabId === 'fraud-analysis') {
                 const fraudCtx = document.getElementById('fraudAnalysisChart').getContext('2d');
-                new Chart(fraudCtx, {
+                fraudAnalysisChartInstance = new Chart(fraudCtx, {
                     type: 'bar',
                     data: {
                         labels: ['Eastern Region', 'Northern Region', 'Western Region'],
@@ -1564,12 +1931,9 @@
                         }
                     }
                 });
-            }
-            
-            // Initialize Agent Growth Chart if active
-            if (document.getElementById('agentGrowthChart') && document.getElementById('agent-growth').classList.contains('active')) {
+            } else if (activeTabId === 'agent-growth') {
                 const growthCtx = document.getElementById('agentGrowthChart').getContext('2d');
-                new Chart(growthCtx, {
+                agentGrowthChartInstance = new Chart(growthCtx, {
                     type: 'line',
                     data: {
                         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -1578,4 +1942,159 @@
                             data: [120, 125, 130, 132, 135, 138, 142],
                             borderColor: '#3b82f6',
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            tension: 0.
+                            tension: 0.3,
+                            fill: true
+                        }, {
+                            label: 'Northern Region',
+                            data: [100, 105, 110, 115, 120, 125, 128],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }, {
+                            label: 'Western Region',
+                            data: [80, 82, 85, 88, 92, 95, 98],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        /**
+         * Initializes the Sales Team Registrations Chart.
+         */
+        function initSalesTeamRegistrationsChart() {
+            if (salesTeamRegistrationsChartInstance) {
+                salesTeamRegistrationsChartInstance.destroy();
+            }
+            const ctx = document.getElementById('salesTeamRegistrationsChart').getContext('2d');
+            salesTeamRegistrationsChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Alpha Team', 'Beta Team', 'Gamma Team'],
+                    datasets: [{
+                        label: 'Total Registrations',
+                        data: [2100, 1800, 1500],
+                        backgroundColor: '#3b82f6'
+                    }, {
+                        label: 'Active Subscriptions',
+                        data: [1900, 1620, 1350],
+                        backgroundColor: '#10b981'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Sales Team Registrations Overview'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Registrations'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * Initializes the Freelancer Registration Trend Chart.
+         */
+        function initFreelancerRegistrationTrendChart() {
+            if (freelancerRegistrationTrendChartInstance) {
+                freelancerRegistrationTrendChartInstance.destroy();
+            }
+            const ctx = document.getElementById('freelancerRegistrationTrendChart').getContext('2d');
+            freelancerRegistrationTrendChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'New Freelancer Registrations',
+                        data: [10, 12, 15, 18, 20, 22, 25],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }, {
+                        label: 'Total Active Freelancers',
+                        data: [100, 105, 110, 115, 120, 130, 142],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Freelancer Registration Trend'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Freelancers'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * Handles the logout process.
+         * Redirects to the index.html (login page).
+         */
+        function logout() {
+            showCustomModal('Logout', 'Logging out... Redirecting to login page.');
+            setTimeout(() => {
+                window.location.href = 'index.html'; // Assuming index.html is the login page
+            }, 1000);
+        }
+
+        // Initialize functionality on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the default dashboard chart on initial load
+            initZonePerformanceChart();
+
+            // Initialize the default report tab chart if the reports section is active
+            const reportsSection = document.getElementById('reports');
+            if (reportsSection && reportsSection.classList.contains('active')) {
+                changeReportTab(null, 'zone-performance-report'); // Pass null for event as it's not a direct click
+            }
+        });
+    </script>
+</body>
+</html>

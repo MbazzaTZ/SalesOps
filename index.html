@@ -186,40 +186,39 @@
             sessionStorage.setItem('aMobileUserRole', userRole);
             sessionStorage.setItem('aMobileUsername', username);
             
-            // Redirect to appropriate dashboard
-            let dashboardPage = '';
-            switch (userRole) {
-                case 'Admin':
-                    dashboardPage = 'admin-dashboard.html';
-                    break;
-                case 'Zonal Manager':
-                    dashboardPage = 'zonal-manager-dashboard.html';
-                    break;
-                case 'Account Developer':
-                    dashboardPage = 'account-developer-dashboard.html';
-                    break;
-                case 'Sales Team':
-                    dashboardPage = 'sales-team-dashboard.html';
-                    break;
-                case 'Aggregator':
-                    dashboardPage = 'aggregator-dashboard.html';
-                    break;
-                case 'Agent':
-                    dashboardPage = 'agent-dashboard.html';
-                    break;
-                case 'Merchant':
-                    dashboardPage = 'merchant-dashboard.html';
-                    break;
-                case 'ASR':
-                    dashboardPage = 'asr.html';
-                    break;
-                case 'Freelancer':
-                    dashboardPage = 'freelancer-dashboard.html';
-                    break;
-                default:
-                    alert('Invalid role selected! Please choose an operational role.');
-                    return;
-            }
+// Replace the switch statement in your login form submission with this:
+switch (userRole) {
+    case 'Admin':
+        window.location.href = 'admin-dashboard.html';
+        break;
+    case 'Zonal Manager':
+        window.location.href = 'zonal-manager-dashboard.html';
+        break;
+    case 'Account Developer':
+        window.location.href = 'account-developer-dashboard.html';
+        break;
+    case 'Sales Team':
+        window.location.href = 'sales-team-dashboard.html';
+        break;
+    case 'Aggregator':
+        window.location.href = 'aggregator-dashboard.html';
+        break;
+    case 'Agent':
+        window.location.href = 'agent-dashboard.html';
+        break;
+    case 'Merchant':
+        window.location.href = 'merchant-dashboard.html';
+        break;
+    case 'ASR':
+        window.location.href = 'asr.html';
+        break;
+    case 'Freelancer':
+        window.location.href = 'freelancer-dashboard.html';
+        break;
+    default:
+        alert('Invalid role selected! Please choose an operational role.');
+        return;
+}
             
             // For demo purposes, we'll just show where we would redirect
             alert(`Login successful! Redirecting to ${userRole} dashboard...`);

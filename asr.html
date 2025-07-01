@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aggregator Dashboard - Admin View</title>
+    <title>Account Developer Portal - Admin View</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,41 +20,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Original Aggregator Dashboard styles */
+        /* General styles for consistency */
         .status-badge {
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 600;
         }
-        .status-active {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-        .status-inactive {
-            background-color: #e5e7eb;
-            color: #4b5563;
-        }
-        .status-suspended {
-            background-color: #fef9c3;
-            color: #b45309;
-        }
-        .status-terminated {
-            background-color: #fee2e2;
-            color: #b91c1c;
-        }
-        .status-clean {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-        .status-suspect {
-            background-color: #fef9c3;
-            color: #b45309;
-        }
-        .status-fraud {
-            background-color: #fee2e2;
-            color: #b91c1c;
-        }
+        .status-active { background-color: #d1fae5; color: #065f46; }
+        .status-inactive { background-color: #e5e7eb; color: #4b5563; }
+        .status-suspended { background-color: #fef9c3; color: #b45309; }
+        .status-terminated { background-color: #fee2e2; color: #b91c1c; }
+        .status-clean { background-color: #d1fae5; color: #065f46; }
+        .status-suspect { background-color: #fef9c3; color: #b45309; }
+        .status-fraud { background-color: #fee2e2; color: #b91c1c; }
+
         .chart-container {
             position: relative;
             height: 300px;
@@ -77,24 +57,12 @@
             font-size: 12px;
             font-weight: 600;
         }
-        .badge-primary {
-            background-color: #dbeafe;
-            color: #1e40af;
-        }
-        .badge-success {
-            background-color: #dcfce7;
-            color: #166534;
-        }
-        .badge-warning {
-            background-color: #fef9c3;
-            color: #854d0e;
-        }
-        .badge-danger {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
+        .badge-primary { background-color: #dbeafe; color: #1e40af; }
+        .badge-success { background-color: #dcfce7; color: #166534; }
+        .badge-warning { background-color: #fef9c3; color: #854d0e; }
+        .badge-danger { background-color: #fee2e2; color: #991b1b; }
 
-        /* Admin/Sectional View Specific Styles */
+        /* Sectional View Specific Styles */
         .content-section {
             display: none; /* Hide all sections by default */
         }
@@ -103,10 +71,6 @@
         }
         .nav-item.active {
             background-color: #1e40af; /* Darker blue for active state */
-        }
-        .tab-button.active {
-            background-color: #1e40af;
-            color: white;
         }
         /* Modal styles */
         .modal { 
@@ -156,7 +120,7 @@
         <!-- Sidebar Navigation -->
         <div class="w-64 bg-blue-800 text-white p-4 flex flex-col shadow-lg">
             <div class="flex items-center justify-between mb-8 mt-4">
-                <h1 class="text-2xl font-bold">Aggregator Admin</h1>
+                <h1 class="text-2xl font-bold">Account Dev Admin</h1>
             </div>
             
             <!-- Admin Profile -->
@@ -182,28 +146,28 @@
                         </a>
                     </li>
                     <li class="mb-2">
+                        <a href="#aggregator-base-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700" onclick="showSection(this, 'aggregator-base-section')">
+                            <i class="fas fa-users mr-3 text-lg"></i> Aggregator Base
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#asr-base-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700" onclick="showSection(this, 'asr-base-section')">
+                            <i class="fas fa-user-tie mr-3 text-lg"></i> ASR Base
+                        </a>
+                    </li>
+                    <li class="mb-2">
                         <a href="#agent-base-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700" onclick="showSection(this, 'agent-base-section')">
-                            <i class="fas fa-user-tie mr-3 text-lg"></i> Agent Base
+                            <i class="fas fa-user-friends mr-3 text-lg"></i> Agent Base
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#asr-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700" onclick="showSection(this, 'asr-section')">
-                            <i class="fas fa-users mr-3 text-lg"></i> ASR
+                        <a href="#performance-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700" onclick="showSection(this, 'performance-section')">
+                            <i class="fas fa-chart-line mr-3 text-lg"></i> Performance
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#merchant-base-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700" onclick="showSection(this, 'merchant-base-section')">
-                            <i class="fas fa-store mr-3 text-lg"></i> Merchant Base
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#commissions-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700" onclick="showSection(this, 'commissions-section')">
-                            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Commissions
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#requests-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700" onclick="showSection(this, 'requests-section')">
-                            <i class="fas fa-envelope mr-3 text-lg"></i> Requests
+                        <a href="#fraud-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700" onclick="showSection(this, 'fraud-section')">
+                            <i class="fas fa-exclamation-triangle mr-3 text-lg"></i> Fraud
                         </a>
                     </li>
                     <li class="mb-2">
@@ -224,11 +188,11 @@
         <!-- Main Content -->
         <div class="flex-1 p-8">
             <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
-                <h2 class="text-3xl font-bold text-gray-800">Aggregator Dashboard</h2>
+                <h2 class="text-3xl font-bold text-gray-800">Account Developer Dashboard</h2>
                 <div class="flex items-center space-x-4">
                     <div class="bg-white p-2 rounded-lg shadow">
-                        <span class="text-gray-500 mr-2">Last Sync:</span>
-                        <span class="font-medium">Today, 10:45 AM</span>
+                        <span class="text-gray-500 mr-2">Region:</span>
+                        <span class="font-medium">Eastern Region</span>
                     </div>
                     <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                         <i class="fas fa-sync-alt mr-2"></i> Refresh
@@ -241,128 +205,406 @@
 
             <!-- Dashboard Section -->
             <section id="dashboard-section" class="content-section active">
-                <!-- Aggregator Summary Cards -->
+                <!-- Performance Summary -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Total Agents</p>
-                        <p class="text-2xl font-bold mt-1">42</p>
+                        <p class="text-gray-500">Active Aggregators</p>
+                        <p class="text-2xl font-bold mt-1">8</p>
                         <div class="flex items-center mt-2">
-                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 12%</span>
+                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 14%</span>
                             <span class="text-sm text-gray-500">from last month</span>
                         </div>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Total Agents data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Active Aggregators data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage
+                        </button>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Active ASRs</p>
+                        <p class="text-2xl font-bold mt-1">24</p>
+                        <p class="text-sm text-gray-500 mt-2">83% active rate</p>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Active ASRs data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage
+                        </button>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow">
+                        <p class="text-gray-500">Total Float Distributed</p>
+                        <p class="text-2xl font-bold mt-1">TZS 256,230</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 18%</span>
+                            <span class="text-sm text-gray-500">from last month</span>
+                        </div>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Total Float Distributed data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
                             <i class="fas fa-cogs mr-1"></i> Manage
                         </button>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow">
                         <p class="text-gray-500">Active Agents</p>
-                        <p class="text-2xl font-bold mt-1">38</p>
-                        <p class="text-sm text-gray-500 mt-2">90% active rate</p>
+                        <p class="text-2xl font-bold mt-1">142</p>
+                        <p class="text-sm text-gray-500 mt-2">78% active rate</p>
                         <button onclick="showCustomMessage('Admin Action', 'Manage Active Agents data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
                             <i class="fas fa-cogs mr-1"></i> Manage
                         </button>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Float Balance</p>
-                        <p class="text-2xl font-bold mt-1">TZS 12,500</p>
-                        <div class="flex items-center mt-2">
-                            <span class="text-red-500 mr-1"><i class="fas fa-arrow-down"></i> 8%</span>
-                            <span class="text-sm text-gray-500">from last week</span>
-                        </div>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Float Balance data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
-                            <i class="fas fa-cogs mr-1"></i> Manage
-                        </button>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Estimated Commission</p>
-                        <p class="text-2xl font-bold mt-1">TZS 5,280</p>
-                        <p class="text-sm text-gray-500 mt-2">Based on current performance</p>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Estimated Commission data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
-                            <i class="fas fa-cogs mr-1"></i> Manage
-                        </button>
-                    </div>
                 </div>
 
-                <!-- Agent Activity and Float Distribution -->
-                <div class="bg-white p-6 rounded-xl shadow mb-8">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Region Performance Overview -->
+                <div class="bg-white p-6 rounded-xl shadow mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Region Performance Overview</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div>
-                            <h3 class="text-xl font-semibold mb-4">Agent Activity</h3>
+                            <h4 class="font-medium mb-3">Transaction Summary</h4>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-gray-500">Cash Out</p>
+                                        <p class="text-xl font-bold">TZS 128,450</p>
+                                        <p class="text-sm text-gray-500">1,428 transactions</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500">Cash In</p>
+                                        <p class="text-xl font-bold">TZS 98,780</p>
+                                        <p class="text-sm text-gray-500">714 transactions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-medium mb-3">Agent Activity</h4>
                             <div class="chart-container">
                                 <canvas id="agentActivityChart"></canvas>
                             </div>
                         </div>
-                        <div>
-                            <h3 class="text-xl font-semibold mb-4">Float Distribution</h3>
-                            <div class="chart-container">
-                                <canvas id="floatDistributionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Performing Aggregators -->
+                <div class="bg-white p-6 rounded-xl shadow mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Top Performing Aggregators</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">1</div>
+                                <div>
+                                    <p class="font-medium">Global Aggregator</p>
+                                    <p class="text-sm text-gray-500">AGG-3001</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <p class="text-gray-500 text-sm">ASRs</p>
+                                    <p class="font-bold">8/10</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-sm">Float</p>
+                                    <p class="font-bold">TZS 64,230</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">2</div>
+                                <div>
+                                    <p class="font-medium">East Region Aggregator</p>
+                                    <p class="text-sm text-gray-500">AGG-3002</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <p class="text-gray-500 text-sm">ASRs</p>
+                                    <p class="font-bold">7/8</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-sm">Float</p>
+                                    <p class="font-bold">TZS 58,750</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">3</div>
+                                <div>
+                                    <p class="font-medium">North Region Aggregator</p>
+                                    <p class="text-sm text-gray-500">AGG-3003</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <p class="text-gray-500 text-sm">ASRs</p>
+                                    <p class="font-bold">6/8</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-sm">Float</p>
+                                    <p class="font-bold">TZS 52,980</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Agent Activity -->
+                <!-- Recent Activity -->
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-xl font-semibold mb-4">Recent Agent Activity</h3>
+                    <h3 class="text-xl font-semibold mb-4">Recent Activity</h3>
                     <div class="overflow-x-auto">
-                        <table class="w-full border-collapse">
+                        <table id="recentActivityTable" class="w-full border-collapse">
                             <thead>
                                 <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">Agent Name</th>
-                                    <th class="p-3 text-left">Agent ID</th>
-                                    <th class="p-3 text-left">Last Transaction</th>
-                                    <th class="p-3 text-left">Transaction Type</th>
-                                    <th class="p-3 text-left">Amount</th>
+                                    <th class="p-3 text-left">Date</th>
+                                    <th class="p-3 text-left">Aggregator</th>
+                                    <th class="p-3 text-left">Activity</th>
+                                    <th class="p-3 text-left">Details</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Today, 10:30 AM</td>
+                                    <td class="p-3">Global Aggregator (AGG-3001)</td>
+                                    <td class="p-3">Float Distribution</td>
+                                    <td class="p-3">TZS 8,450 distributed to 5 ASRs</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit Activity" onclick="showCustomMessage('Admin Action', 'Edit activity for Global Aggregator.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Activity" onclick="confirmDelete('Activity for Global Aggregator')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Today, 9:15 AM</td>
+                                    <td class="p-3">East Region Aggregator (AGG-3002)</td>
+                                    <td class="p-3">Agent Recruitment</td>
+                                    <td class="p-3">3 new agents added</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit Activity" onclick="showCustomMessage('Admin Action', 'Edit activity for East Region Aggregator.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Activity" onclick="confirmDelete('Activity for East Region Aggregator')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Yesterday, 4:45 PM</td>
+                                    <td class="p-3">North Region Aggregator (AGG-3003)</td>
+                                    <td class="p-3">Performance Review</td>
+                                    <td class="p-3">Performance rating updated to 4.2/5</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit Activity" onclick="showCustomMessage('Admin Action', 'Edit activity for North Region Aggregator.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Activity" onclick="confirmDelete('Activity for North Region Aggregator')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Aggregator Base Section -->
+            <section id="aggregator-base-section" class="content-section">
+                <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-bold text-gray-800">Aggregator Base Management</h2>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="openAggregatorModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-user-plus mr-2"></i> Add Aggregator
+                        </button>
+                        <div class="relative">
+                            <input type="text" placeholder="Search aggregators..." class="pl-10 pr-4 py-2 rounded-lg border">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Aggregator Base settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                            <i class="fas fa-cogs mr-2"></i> Manage Data
+                        </button>
+                    </div>
+                </header>
+
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold">Aggregator Network</h3>
+                            <p class="text-sm text-gray-500">Total: 8 aggregators (6 active, 2 inactive)</p>
+                        </div>
+                        <select id="aggregatorFilter" class="bg-gray-100 p-2 rounded-lg border">
+                            <option value="all">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table id="aggregatorTable" class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Aggregator Name</th>
+                                    <th class="p-3 text-left">Aggregator ID</th>
+                                    <th class="p-3 text-left">Region</th>
+                                    <th class="p-3 text-left">ASRs</th>
+                                    <th class="p-3 text-left">Agents</th>
                                     <th class="p-3 text-left">Status</th>
                                     <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Sarah Miller</td>
-                                    <td class="p-3">AG-2001</td>
-                                    <td class="p-3">Today, 10:30 AM</td>
-                                    <td class="p-3">Cash Out</td>
-                                    <td class="p-3">TZS 200.00</td>
-                                    <td class="p-3"><span class="status-badge status-clean">Clean</span></td>
+                                    <td class="p-3">Global Aggregator</td>
+                                    <td class="p-3">AGG-3001</td>
+                                    <td class="p-3">Eastern Region</td>
+                                    <td class="p-3">8</td>
+                                    <td class="p-3">24</td>
+                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
                                     <td class="p-3 text-center">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Profile" onclick="showAgentProfile('AG-2001')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="text-green-600 hover:text-green-800" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit Agent AG-2001.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Aggregator" onclick="openAggregatorModal('AGG-3001', 'Global Aggregator', 'Eastern Region', '8', '24', 'active')">
                                             <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Aggregator" onclick="confirmDelete('Aggregator Global Aggregator')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">David Wilson</td>
-                                    <td class="p-3">AG-2002</td>
-                                    <td class="p-3">Today, 9:15 AM</td>
-                                    <td class="p-3">Cash In</td>
-                                    <td class="p-3">TZS 150.00</td>
-                                    <td class="p-3"><span class="status-badge status-suspect">Suspect</span></td>
+                                    <td class="p-3">East Region Aggregator</td>
+                                    <td class="p-3">AGG-3002</td>
+                                    <td class="p-3">Eastern Region</td>
+                                    <td class="p-3">7</td>
+                                    <td class="p-3">18</td>
+                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
                                     <td class="p-3 text-center">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Profile" onclick="showAgentProfile('AG-2002')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="text-green-600 hover:text-green-800" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit Agent AG-2002.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Aggregator" onclick="openAggregatorModal('AGG-3002', 'East Region Aggregator', 'Eastern Region', '7', '18', 'active')">
                                             <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Aggregator" onclick="confirmDelete('Aggregator East Region Aggregator')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">North Region Aggregator</td>
+                                    <td class="p-3">AGG-3003</td>
+                                    <td class="p-3">Northern Region</td>
+                                    <td class="p-3">6</td>
+                                    <td class="p-3">15</td>
+                                    <td class="p-3"><span class="status-badge status-inactive">Inactive</span></td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Aggregator" onclick="openAggregatorModal('AGG-3003', 'North Region Aggregator', 'Northern Region', '6', '15', 'inactive')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Aggregator" onclick="confirmDelete('Aggregator North Region Aggregator')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-4">
+                        <span class="text-sm text-gray-500">Showing 1 to 3 of 8 aggregators</span>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Previous</button>
+                            <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">1</button>
+                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">2</button>
+                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">3</button>
+                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ASR Base Section -->
+            <section id="asr-base-section" class="content-section">
+                <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-bold text-gray-800">ASR Base Management</h2>
+                    <div class="flex items-center space-x-4">
+                        <button onclick="openASRModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-user-plus mr-2"></i> Add ASR
+                        </button>
+                        <div class="relative">
+                            <input type="text" placeholder="Search ASRs..." class="pl-10 pr-4 py-2 rounded-lg border">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage ASR Base settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                            <i class="fas fa-cogs mr-2"></i> Manage Data
+                        </button>
+                    </div>
+                </header>
+
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold">ASR Network Overview</h3>
+                            <p class="text-sm text-gray-500">Total: 24 ASRs (18 active, 6 inactive)</p>
+                        </div>
+                        <select id="asrBaseFilter" class="bg-gray-100 p-2 rounded-lg border">
+                            <option value="all">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="asrBaseTable" class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">ASR Name</th>
+                                    <th class="p-3 text-left">ASR ID</th>
+                                    <th class="p-3 text-left">Aggregator</th>
+                                    <th class="p-3 text-left">Assigned Area</th>
+                                    <th class="p-3 text-left">Status</th>
+                                    <th class="p-3 text-left">Total Agents</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">John Smith</td>
+                                    <td class="p-3">ASR-1001</td>
+                                    <td class="p-3">Global Aggregator</td>
+                                    <td class="p-3">Downtown District</td>
+                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
+                                    <td class="p-3">6</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit ASR" onclick="openASRModal('ASR-1001', 'John Smith', 'AGG-3001', 'Downtown District', 'active')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove ASR" onclick="confirmDelete('ASR John Smith')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Sarah Johnson</td>
+                                    <td class="p-3">ASR-1002</td>
+                                    <td class="p-3">Global Aggregator</td>
+                                    <td class="p-3">Westside Area</td>
+                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
+                                    <td class="p-3">5</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit ASR" onclick="openASRModal('ASR-1002', 'Sarah Johnson', 'AGG-3001', 'Westside Area', 'active')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove ASR" onclick="confirmDelete('ASR Sarah Johnson')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">Michael Brown</td>
-                                    <td class="p-3">AG-2003</td>
-                                    <td class="p-3">Yesterday, 4:45 PM</td>
-                                    <td class="p-3">Cash Out</td>
-                                    <td class="p-3">TZS 500.00</td>
-                                    <td class="p-3"><span class="status-badge status-fraud">Fraud</span></td>
+                                    <td class="p-3">ASR-1003</td>
+                                    <td class="p-3">East Region Aggregator</td>
+                                    <td class="p-3">East Market</td>
+                                    <td class="p-3"><span class="status-badge status-suspended">Suspended</span></td>
+                                    <td class="p-3">4</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Profile" onclick="showAgentProfile('AG-2003')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="text-green-600 hover:text-green-800" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit Agent AG-2003.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit ASR" onclick="openASRModal('ASR-1003', 'Michael Brown', 'AGG-3002', 'East Market', 'suspended')">
                                             <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove ASR" onclick="confirmDelete('ASR Michael Brown')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -393,8 +635,8 @@
                 <div class="bg-white p-6 rounded-xl shadow">
                     <div class="flex justify-between items-center mb-6">
                         <div>
-                            <h3 class="text-xl font-semibold">Agent Network Overview</h3>
-                            <p class="text-sm text-gray-500">Total: 42 agents (38 active, 4 inactive)</p>
+                            <h3 class="text-xl font-semibold">Agent Portfolio</h3>
+                            <p class="text-sm text-gray-500">Total: 142 agents (112 active, 30 inactive)</p>
                         </div>
                         <select id="agentFilter" class="bg-gray-100 p-2 rounded-lg border">
                             <option value="all">All Statuses</option>
@@ -404,55 +646,30 @@
                             <option value="terminated">Terminated</option>
                         </select>
                     </div>
-
+                    
                     <div class="overflow-x-auto">
-                        <table id="agentTable" class="w-full border-collapse">
+                        <table id="agentBaseTable" class="w-full border-collapse">
                             <thead>
                                 <tr class="bg-gray-100">
                                     <th class="p-3 text-left">Agent Name</th>
                                     <th class="p-3 text-left">Agent ID</th>
-                                    <th class="p-3 text-left">Tier</th>
+                                    <th class="p-3 text-left">Aggregator</th>
+                                    <th class="p-3 text-left">ASR</th>
                                     <th class="p-3 text-left">Status</th>
                                     <th class="p-3 text-left">Last Activity</th>
-                                    <th class="p-3 text-left">Total Transactions</th>
-                                    <th class="p-3 text-left">Total Volume (TZS)</th>
                                     <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Sarah Miller</td>
+                                    <td class="p-3">David Wilson</td>
                                     <td class="p-3">AG-2001</td>
-                                    <td class="p-3">Tier 2</td>
+                                    <td class="p-3">Global Aggregator</td>
+                                    <td class="p-3">John Smith (ASR-1001)</td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
                                     <td class="p-3">Today, 10:30 AM</td>
-                                    <td class="p-3">142</td>
-                                    <td class="p-3">TZS 28,450</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Profile" onclick="showAgentProfile('AG-2001')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('AG-2001', 'Sarah Miller', 'Tier 2', 'active', '2023-03-15')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent Sarah Miller')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">David Wilson</td>
-                                    <td class="p-3">AG-2002</td>
-                                    <td class="p-3">Tier 1</td>
-                                    <td class="p-3"><span class="status-badge status-suspended">Suspended</span></td>
-                                    <td class="p-3">Today, 9:15 AM</td>
-                                    <td class="p-3">98</td>
-                                    <td class="p-3">TZS 19,750</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Profile" onclick="showAgentProfile('AG-2002')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('AG-2002', 'David Wilson', 'Tier 1', 'suspended', '2023-05-22')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('AG-2001', 'David Wilson', 'AGG-3001', 'ASR-1001', 'active', '2023-05-15')">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent David Wilson')">
@@ -461,307 +678,17 @@
                                     </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Michael Brown</td>
-                                    <td class="p-3">AG-2003</td>
-                                    <td class="p-3">Tier 2</td>
-                                    <td class="p-3"><span class="status-badge status-terminated">Terminated</span></td>
-                                    <td class="p-3">2 weeks ago</td>
-                                    <td class="p-3">215</td>
-                                    <td class="p-3">TZS 42,300</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Profile" onclick="showAgentProfile('AG-2003')">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('AG-2003', 'Michael Brown', 'Tier 2', 'terminated', '2023-02-10')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent Michael Brown')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="flex justify-between items-center mt-4">
-                        <span class="text-sm text-gray-500">Showing 1 to 3 of 42 agents</span>
-                        <div class="flex space-x-2">
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Previous</button>
-                            <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">1</button>
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">2</button>
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">3</button>
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Next</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ASR Section -->
-            <section id="asr-section" class="content-section">
-                <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
-                    <h2 class="text-3xl font-bold text-gray-800">Aggregator Sales Reps (ASR)</h2>
-                    <div class="flex items-center space-x-4">
-                        <button onclick="openASRModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-user-plus mr-2"></i> Add ASR
-                        </button>
-                        <div class="relative">
-                            <input type="text" placeholder="Search ASRs..." class="pl-10 pr-4 py-2 rounded-lg border">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage ASR settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
-                            <i class="fas fa-cogs mr-2"></i> Manage Data
-                        </button>
-                    </div>
-                </header>
-
-                <!-- ASR Summary Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Total ASRs</p>
-                        <p class="text-2xl font-bold mt-1">24</p>
-                        <div class="flex items-center mt-2">
-                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 12%</span>
-                            <span class="text-sm text-gray-500">from last month</span>
-                        </div>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Total ASRs data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
-                            <i class="fas fa-cogs mr-1"></i> Manage
-                        </button>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Active ASRs</p>
-                        <p class="text-2xl font-bold mt-1">18</p>
-                        <p class="text-sm text-gray-500 mt-2">75% active rate</p>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Active ASRs data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
-                            <i class="fas fa-cogs mr-1"></i> Manage
-                        </button>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Agent Recruitment</p>
-                        <p class="text-2xl font-bold mt-1">15/20</p>
-                        <div class="flex items-center mt-2">
-                            <span class="text-green-500 mr-1">75%</span>
-                            <span class="text-sm text-gray-500">of monthly target</span>
-                        </div>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Agent Recruitment data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
-                            <i class="fas fa-cogs mr-1"></i> Manage
-                        </button>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Float Distribution</p>
-                        <p class="text-2xl font-bold mt-1">TZS 64,230</p>
-                        <p class="text-sm text-gray-500 mt-2">98 transactions</p>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Float Distribution data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
-                            <i class="fas fa-cogs mr-1"></i> Manage
-                        </button>
-                    </div>
-                </div>
-
-                <!-- ASR Float Distribution -->
-                <div class="bg-white p-6 rounded-xl shadow mb-6">
-                    <h3 class="text-xl font-semibold mb-4">ASR Float Distribution</h3>
-                    <div class="overflow-x-auto">
-                        <table id="asrFloatTable" class="w-full border-collapse">
-                            <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">ASR Name</th>
-                                    <th class="p-3 text-left">ASR ID</th>
-                                    <th class="p-3 text-left">Assigned Area</th>
-                                    <th class="p-3 text-left">Total Float (TZS)</th>
-                                    <th class="p-3 text-left">ASR to Agent (TZS)</th>
-                                    <th class="p-3 text-left">Agent to ASR (TZS)</th>
-                                    <th class="p-3 text-left">Status</th>
-                                    <th class="p-3 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">John Smith</td>
-                                    <td class="p-3">ASR-1001</td>
-                                    <td class="p-3">Downtown District</td>
-                                    <td class="p-3">TZS 8,450</td>
-                                    <td class="p-3">TZS 3,200</td>
-                                    <td class="p-3">TZS 5,250</td>
-                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit ASR Float" onclick="showCustomMessage('Admin Action', 'Edit ASR-1001 float data.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove ASR Float" onclick="confirmDelete('ASR-1001 float data')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Sarah Johnson</td>
-                                    <td class="p-3">ASR-1002</td>
-                                    <td class="p-3">Westside Area</td>
-                                    <td class="p-3">TZS 7,800</td>
-                                    <td class="p-3">TZS 2,950</td>
-                                    <td class="p-3">TZS 4,850</td>
-                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit ASR Float" onclick="showCustomMessage('Admin Action', 'Edit ASR-1002 float data.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove ASR Float" onclick="confirmDelete('ASR-1002 float data')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Michael Brown</td>
-                                    <td class="p-3">ASR-1003</td>
-                                    <td class="p-3">East Market</td>
-                                    <td class="p-3">TZS 6,980</td>
-                                    <td class="p-3">TZS 2,750</td>
-                                    <td class="p-3">TZS 4,230</td>
-                                    <td class="p-3"><span class="status-badge status-suspended">Suspended</span></td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit ASR Float" onclick="showCustomMessage('Admin Action', 'Edit ASR-1003 float data.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove ASR Float" onclick="confirmDelete('ASR-1003 float data')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- ASR Recruitment Performance -->
-                <div class="bg-white p-6 rounded-xl shadow mb-6">
-                    <h3 class="text-xl font-semibold mb-4">ASR Recruitment Performance</h3>
-                    <div class="overflow-x-auto">
-                        <table id="asrRecruitmentTable" class="w-full border-collapse">
-                            <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">ASR Name</th>
-                                    <th class="p-3 text-left">Assigned Area</th>
-                                    <th class="p-3 text-left">Target Agents</th>
-                                    <th class="p-3 text-left">Recruited</th>
-                                    <th class="p-3 text-left">Active Rate</th>
-                                    <th class="p-3 text-left">Performance</th>
-                                    <th class="p-3 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">John Smith</td>
-                                    <td class="p-3">Downtown District</td>
-                                    <td class="p-3">8</td>
-                                    <td class="p-3">6</td>
-                                    <td class="p-3">83%</td>
-                                    <td class="p-3">
-                                        <span class="badge badge-success">Excellent</span>
-                                    </td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Recruitment Data" onclick="showCustomMessage('Admin Action', 'Edit John Smith recruitment data.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Recruitment Data" onclick="confirmDelete('John Smith recruitment data')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Sarah Johnson</td>
-                                    <td class="p-3">Westside Area</td>
-                                    <td class="p-3">6</td>
-                                    <td class="p-3">5</td>
-                                    <td class="p-3">80%</td>
-                                    <td class="p-3">
-                                        <span class="badge badge-success">Good</span>
-                                    </td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Recruitment Data" onclick="showCustomMessage('Admin Action', 'Edit Sarah Johnson recruitment data.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Recruitment Data" onclick="confirmDelete('Sarah Johnson recruitment data')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Michael Brown</td>
-                                    <td class="p-3">East Market</td>
-                                    <td class="p-3">6</td>
-                                    <td class="p-3">4</td>
-                                    <td class="p-3">75%</td>
-                                    <td class="p-3">
-                                        <span class="badge badge-warning">Average</span>
-                                    </td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Recruitment Data" onclick="showCustomMessage('Admin Action', 'Edit Michael Brown recruitment data.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Recruitment Data" onclick="confirmDelete('Michael Brown recruitment data')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Agents Under ASR -->
-                <div class="bg-white p-6 rounded-xl shadow mb-6">
-                    <h3 class="text-xl font-semibold mb-4">Agents Under ASR</h3>
-                    <div class="mb-4 flex items-center space-x-2">
-                        <select id="asrAgentFilter" class="bg-gray-100 p-2 rounded-lg border">
-                            <option value="all">All ASRs</option>
-                            <option value="ASR-1001">John Smith (ASR-1001)</option>
-                            <option value="ASR-1002">Sarah Johnson (ASR-1002)</option>
-                            <option value="ASR-1003">Michael Brown (ASR-1003)</option>
-                        </select>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Agents Under ASR data.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
-                            <i class="fas fa-cogs mr-1"></i> Manage Data
-                        </button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table id="agentsUnderAsrTable" class="w-full border-collapse">
-                            <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">Agent Name</th>
-                                    <th class="p-3 text-left">Agent ID</th>
-                                    <th class="p-3 text-left">Assigned ASR</th>
-                                    <th class="p-3 text-left">Status</th>
-                                    <th class="p-3 text-left">Recruited On</th>
-                                    <th class="p-3 text-left">Last Activity</th>
-                                    <th class="p-3 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">David Wilson</td>
-                                    <td class="p-3">AG-2001</td>
-                                    <td class="p-3">John Smith (ASR-1001)</td>
-                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">2023-05-15</td>
-                                    <td class="p-3">Today, 10:30 AM</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit Agent AG-2001.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent AG-2001')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">Emily Davis</td>
                                     <td class="p-3">AG-2002</td>
+                                    <td class="p-3">Global Aggregator</td>
                                     <td class="p-3">John Smith (ASR-1001)</td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">2023-06-22</td>
                                     <td class="p-3">Today, 9:15 AM</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit Agent AG-2002.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('AG-2002', 'Emily Davis', 'AGG-3001', 'ASR-1001', 'active', '2023-06-22')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent AG-2002')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent Emily Davis')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -769,178 +696,15 @@
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">Robert Johnson</td>
                                     <td class="p-3">AG-2003</td>
+                                    <td class="p-3">East Region Aggregator</td>
                                     <td class="p-3">Sarah Johnson (ASR-1002)</td>
                                     <td class="p-3"><span class="status-badge status-inactive">Inactive</span></td>
-                                    <td class="p-3">2023-04-10</td>
                                     <td class="p-3">2 weeks ago</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit Agent AG-2003.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('AG-2003', 'Robert Johnson', 'AGG-3002', 'ASR-1002', 'inactive', '2023-04-10')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent AG-2003')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Top Performing ASRs -->
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-xl font-semibold mb-4">Top Performing ASRs</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <div class="flex items-center mb-3">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">1</div>
-                                <div>
-                                    <p class="font-medium">John Smith</p>
-                                    <p class="text-sm text-gray-500">ASR-1001</p>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <p class="text-gray-500 text-sm">Agents</p>
-                                    <p class="font-bold">6/8</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 text-sm">Float</p>
-                                    <p class="font-bold">TZS 8,450</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <div class="flex items-center mb-3">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">2</div>
-                                <div>
-                                    <p class="font-medium">Sarah Johnson</p>
-                                    <p class="text-sm text-gray-500">ASR-1002</p>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <p class="text-gray-500 text-sm">Agents</p>
-                                    <p class="font-bold">5/6</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 text-sm">Float</p>
-                                    <p class="font-bold">TZS 7,800</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <div class="flex items-center mb-3">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">3</div>
-                                <div>
-                                    <p class="font-medium">Michael Brown</p>
-                                    <p class="text-sm text-gray-500">ASR-1003</p>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <p class="text-gray-500 text-sm">Agents</p>
-                                    <p class="font-bold">4/6</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 text-sm">Float</p>
-                                    <p class="font-bold">TZS 6,980</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Merchant Base Section -->
-            <section id="merchant-base-section" class="content-section">
-                <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
-                    <h2 class="text-3xl font-bold text-gray-800">Merchant Base</h2>
-                    <div class="flex items-center space-x-4">
-                        <button onclick="openMerchantModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-store-alt mr-2"></i> Add Merchant
-                        </button>
-                        <div class="relative">
-                            <input type="text" placeholder="Search merchants..." class="pl-10 pr-4 py-2 rounded-lg border">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Merchant Base settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
-                            <i class="fas fa-cogs mr-2"></i> Manage Data
-                        </button>
-                    </div>
-                </header>
-
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <h3 class="text-xl font-semibold">Merchant Network</h3>
-                            <p class="text-sm text-gray-500">Total: 56 merchants (42 active, 14 inactive)</p>
-                        </div>
-                        <select id="merchantFilter" class="bg-gray-100 p-2 rounded-lg border">
-                            <option value="all">All Statuses</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
-                    
-                    <div class="overflow-x-auto">
-                        <table id="merchantTable" class="w-full border-collapse">
-                            <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">Merchant Name</th>
-                                    <th class="p-3 text-left">Merchant ID</th>
-                                    <th class="p-3 text-left">Category</th>
-                                    <th class="p-3 text-left">Status</th>
-                                    <th class="p-3 text-left">Agents</th>
-                                    <th class="p-3 text-left">Last Settlement (TZS)</th>
-                                    <th class="p-3 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">QuickPay Store</td>
-                                    <td class="p-3">MCH-5001</td>
-                                    <td class="p-3">Retail</td>
-                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">12</td>
-                                    <td class="p-3">Today, TZS 1,250</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Merchant" onclick="openMerchantModal('MCH-5001', 'QuickPay Store', 'Retail', 'active', '12')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Merchant" onclick="confirmDelete('Merchant QuickPay Store')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">City Market</td>
-                                    <td class="p-3">MCH-5002</td>
-                                    <td class="p-3">Supermarket</td>
-                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">8</td>
-                                    <td class="p-3">Today, TZS 980</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Merchant" onclick="openMerchantModal('MCH-5002', 'City Market', 'Supermarket', 'active', '8')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Merchant" onclick="confirmDelete('Merchant City Market')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Mobile Zone</td>
-                                    <td class="p-3">MCH-5003</td>
-                                    <td class="p-3">Telecom</td>
-                                    <td class="p-3"><span class="status-badge status-inactive">Inactive</span></td>
-                                    <td class="p-3">5</td>
-                                    <td class="p-3">2 weeks ago</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Merchant" onclick="openMerchantModal('MCH-5003', 'Mobile Zone', 'Telecom', 'inactive', '5')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Merchant" onclick="confirmDelete('Merchant Mobile Zone')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent Robert Johnson')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -950,7 +714,7 @@
                     </div>
                     
                     <div class="flex justify-between items-center mt-4">
-                        <span class="text-sm text-gray-500">Showing 1 to 3 of 56 merchants</span>
+                        <span class="text-sm text-gray-500">Showing 1 to 3 of 142 agents</span>
                         <div class="flex space-x-2">
                             <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Previous</button>
                             <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">1</button>
@@ -962,24 +726,21 @@
                 </div>
             </section>
 
-            <!-- Commissions Section -->
-            <section id="commissions-section" class="content-section">
+            <!-- Performance Section -->
+            <section id="performance-section" class="content-section">
                 <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
-                    <h2 class="text-3xl font-bold text-gray-800">Commissions</h2>
+                    <h2 class="text-3xl font-bold text-gray-800">Performance Metrics</h2>
                     <div class="flex items-center space-x-4">
                         <select class="bg-gray-100 p-2 rounded-lg border" id="month-select">
                             <option value="0">This Month</option>
                             <option value="-1">Last Month</option>
                             <option value="-2">2 Months Ago</option>
                             <option value="-3">3 Months Ago</option>
-                            <option value="-4">4 Months Ago</option>
-                            <option value="-5">5 Months Ago</option>
-                            <option value="-6">6 Months Ago</option>
                         </select>
                         <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                             <i class="fas fa-download mr-2"></i> Export
                         </button>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Commission settings and rules.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Performance Metrics settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
                             <i class="fas fa-cogs mr-2"></i> Manage Data
                         </button>
                     </div>
@@ -991,7 +752,7 @@
                             <h3 class="text-lg font-semibold">Current Month</h3>
                             <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">Estimated</span>
                         </div>
-                        <p class="text-3xl font-bold">TZS 5,280</p>
+                        <p class="text-3xl font-bold">TZS 12,280</p>
                         <div class="flex items-center mt-2">
                             <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 15%</span>
                             <span class="text-sm text-gray-500">from last month</span>
@@ -999,263 +760,154 @@
                         <div class="mt-4">
                             <div class="flex justify-between mb-1">
                                 <span class="text-gray-500">Target</span>
-                                <span>TZS 6,000</span>
+                                <span>TZS 15,000</span>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress-fill bg-blue-600" style="width: 88%"></div>
+                                <div class="progress-fill bg-blue-600" style="width: 82%"></div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="bg-white p-6 rounded-xl shadow">
                         <h3 class="text-lg font-semibold mb-4">Last Month</h3>
-                        <p class="text-3xl font-bold">TZS 4,592</p>
+                        <p class="text-3xl font-bold">TZS 10,692</p>
                         <p class="text-sm text-gray-500 mt-2">Paid on 5th July</p>
                         <div class="mt-4">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Base Commissions</span>
-                                <span>TZS 3,842</span>
+                                <span>TZS 8,842</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Performance Bonus</span>
-                                <span>TZS 750</span>
+                                <span>TZS 1,850</span>
                             </div>
                         </div>
                     </div>
                     
                     <div class="bg-white p-6 rounded-xl shadow">
-                        <h3 class="text-lg font-semibold mb-4">Fraud Adjustments</h3>
-                        <p class="text-3xl font-bold text-red-600">TZS -320</p>
-                        <p class="text-sm text-gray-500 mt-2">Deducted from commissions</p>
+                        <h3 class="text-lg font-semibold mb-4">Agent Activity</h3>
+                        <p class="text-3xl font-bold">142</p>
+                        <p class="text-sm text-gray-500 mt-2">Active agents this month</p>
                         <div class="mt-4">
                             <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">Confirmed Fraud</span>
-                                <span class="text-red-600">TZS -280</span>
+                                <span class="text-gray-500">Cash In</span>
+                                <span>714 transactions</span>
                             </div>
                             <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">Suspected Fraud</span>
-                                <span class="text-red-600">TZS -40</span>
+                                <span class="text-gray-500">Cash Out</span>
+                                <span>1,428 transactions</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-xl font-semibold mb-4">Commission Breakdown</h3>
+                    <h3 class="text-xl font-semibold mb-4">Regional Performance</h3>
                     <div class="chart-container mb-6">
-                        <canvas id="commissionChart"></canvas>
+                        <canvas id="regionalPerformanceChart"></canvas>
                     </div>
-                    
-                    <div class="overflow-x-auto">
-                        <table id="commissionTable" class="w-full border-collapse">
-                            <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">Agent</th>
-                                    <th class="p-3 text-left">Transaction Type</th>
-                                    <th class="p-3 text-left">Amount (TZS)</th>
-                                    <th class="p-3 text-left">Commission (TZS)</th>
-                                    <th class="p-3 text-left">Status</th>
-                                    <th class="p-3 text-left">Adjustment (TZS)</th>
-                                    <th class="p-3 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Sarah Miller (AG-2001)</td>
-                                    <td class="p-3">Cash Out</td>
-                                    <td class="p-3">TZS 200.00</td>
-                                    <td class="p-3">TZS 6.00</td>
-                                    <td class="p-3"><span class="status-badge status-clean">Clean</span></td>
-                                    <td class="p-3">TZS 0.00</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Commission" onclick="showCustomMessage('Admin Action', 'Edit commission for Sarah Miller.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Commission" onclick="confirmDelete('Commission for Sarah Miller')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">David Wilson (AG-2002)</td>
-                                    <td class="p-3">Cash In</td>
-                                    <td class="p-3">TZS 150.00</td>
-                                    <td class="p-3">TZS 4.50</td>
-                                    <td class="p-3"><span class="status-badge status-suspect">Suspect</span></td>
-                                    <td class="p-3 text-red-600">TZS -1.50</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Commission" onclick="showCustomMessage('Admin Action', 'Edit commission for David Wilson.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Commission" onclick="confirmDelete('Commission for David Wilson')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Michael Brown (AG-2003)</td>
-                                    <td class="p-3">Cash Out</td>
-                                    <td class="p-3">TZS 500.00</td>
-                                    <td class="p-3">TZS 15.00</td>
-                                    <td class="p-3"><span class="status-badge status-fraud">Fraud</span></td>
-                                    <td class="p-3 text-red-600">TZS -15.00</td>
-                                    <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Commission" onclick="showCustomMessage('Admin Action', 'Edit commission for Michael Brown.', 'alert')">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Commission" onclick="confirmDelete('Commission for Michael Brown')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                </div>
+
+                <!-- New: ASR Activity Chart -->
+                <div class="bg-white p-6 rounded-xl shadow mb-6">
+                    <h3 class="text-xl font-semibold mb-4">ASR Activity Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="asrActivityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- New: Aggregator Activity Chart -->
+                <div class="bg-white p-6 rounded-xl shadow mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Aggregator Activity Trend</h3>
+                    <div class="chart-container">
+                        <canvas id="aggregatorActivityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- New: Agent Commission Summary Chart -->
+                <div class="bg-white p-6 rounded-xl shadow mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Agent Commission Summary (3-Month Trend)</h3>
+                    <div class="chart-container">
+                        <canvas id="agentCommissionSummaryChart"></canvas>
                     </div>
                 </div>
             </section>
 
-            <!-- Requests Section -->
-            <section id="requests-section" class="content-section">
+            <!-- Fraud Section -->
+            <section id="fraud-section" class="content-section">
                 <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
-                    <h2 class="text-3xl font-bold text-gray-800">Requests</h2>
+                    <h2 class="text-3xl font-bold text-gray-800">Fraud Management</h2>
                     <div class="flex items-center space-x-4">
-                        <select id="requestFilter" class="bg-gray-100 p-2 rounded-lg border">
-                            <option value="all">All Requests</option>
-                            <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
+                        <button onclick="openFraudModal()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                            <i class="fas fa-plus-circle mr-2"></i> Report New Fraud
+                        </button>
+                        <select id="fraudFilter" class="bg-gray-100 p-2 rounded-lg border">
+                            <option value="all">All Statuses</option>
+                            <option value="reported">Reported</option>
+                            <option value="investigating">Investigating</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="escalated">Escalated</option>
                         </select>
-                        <button onclick="showCustomMessage('Admin Action', 'Manage Request settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Fraud settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
                             <i class="fas fa-cogs mr-2"></i> Manage Data
                         </button>
                     </div>
                 </header>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <!-- Delete Agent Request -->
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <h3 class="text-xl font-semibold mb-4">Request Agent Deletion</h3>
-                        <form onsubmit="submitAgentDeletionRequest(event)" class="space-y-4">
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">Select Agent</label>
-                                <select id="delete-agent-select" class="w-full p-2 border rounded-lg">
-                                    <option value="">Select Agent</option>
-                                    <option value="AG-2001">Sarah Miller (AG-2001)</option>
-                                    <option value="AG-2002">David Wilson (AG-2002)</option>
-                                    <option value="AG-2003">Michael Brown (AG-2003)</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">Reason for Deletion</label>
-                                <select id="delete-reason-select" class="w-full p-2 border rounded-lg">
-                                    <option value="">Select Reason</option>
-                                    <option>Inactivity</option>
-                                    <option>Policy Violation</option>
-                                    <option>Fraudulent Activity</option>
-                                    <option>Agent Request</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">Additional Notes</label>
-                                <textarea id="delete-notes" class="w-full p-2 border rounded-lg" rows="3"></textarea>
-                            </div>
-                            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
-                                <i class="fas fa-trash-alt mr-2"></i> Submit Deletion Request
-                            </button>
-                        </form>
-                    </div>
-                    
-                    <!-- Map Agent Request -->
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <h3 class="text-xl font-semibold mb-4">Request Agent Mapping</h3>
-                        <form onsubmit="submitAgentMappingRequest(event)" class="space-y-4">
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">Select Agent</label>
-                                <select id="map-agent-select" class="w-full p-2 border rounded-lg">
-                                    <option value="">Select Agent</option>
-                                    <option value="AG-2015">John Smith (AG-2015)</option>
-                                    <option value="AG-2016">Emily Davis (AG-2016)</option>
-                                    <option value="AG-2017">Robert Wilson (AG-2017)</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">Current Aggregator</label>
-                                <input type="text" class="w-full p-2 border rounded-lg" value="East Region Aggregator" readonly>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">Reason for Mapping</label>
-                                <select id="map-reason-select" class="w-full p-2 border rounded-lg">
-                                    <option value="">Select Reason</option>
-                                    <option>Geographical Realignment</option>
-                                    <option>Performance Optimization</option>
-                                    <option>Agent Request</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 mb-2">Additional Notes</label>
-                                <textarea id="map-notes" class="w-full p-2 border rounded-lg" rows="3"></textarea>
-                            </div>
-                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                                <i class="fas fa-map-marker-alt mr-2"></i> Submit Mapping Request
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                
-                <!-- Pending Requests -->
                 <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-xl font-semibold mb-4">Pending Requests</h3>
+                    <h3 class="text-xl font-semibold mb-4">Recent Fraud Cases</h3>
                     <div class="overflow-x-auto">
-                        <table id="pendingRequestsTable" class="w-full border-collapse">
+                        <table id="fraudTable" class="w-full border-collapse">
                             <thead>
                                 <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">Request ID</th>
+                                    <th class="p-3 text-left">Case ID</th>
                                     <th class="p-3 text-left">Type</th>
-                                    <th class="p-3 text-left">Agent</th>
-                                    <th class="p-3 text-left">Reason</th>
-                                    <th class="p-3 text-left">Submitted</th>
+                                    <th class="p-3 text-left">Aggregator/ASR/Agent</th>
+                                    <th class="p-3 text-left">Amount (TZS)</th>
+                                    <th class="p-3 text-left">Date Reported</th>
                                     <th class="p-3 text-left">Status</th>
+                                    <th class="p-3 text-left">Actions Taken</th>
                                     <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">REQ-1001</td>
-                                    <td class="p-3">Deletion</td>
-                                    <td class="p-3">Michael Brown (AG-2003)</td>
-                                    <td class="p-3">Inactivity</td>
+                                    <td class="p-3">FRD-001</td>
+                                    <td class="p-3">Float Misuse</td>
+                                    <td class="p-3">ASR-1003 (M. Brown)</td>
+                                    <td class="p-3">TZS 5,000</td>
                                     <td class="p-3">2023-07-10</td>
-                                    <td class="p-3"><span class="status-badge status-active">Pending</span></td>
+                                    <td class="p-3"><span class="status-badge status-suspended">Investigating</span></td>
+                                    <td class="p-3">Account suspended</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Details" onclick="showCustomMessage('Admin Action', 'View details for REQ-1001.', 'alert')">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Details" onclick="showCustomMessage('Admin Action', 'View details of fraud case FRD-001.', 'alert')">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Approve Request" onclick="showCustomMessage('Admin Action', 'Approve REQ-1001.', 'alert')">
-                                            <i class="fas fa-check"></i>
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Case" onclick="openFraudModal('FRD-001', 'Float Misuse', 'ASR-1003', '5000', '2023-07-10', 'investigating', 'Account suspended')">
+                                            <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Reject Request" onclick="showCustomMessage('Admin Action', 'Reject REQ-1001.', 'alert')">
-                                            <i class="fas fa-times"></i>
+                                        <button class="text-red-600 hover:text-red-800" title="Delete Case" onclick="confirmDelete('Fraud Case FRD-001')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">REQ-1002</td>
-                                    <td class="p-3">Mapping</td>
-                                    <td class="p-3">John Smith (AG-2015)</td>
-                                    <td class="p-3">Geographical Realignment</td>
+                                    <td class="p-3">FRD-002</td>
+                                    <td class="p-3">Unauthorized Txn</td>
+                                    <td class="p-3">AGG-3002 (East Region)</td>
+                                    <td class="p-3">TZS 10,000</td>
                                     <td class="p-3">2023-07-08</td>
-                                    <td class="p-3"><span class="status-badge status-active">Pending</span></td>
+                                    <td class="p-3"><span class="status-badge status-active">Reported</span></td>
+                                    <td class="p-3">N/A</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Details" onclick="showCustomMessage('Admin Action', 'View details for REQ-1002.', 'alert')">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2" title="View Details" onclick="showCustomMessage('Admin Action', 'View details of fraud case FRD-002.', 'alert')">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Approve Request" onclick="showCustomMessage('Admin Action', 'Approve REQ-1002.', 'alert')">
-                                            <i class="fas fa-check"></i>
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Case" onclick="openFraudModal('FRD-002', 'Unauthorized Txn', 'AGG-3002', '10000', '2023-07-08', 'reported', 'N/A')">
+                                            <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Reject Request" onclick="showCustomMessage('Admin Action', 'Reject REQ-1002.', 'alert')">
-                                            <i class="fas fa-times"></i>
+                                        <button class="text-red-600 hover:text-red-800" title="Delete Case" onclick="confirmDelete('Fraud Case FRD-002')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -1300,46 +952,46 @@
                             </thead>
                             <tbody>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Review ASR performance in Downtown</td>
-                                    <td class="p-3">John Smith (ASR-1001)</td>
+                                    <td class="p-3">Review Aggregator performance (AGG-3001)</td>
+                                    <td class="p-3">Admin User</td>
                                     <td class="p-3"><span class="badge badge-primary">High</span></td>
                                     <td class="p-3">Today</td>
                                     <td class="p-3"><span class="status-badge status-active">In Progress</span></td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Review ASR performance in Downtown.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="openTaskModal('Review Aggregator performance (AGG-3001)', 'Admin User', 'High', 'Today', 'In Progress')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Review ASR performance in Downtown')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Review Aggregator performance (AGG-3001)')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Recruit 2 new agents in Westside</td>
-                                    <td class="p-3">Sarah Johnson (ASR-1002)</td>
+                                    <td class="p-3">Coordinate ASR training (Eastern Region)</td>
+                                    <td class="p-3">Admin User</td>
                                     <td class="p-3"><span class="badge badge-warning">Medium</span></td>
                                     <td class="p-3">Tomorrow</td>
                                     <td class="p-3"><span class="status-badge status-inactive">Pending</span></td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Recruit 2 new agents in Westside.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="openTaskModal('Coordinate ASR training (Eastern Region)', 'Admin User', 'Medium', 'Tomorrow', 'Pending')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Recruit 2 new agents in Westside')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Coordinate ASR training (Eastern Region)')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Investigate fraud cases in East Market</td>
-                                    <td class="p-3">Michael Brown (ASR-1003)</td>
+                                    <td class="p-3">Investigate fraud case (FRD-001)</td>
+                                    <td class="p-3">Admin User</td>
                                     <td class="p-3"><span class="badge badge-danger">Critical</span></td>
                                     <td class="p-3">Today</td>
                                     <td class="p-3"><span class="status-badge status-active">In Progress</span></td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Investigate fraud cases in East Market.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="openTaskModal('Investigate fraud case (FRD-001)', 'Admin User', 'Critical', 'Today', 'In Progress')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Investigate fraud cases in East Market')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Investigate fraud case (FRD-001)')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -1349,7 +1001,7 @@
                     </div>
                     
                     <div class="flex justify-between items-center mt-4">
-                        <span class="text-sm text-gray-500">Showing 1 to 3 of 12 tasks</span>
+                        <span class="text-sm text-gray-500">Showing 1 to 3 of 5 tasks</span>
                         <div class="flex space-x-2">
                             <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Previous</button>
                             <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">1</button>
@@ -1360,6 +1012,101 @@
                     </div>
                 </div>
             </section>
+        </div>
+    </div>
+
+    <!-- Aggregator Registration Modal -->
+    <div id="aggregatorModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeAggregatorModal()">&times;</span>
+            <h3 id="aggregator-modal-title" class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-user-plus mr-2 text-blue-600"></i> Add New Aggregator
+            </h3>
+            <form class="space-y-4" onsubmit="saveAggregator(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">Aggregator Name</label>
+                        <input type="text" id="aggregator-name-input" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">Aggregator ID</label>
+                        <input type="text" id="aggregator-id-input" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Region</label>
+                    <input type="text" id="aggregator-region-input" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">ASRs</label>
+                    <input type="number" id="aggregator-asrs-input" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Agents</label>
+                    <input type="number" id="aggregator-agents-input" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Status</label>
+                    <select id="aggregator-status-input" class="w-full p-2 border rounded-lg">
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeAggregatorModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Save Aggregator
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ASR Registration Modal -->
+    <div id="asrModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeASRModal()">&times;</span>
+            <h3 id="asr-modal-title" class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-user-plus mr-2 text-blue-600"></i> Add New ASR
+            </h3>
+            <form class="space-y-4" onsubmit="saveASR(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">ASR Name</label>
+                        <input type="text" id="asr-name-input" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">ASR ID</label>
+                        <input type="text" id="asr-id-input" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Aggregator ID</label>
+                    <input type="text" id="asr-aggregator-id-input" class="w-full p-2 border rounded-lg" placeholder="e.g., AGG-3001" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Assigned Area</label>
+                    <input type="text" id="asr-area-input" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Status</label>
+                    <select id="asr-status-input" class="w-full p-2 border rounded-lg">
+                        <option>Active</option>
+                        <option>Inactive</option>
+                        <option>Suspended</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeASRModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Save ASR
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1382,12 +1129,12 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-gray-700 mb-1">Tier</label>
-                    <select id="agent-tier-select" class="w-full p-2 border rounded-lg">
-                        <option>Tier 1</option>
-                        <option>Tier 2</option>
-                        <option>Tier 3</option>
-                    </select>
+                    <label class="block text-gray-700 mb-1">Aggregator ID</label>
+                    <input type="text" id="agent-aggregator-id-input" class="w-full p-2 border rounded-lg" placeholder="e.g., AGG-3001" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">ASR ID</label>
+                    <input type="text" id="agent-asr-id-input" class="w-full p-2 border rounded-lg" placeholder="e.g., ASR-1001" required>
                 </div>
                 <div>
                     <label class="block text-gray-700 mb-1">Status</label>
@@ -1414,6 +1161,59 @@
         </div>
     </div>
 
+    <!-- Fraud Modal -->
+    <div id="fraudModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeFraudModal()">&times;</span>
+            <h3 id="fraud-modal-title" class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-plus-circle mr-2 text-red-600"></i> Report New Fraud Case
+            </h3>
+            <form class="space-y-4" onsubmit="saveFraudCase(event)">
+                <div>
+                    <label class="block text-gray-700 mb-1">Case ID</label>
+                    <input type="text" id="fraud-case-id-input" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Fraud Type</label>
+                    <input type="text" id="fraud-type-input" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Involved Entity (ID)</label>
+                    <input type="text" id="fraud-entity-id-input" class="w-full p-2 border rounded-lg" placeholder="e.g., ASR-1001, AGG-3002, AG-2005" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Amount (TZS)</label>
+                    <input type="number" step="0.01" id="fraud-amount-input" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Date Reported</label>
+                    <input type="date" id="fraud-date-reported-input" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Status</label>
+                    <select id="fraud-status-input" class="w-full p-2 border rounded-lg">
+                        <option>Reported</option>
+                        <option>Investigating</option>
+                        <option>Resolved</option>
+                        <option>Escalated</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Actions Taken</label>
+                    <textarea id="fraud-actions-taken-input" class="w-full p-2 border rounded-lg" rows="3"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeFraudModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Save Fraud Case
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Task Modal -->
     <div id="taskModal" class="modal">
         <div class="modal-content">
@@ -1427,8 +1227,8 @@
                     <input type="text" id="task-description-input" class="w-full p-2 border rounded-lg" required>
                 </div>
                 <div>
-                    <label class="block text-gray-700 mb-1">Assigned To (ASR ID)</label>
-                    <input type="text" id="task-assigned-to-input" class="w-full p-2 border rounded-lg" placeholder="e.g., ASR-1001" required>
+                    <label class="block text-gray-700 mb-1">Assigned To (User ID)</label>
+                    <input type="text" id="task-assigned-to-input" class="w-full p-2 border rounded-lg" placeholder="e.g., AGG-3001, ASR-1001, AG-2005" required>
                 </div>
                 <div>
                     <label class="block text-gray-700 mb-1">Priority</label>
@@ -1485,63 +1285,65 @@
     <!-- JavaScript -->
     <script>
         // Global Chart and DataTable instances to prevent re-initialization issues
-        var asrAgentActivityChartInstance = null;
-        var asrFloatDistributionChartInstance = null;
-        var myAgentsTableInstance = null;
-        var myFloatTableInstance = null;
-        var myRecruitmentTableInstance = null;
-        var tasksTableInstance = null;
-        var agentTableInstance = null; // Declare here
-        var asrTableInstance = null; // Declare here
-        var asrFloatTableInstance = null; // Declare here
-        var asrRecruitmentTableInstance = null; // Declare here
-        var agentsUnderAsrTableInstance = null; // Declare here
-        var merchantTableInstance = null; // Declare here
-        var pendingRequestsTableInstance = null; // Declare here
-        var commissionTableInstance = null; // Declare here
-        var agentActivityChartInstance = null; // Declare here
-        var floatDistributionChartInstance = null; // Declare here
+        var agentActivityChartInstance = null;
+        var regionalPerformanceChartInstance = null;
+        var aggregatorTableInstance = null;
+        var asrBaseTableInstance = null;
+        var agentBaseTableInstance = null;
+        var recentActivityTableInstance = null;
+        var asrActivityChartInstance = null; // New chart for ASR activity
+        var aggregatorActivityChartInstance = null; // New chart for Aggregator activity
+        var agentCommissionSummaryChartInstance = null; // New chart for Agent Commission Summary
+        var fraudTableInstance = null; // New DataTable for fraud
+        var tasksTableInstance = null; // New DataTable for tasks
 
-
-        // Sample data for modals (in a real app, this would come from a backend)
-        // Data for the specific ASR (John Smith, ASR-1001)
-        const currentASR = {
-            id: 'ASR-1001',
-            name: 'John Smith',
-            area: 'Downtown District',
-            totalAgents: 6,
-            activeAgents: 5,
-            floatBalance: '8,450',
-            estimatedCommission: '1,200',
-            agentActivityData: [32, 34, 36, 35, 38, 37, 39, 40, 38, 39, 41, 42, 40, 42, 41, 43, 42, 44, 43, 42, 41, 40, 42, 41, 43, 42, 44, 45, 44, 42].slice(0, new Date().getDate()),
-            floatDistributionData: {
-                aggregatorToAgent: [6500, 7200, 6800, 7950],
-                agentToAggregator: [8200, 8900, 9300, 8780],
-                totalFloat: [14700, 16100, 16100, 16730]
-            },
-            myAgents: {
-                'AG-2001': { name: 'David Wilson', tier: 'Tier 1', status: 'active', regDate: '2023-05-15', lastActivity: 'Today, 10:30 AM', transactions: 142, volume: '28,450' },
-                'AG-2002': { name: 'Emily Davis', tier: 'Tier 2', status: 'active', regDate: '2023-06-22', lastActivity: 'Today, 9:15 AM', transactions: 98, volume: '19,750' },
-                'AG-2003': { name: 'Robert Johnson', tier: 'Tier 2', status: 'inactive', regDate: '2023-04-10', lastActivity: '2 weeks ago', transactions: 215, volume: '42,300' }
-            },
-            myFloatTransactions: [
-                { date: 'Today, 11:00 AM', type: 'ASR to Agent', amount: '500', counterparty: 'AG-2001 (David Wilson)', status: 'clean' },
-                { date: 'Yesterday, 03:00 PM', type: 'Agent to ASR', amount: '1,200', counterparty: 'AG-2002 (Emily Davis)', status: 'clean' }
-            ],
-            myRecruitment: [
-                { month: 'July 2023', target: 8, recruited: 6, activeRate: '83%', performance: 'Excellent' },
-                { month: 'June 2023', target: 6, recruited: 5, activeRate: '80%', performance: 'Good' }
-            ],
-            myTasks: [
-                { description: 'Review ASR performance in Downtown', assignedTo: 'John Smith (ASR-1001)', priority: 'High', dueDate: 'Today', status: 'In Progress' },
-                { description: 'Recruit 2 new agents in Westside', assignedTo: 'Sarah Johnson (ASR-1002)', priority: 'Medium', dueDate: 'Tomorrow', status: 'Pending' },
-                { description: 'Investigate fraud cases in East Market', assignedTo: 'Michael Brown (ASR-1003)', priority: 'Critical', dueDate: 'Today', status: 'In Progress' }
-            ]
+        // Sample data (replace with real data fetching in a production app)
+        const aggregatorsData = {
+            'AGG-3001': { name: 'Global Aggregator', region: 'Eastern Region', asrs: 8, agents: 24, status: 'active' },
+            'AGG-3002': { name: 'East Region Aggregator', region: 'Eastern Region', asrs: 7, agents: 18, status: 'active' },
+            'AGG-3003': { name: 'North Region Aggregator', region: 'Northern Region', asrs: 6, agents: 15, status: 'inactive' }
         };
+
+        const asrsData = {
+            'ASR-1001': { name: 'John Smith', aggregatorId: 'AGG-3001', area: 'Downtown District', status: 'active', totalAgents: 6 },
+            'ASR-1002': { name: 'Sarah Johnson', aggregatorId: 'AGG-3001', area: 'Westside Area', status: 'active', totalAgents: 5 },
+            'ASR-1003': { name: 'Michael Brown', aggregatorId: 'AGG-3002', area: 'East Market', status: 'suspended', totalAgents: 4 }
+        };
+
+        const agentsData = {
+            'AG-2001': { name: 'David Wilson', aggregatorId: 'AGG-3001', asrId: 'ASR-1001', status: 'active', lastActivity: 'Today, 10:30 AM', regDate: '2023-05-15' },
+            'AG-2002': { name: 'Emily Davis', aggregatorId: 'AGG-3001', asrId: 'ASR-1001', status: 'active', lastActivity: 'Today, 9:15 AM', regDate: '2023-06-22' },
+            'AG-2003': { name: 'Robert Johnson', aggregatorId: 'AGG-3002', asrId: 'ASR-1002', status: 'inactive', lastActivity: '2 weeks ago', regDate: '2023-04-10' }
+        };
+
+        const recentActivityData = [
+            { date: 'Today, 10:30 AM', aggregator: 'Global Aggregator (AGG-3001)', activity: 'Float Distribution', details: 'TZS 8,450 distributed to 5 ASRs' },
+            { date: 'Today, 9:15 AM', aggregator: 'East Region Aggregator (AGG-3002)', activity: 'Agent Recruitment', details: '3 new agents added' },
+            { date: 'Yesterday, 4:45 PM', aggregator: 'North Region Aggregator (AGG-3003)', activity: 'Performance Review', details: 'Performance rating updated to 4.2/5' }
+        ];
+
+        const fraudCasesData = [
+            { id: 'FRD-001', type: 'Float Misuse', entity: 'ASR-1003 (M. Brown)', amount: 5000, dateReported: '2023-07-10', status: 'suspended', actions: 'Account suspended' },
+            { id: 'FRD-002', type: 'Unauthorized Txn', entity: 'AGG-3002 (East Region)', amount: 10000, dateReported: '2023-07-08', status: 'active', actions: 'N/A' }
+        ];
+
+        const tasksData = [
+            { description: 'Review Aggregator performance (AGG-3001)', assignedTo: 'Admin User', priority: 'High', dueDate: 'Today', status: 'In Progress' },
+            { description: 'Coordinate ASR training (Eastern Region)', assignedTo: 'Admin User', priority: 'Medium', dueDate: 'Tomorrow', status: 'Pending' },
+            { description: 'Investigate fraud case (FRD-001)', assignedTo: 'Admin User', priority: 'Critical', dueDate: 'Today', status: 'In Progress' }
+        ];
+
+        const asrActivityTrendData = [20, 22, 21, 23, 24, 23, 22]; // Sample data for ASR activity
+        const aggregatorActivityTrendData = [6, 7, 8, 7, 8, 7, 6]; // Sample data for Aggregator activity
+        const agentCommissionSummaryData = [
+            { month: 'May', commission: 75000 },
+            { month: 'June', commission: 82000 },
+            { month: 'July', commission: 90000 }
+        ];
 
 
         // Function to show custom modal messages (replaces alert/confirm)
-        var confirmCallback = null; // To store the callback for confirmation
+        var confirmCallback = null;
 
         function showCustomMessage(title, message, type = 'alert', onConfirm = null) {
             const messageBox = document.getElementById('custom-message-box');
@@ -1573,7 +1375,7 @@
                 };
                 confirmCallback = null;
             }
-            messageBox.style.display = 'flex'; // Use flex to center
+            messageBox.style.display = 'flex';
         }
 
         function closeCustomMessageBox() {
@@ -1589,8 +1391,7 @@
                     if (result) {
                         console.log(`Deleting ${itemName}... (simulated)`);
                         showCustomMessage('Deleted!', `${itemName} has been deleted.`, 'alert');
-                        // In a real app, you'd send a DELETE request to your backend here
-                        // For demonstration, you might want to remove the row from the table dynamically
+                        // In a real app, you'd send a DELETE request and refresh the relevant table
                     } else {
                         console.log(`Deletion of ${itemName} cancelled.`);
                         showCustomMessage('Cancelled', `Deletion of ${itemName} was cancelled.`, 'alert');
@@ -1599,52 +1400,133 @@
             );
         }
 
-        // Handles navigation by showing the selected section and updating active nav item.
+        // Section navigation logic
         function showSection(element, sectionId) {
-            // Remove 'active' class from all nav items
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            // Add 'active' class to the clicked nav item
             element.classList.add('active');
 
-            // Hide all content sections
-            document.querySelectorAll('section.content-section').forEach(section => {
+            document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
             });
-            
-            // Show the selected section
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
+            document.getElementById(sectionId).classList.add('active');
 
-            // Initialize charts/tables specific to the section when it becomes active
+            // Initialize charts/tables for the active section
             if (sectionId === 'dashboard-section') {
-                initASRDashboardChartsAndTables();
-            } else if (sectionId === 'my-agents-section') {
-                initMyAgentsTable();
-            } else if (sectionId === 'my-float-section') {
-                initMyFloatTable();
-            } else if (sectionId === 'my-recruitment-section') {
-                initMyRecruitmentTable();
-            } else if (sectionId === 'assigned-tasks-section') {
+                initDashboardChartsAndTables();
+            } else if (sectionId === 'aggregator-base-section') {
+                initAggregatorTable();
+            } else if (sectionId === 'asr-base-section') {
+                initASRBaseTable();
+            } else if (sectionId === 'agent-base-section') {
+                initAgentBaseTable();
+            } else if (sectionId === 'performance-section') {
+                initPerformanceChartsAndTables();
+            } else if (sectionId === 'fraud-section') {
+                initFraudTable();
+            } else if (sectionId === 'tasks-section') {
                 initTasksTable();
             }
         }
 
-        // Agent Add/Edit Modal Functions (for agents under this ASR)
-        function openAgentModal(id = '', name = '', tier = '', status = '', regDate = '') {
+        // Modals Functions
+        function openAggregatorModal(id = '', name = '', region = '', asrs = '', agents = '', status = '') {
+            const modal = document.getElementById('aggregatorModal');
+            document.getElementById('aggregator-id-input').value = id;
+            document.getElementById('aggregator-name-input').value = name;
+            document.getElementById('aggregator-region-input').value = region;
+            document.getElementById('aggregator-asrs-input').value = asrs;
+            document.getElementById('aggregator-agents-input').value = agents;
+            document.getElementById('aggregator-status-input').value = status;
+
+            if (id) {
+                document.getElementById('aggregator-modal-title').textContent = 'Edit Aggregator';
+                document.getElementById('aggregator-id-input').readOnly = true;
+            } else {
+                document.getElementById('aggregator-modal-title').textContent = 'Add New Aggregator';
+                document.getElementById('aggregator-id-input').readOnly = false;
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeAggregatorModal() {
+            document.getElementById('aggregatorModal').style.display = 'none';
+        }
+
+        function saveAggregator(event) {
+            event.preventDefault();
+            const id = document.getElementById('aggregator-id-input').value;
+            const name = document.getElementById('aggregator-name-input').value;
+            const region = document.getElementById('aggregator-region-input').value;
+            const asrs = document.getElementById('aggregator-asrs-input').value;
+            const agents = document.getElementById('aggregator-agents-input').value;
+            const status = document.getElementById('aggregator-status-input').value;
+
+            if (aggregatorsData[id]) {
+                aggregatorsData[id] = { ...aggregatorsData[id], name, region, asrs, agents, status };
+                showCustomMessage('Aggregator Updated!', `Aggregator ${name} (ID: ${id}) updated.`, 'alert');
+            } else {
+                aggregatorsData[id] = { name, region, asrs, agents, status };
+                showCustomMessage('Aggregator Added!', `Aggregator ${name} (ID: ${id}) added.`, 'alert');
+            }
+            closeAggregatorModal();
+            initAggregatorTable(); // Refresh table
+        }
+
+        function openASRModal(id = '', name = '', aggregatorId = '', area = '', status = '') {
+            const modal = document.getElementById('asrModal');
+            document.getElementById('asr-id-input').value = id;
+            document.getElementById('asr-name-input').value = name;
+            document.getElementById('asr-aggregator-id-input').value = aggregatorId;
+            document.getElementById('asr-area-input').value = area;
+            document.getElementById('asr-status-input').value = status;
+
+            if (id) {
+                document.getElementById('asr-modal-title').textContent = 'Edit ASR';
+                document.getElementById('asr-id-input').readOnly = true;
+            } else {
+                document.getElementById('asr-modal-title').textContent = 'Add New ASR';
+                document.getElementById('asr-id-input').readOnly = false;
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeASRModal() {
+            document.getElementById('asrModal').style.display = 'none';
+        }
+
+        function saveASR(event) {
+            event.preventDefault();
+            const id = document.getElementById('asr-id-input').value;
+            const name = document.getElementById('asr-name-input').value;
+            const aggregatorId = document.getElementById('asr-aggregator-id-input').value;
+            const area = document.getElementById('asr-area-input').value;
+            const status = document.getElementById('asr-status-input').value;
+
+            if (asrsData[id]) {
+                asrsData[id] = { ...asrsData[id], name, aggregatorId, area, status };
+                showCustomMessage('ASR Updated!', `ASR ${name} (ID: ${id}) updated.`, 'alert');
+            } else {
+                asrsData[id] = { name, aggregatorId, area, status, totalAgents: 0 }; // Simplified
+                showCustomMessage('ASR Added!', `ASR ${name} (ID: ${id}) added.`, 'alert');
+            }
+            closeASRModal();
+            initASRBaseTable(); // Refresh table
+        }
+
+        function openAgentModal(id = '', name = '', aggregatorId = '', asrId = '', status = '', regDate = '') {
             const modal = document.getElementById('agentModal');
-            document.getElementById('agent-id-input').value = id;
             document.getElementById('agent-name-input').value = name;
-            document.getElementById('agent-tier-select').value = tier;
+            document.getElementById('agent-id-input').value = id;
+            document.getElementById('agent-aggregator-id-input').value = aggregatorId;
+            document.getElementById('agent-asr-id-input').value = asrId;
             document.getElementById('agent-status-input').value = status;
             document.getElementById('agent-reg-date-input').value = regDate;
 
             if (id) {
                 document.getElementById('agent-modal-title').textContent = 'Edit Agent';
-                document.getElementById('agent-id-input').readOnly = true; // Prevent editing ID
+                document.getElementById('agent-id-input').readOnly = true;
             } else {
                 document.getElementById('agent-modal-title').textContent = 'Add New Agent';
                 document.getElementById('agent-id-input').readOnly = false;
@@ -1660,23 +1542,68 @@
             event.preventDefault();
             const id = document.getElementById('agent-id-input').value;
             const name = document.getElementById('agent-name-input').value;
-            const tier = document.getElementById('agent-tier-select').value;
+            const aggregatorId = document.getElementById('agent-aggregator-id-input').value;
+            const asrId = document.getElementById('agent-asr-id-input').value;
             const status = document.getElementById('agent-status-input').value;
             const regDate = document.getElementById('agent-reg-date-input').value;
 
-            // Simulate save operation for agents under this ASR
-            if (currentASR.myAgents[id]) {
-                currentASR.myAgents[id] = { ...currentASR.myAgents[id], name, tier, status, regDate };
+            if (agentsData[id]) {
+                agentsData[id] = { ...agentsData[id], name, aggregatorId, asrId, status, regDate };
                 showCustomMessage('Agent Updated!', `Agent ${name} (ID: ${id}) updated.`, 'alert');
             } else {
-                currentASR.myAgents[id] = { name, tier, status, regDate, lastActivity: 'N/A', transactions: 0, volume: '0' }; // Simplified
+                agentsData[id] = { name, aggregatorId, asrId, status, regDate, lastActivity: 'N/A' }; // Simplified
                 showCustomMessage('Agent Added!', `Agent ${name} (ID: ${id}) added.`, 'alert');
             }
             closeAgentModal();
-            initMyAgentsTable(); // Refresh table
+            initAgentBaseTable(); // Refresh table
         }
 
-        // Task Add/Edit Modal Functions
+        function openFraudModal(id = '', type = '', entity = '', amount = '', dateReported = '', status = '', actions = '') {
+            const modal = document.getElementById('fraudModal');
+            document.getElementById('fraud-case-id-input').value = id;
+            document.getElementById('fraud-type-input').value = type;
+            document.getElementById('fraud-entity-id-input').value = entity;
+            document.getElementById('fraud-amount-input').value = amount;
+            document.getElementById('fraud-date-reported-input').value = dateReported;
+            document.getElementById('fraud-status-input').value = status;
+            document.getElementById('fraud-actions-taken-input').value = actions;
+
+            if (id) {
+                document.getElementById('fraud-modal-title').textContent = 'Edit Fraud Case';
+                document.getElementById('fraud-case-id-input').readOnly = true;
+            } else {
+                document.getElementById('fraud-modal-title').textContent = 'Report New Fraud Case';
+                document.getElementById('fraud-case-id-input').readOnly = false;
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeFraudModal() {
+            document.getElementById('fraudModal').style.display = 'none';
+        }
+
+        function saveFraudCase(event) {
+            event.preventDefault();
+            const id = document.getElementById('fraud-case-id-input').value;
+            const type = document.getElementById('fraud-type-input').value;
+            const entity = document.getElementById('fraud-entity-id-input').value;
+            const amount = document.getElementById('fraud-amount-input').value;
+            const dateReported = document.getElementById('fraud-date-reported-input').value;
+            const status = document.getElementById('fraud-status-input').value;
+            const actions = document.getElementById('fraud-actions-taken-input').value;
+
+            if (fraudCasesData.find(caseItem => caseItem.id === id)) { // Simple check for existing
+                const index = fraudCasesData.findIndex(caseItem => caseItem.id === id);
+                fraudCasesData[index] = { id, type, entity, amount, dateReported, status, actions };
+                showCustomMessage('Fraud Case Updated!', `Fraud case ${id} updated.`, 'alert');
+            } else {
+                fraudCasesData.push({ id, type, entity, amount, dateReported, status, actions });
+                showCustomMessage('Fraud Case Reported!', `Fraud case ${id} reported.`, 'alert');
+            }
+            closeFraudModal();
+            initFraudTable(); // Refresh table
+        }
+
         function openTaskModal(description = '', assignedTo = '', priority = '', dueDate = '', status = '') {
             const modal = document.getElementById('taskModal');
             document.getElementById('task-description-input').value = description;
@@ -1712,39 +1639,36 @@
             initTasksTable(); // Refresh tasks table
         }
 
+
         // Initialize DataTables
-        function initMyAgentsTable() {
-            if (myAgentsTableInstance) {
-                myAgentsTableInstance.destroy();
+        function initAggregatorTable() {
+            if (aggregatorTableInstance) {
+                aggregatorTableInstance.destroy();
             }
-            myAgentsTableInstance = $('#myAgentsTable').DataTable({
+            aggregatorTableInstance = $('#aggregatorTable').DataTable({
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
                 responsive: true,
-                data: Object.entries(currentASR.myAgents).map(([id, agent]) => [
-                    agent.name, id, agent.tier, 
-                    `<span class="status-badge status-${agent.status}">${agent.status.charAt(0).toUpperCase() + agent.status.slice(1)}</span>`,
-                    agent.lastActivity, agent.transactions, `TZS ${agent.volume}`,
-                    `<button class="text-blue-600 hover:text-blue-800 mr-2" title="View Profile" onclick="showAgentProfile('${id}')">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('${id}', '${agent.name}', '${agent.tier}', '${agent.status}', '${agent.regDate}')">
+                data: Object.entries(aggregatorsData).map(([id, agg]) => [
+                    agg.name, id, agg.region, agg.asrs, agg.agents,
+                    `<span class="status-badge status-${agg.status}">${agg.status.charAt(0).toUpperCase() + agg.status.slice(1)}</span>`,
+                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit Aggregator" onclick="openAggregatorModal('${id}', '${agg.name}', '${agg.region}', '${agg.asrs}', '${agg.agents}', '${agg.status}')">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent ${agent.name}')">
+                    <button class="text-red-600 hover:text-red-800" title="Remove Aggregator" onclick="confirmDelete('Aggregator ${agg.name}')">
                         <i class="fas fa-trash-alt"></i>
                     </button>`
                 ]),
                 columns: [
-                    { title: "Agent Name" }, { title: "Agent ID" }, { title: "Tier" }, 
-                    { title: "Status" }, { title: "Last Activity" }, { title: "Total Transactions" }, 
-                    { title: "Total Volume (TZS)" }, { title: "Actions", orderable: false, searchable: false }
+                    { title: "Aggregator Name" }, { title: "Aggregator ID" }, { title: "Region" },
+                    { title: "ASRs" }, { title: "Agents" }, { title: "Status" },
+                    { title: "Actions", orderable: false, searchable: false }
                 ],
-                retrieve: true, // Add retrieve: true
+                retrieve: true, // Crucial for re-initialization
                 initComplete: function() {
-                    this.api().columns(3).every(function() { // Column 3 is 'Status'
+                    this.api().columns(5).every(function() { // Column 5 is 'Status'
                         var column = this;
-                        var select = $('#myAgentFilter');
+                        var select = $('#aggregatorFilter');
                         select.off('change').on('change', function() {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val === 'all' ? '' : val, true, false).draw();
@@ -1754,57 +1678,145 @@
             });
         }
 
-        function initMyFloatTable() {
-            if (myFloatTableInstance) {
-                myFloatTableInstance.destroy();
+        function initASRBaseTable() {
+            if (asrBaseTableInstance) {
+                asrBaseTableInstance.destroy();
             }
-            myFloatTableInstance = $('#myFloatTable').DataTable({
+            asrBaseTableInstance = $('#asrBaseTable').DataTable({
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
                 responsive: true,
-                data: currentASR.myFloatTransactions.map(transaction => [
-                    transaction.date, transaction.type, `TZS ${transaction.amount}`,
-                    transaction.counterparty, `<span class="status-badge status-${transaction.status}">${transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}</span>`,
-                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit Transaction" onclick="showCustomMessage('Admin Action', 'Edit float transaction.', 'alert')">
+                data: Object.entries(asrsData).map(([id, asr]) => [
+                    asr.name, id, asr.aggregatorId, asr.area,
+                    `<span class="status-badge status-${asr.status}">${asr.status.charAt(0).toUpperCase() + asr.status.slice(1)}</span>`,
+                    asr.totalAgents,
+                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit ASR" onclick="openASRModal('${id}', '${asr.name}', '${asr.aggregatorId}', '${asr.area}', '${asr.status}')">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="text-red-600 hover:text-red-800" title="Remove Transaction" onclick="confirmDelete('Float Transaction TZS ${transaction.amount}')">
+                    <button class="text-red-600 hover:text-red-800" title="Remove ASR" onclick="confirmDelete('ASR ${asr.name}')">
                         <i class="fas fa-trash-alt"></i>
                     </button>`
                 ]),
                 columns: [
-                    { title: "Transaction Date" }, { title: "Type" }, { title: "Amount (TZS)" },
-                    { title: "Agent/Aggregator" }, { title: "Status" },
+                    { title: "ASR Name" }, { title: "ASR ID" }, { title: "Aggregator" },
+                    { title: "Assigned Area" }, { title: "Status" }, { title: "Total Agents" },
                     { title: "Actions", orderable: false, searchable: false }
+                ],
+                retrieve: true, // Crucial for re-initialization
+                initComplete: function() {
+                    this.api().columns(4).every(function() { // Column 4 is 'Status'
+                        var column = this;
+                        var select = $('#asrBaseFilter');
+                        select.off('change').on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val === 'all' ? '' : val, true, false).draw();
+                        });
+                    });
+                }
+            });
+        }
+
+        function initAgentBaseTable() {
+            if (agentBaseTableInstance) {
+                agentBaseTableInstance.destroy();
+            }
+            agentBaseTableInstance = $('#agentBaseTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true,
+                data: Object.entries(agentsData).map(([id, agent]) => [
+                    agent.name, id, agent.aggregatorId, agent.asrId,
+                    `<span class="status-badge status-${agent.status}">${agent.status.charAt(0).toUpperCase() + agent.status.slice(1)}</span>`,
+                    agent.lastActivity,
+                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('${id}', '${agent.name}', '${agent.aggregatorId}', '${agent.asrId}', '${agent.status}', '${agent.regDate || ''}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent ${agent.name}')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>`
+                ]),
+                columns: [
+                    { title: "Agent Name" }, { title: "Agent ID" }, { title: "Aggregator" },
+                    { title: "ASR" }, { title: "Status" }, { title: "Last Activity" },
+                    { title: "Actions", orderable: false, searchable: false }
+                ],
+                retrieve: true, // Crucial for re-initialization
+                initComplete: function() {
+                    this.api().columns(4).every(function() { // Column 4 is 'Status'
+                        var column = this;
+                        var select = $('#agentFilter');
+                        select.off('change').on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val === 'all' ? '' : val, true, false).draw();
+                        });
+                    });
+                }
+            });
+        }
+
+        function initRecentActivityTable() {
+            if (recentActivityTableInstance) {
+                recentActivityTableInstance.destroy();
+            }
+            recentActivityTableInstance = $('#recentActivityTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true,
+                data: recentActivityData.map(activity => [
+                    activity.date, activity.aggregator, activity.activity, activity.details,
+                    `<button class="text-green-600 hover:text-green-800" title="Edit Activity" onclick="showCustomMessage('Admin Action', 'Edit activity for ${activity.aggregator}.', 'alert')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-800" title="Remove Activity" onclick="confirmDelete('Activity for ${activity.aggregator}')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>`
+                ]),
+                columns: [
+                    { title: "Date" }, { title: "Aggregator" }, { title: "Activity" },
+                    { title: "Details" }, { title: "Actions", orderable: false, searchable: false }
                 ],
                 retrieve: true // Add retrieve: true
             });
         }
 
-        function initMyRecruitmentTable() {
-            if (myRecruitmentTableInstance) {
-                myRecruitmentTableInstance.destroy();
+        function initFraudTable() {
+            if (fraudTableInstance) {
+                fraudTableInstance.destroy();
             }
-            myRecruitmentTableInstance = $('#myRecruitmentTable').DataTable({
+            fraudTableInstance = $('#fraudTable').DataTable({
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
                 responsive: true,
-                data: currentASR.myRecruitment.map(rec => [
-                    rec.month, rec.target, rec.recruited, rec.activeRate,
-                    `<span class="badge badge-${rec.performance.toLowerCase()}">${rec.performance}</span>`,
-                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit Recruitment Data" onclick="showCustomMessage('Admin Action', 'Edit ${rec.month} recruitment data.', 'alert')">
+                data: fraudCasesData.map(fraud => [
+                    fraud.id, fraud.type, fraud.entity, `TZS ${fraud.amount.toLocaleString()}`, fraud.dateReported,
+                    `<span class="status-badge status-${fraud.status}">${fraud.status.charAt(0).toUpperCase() + fraud.status.slice(1)}</span>`,
+                    fraud.actions,
+                    `<button class="text-blue-600 hover:text-blue-800 mr-2" title="View Details" onclick="showCustomMessage('Admin Action', 'View details of fraud case ${fraud.id}.', 'alert')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Case" onclick="openFraudModal('${fraud.id}', '${fraud.type}', '${fraud.entity}', '${fraud.amount}', '${fraud.dateReported}', '${fraud.status}', '${fraud.actions}')">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="text-red-600 hover:text-red-800" title="Remove Recruitment Data" onclick="confirmDelete('${rec.month} recruitment data')">
+                    <button class="text-red-600 hover:text-red-800" title="Delete Case" onclick="confirmDelete('Fraud Case ${fraud.id}')">
                         <i class="fas fa-trash-alt"></i>
                     </button>`
                 ]),
                 columns: [
-                    { title: "Month" }, { title: "Target Agents" }, { title: "Recruited" },
-                    { title: "Active Rate" }, { title: "Performance" },
-                    { title: "Actions", orderable: false, searchable: false }
+                    { title: "Case ID" }, { title: "Type" }, { title: "Aggregator/ASR/Agent" },
+                    { title: "Amount (TZS)" }, { title: "Date Reported" }, { title: "Status" },
+                    { title: "Actions Taken" }, { title: "Actions", orderable: false, searchable: false }
                 ],
-                retrieve: true // Add retrieve: true
+                retrieve: true, // Add retrieve: true
+                initComplete: function() {
+                    this.api().columns(5).every(function() { // Column 5 is 'Status'
+                        var column = this;
+                        var select = $('#fraudFilter');
+                        select.off('change').on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val === 'all' ? '' : val, true, false).draw();
+                        });
+                    });
+                }
             });
         }
 
@@ -1816,7 +1828,7 @@
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
                 responsive: true,
-                data: currentASR.myTasks.map(task => [
+                data: tasksData.map(task => [
                     task.description, task.assignedTo,
                     `<span class="badge badge-${task.priority.toLowerCase()}">${task.priority}</span>`,
                     task.dueDate,
@@ -1836,10 +1848,10 @@
                 retrieve: true, // Add retrieve: true
                 initComplete: function() {
                     this.api().columns(4).every(function() { // Column 4 is 'Status'
-                        var column = this; 
-                        var select = $('#taskFilter'); 
+                        var column = this;
+                        var select = $('#taskFilter');
                         select.off('change').on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); 
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val === 'all' ? '' : val, true, false).draw();
                         });
                     });
@@ -1848,28 +1860,29 @@
         }
 
         // Initialize Chart.js Charts
-        function initASRDashboardChartsAndTables() {
-            // Update summary cards with current ASR's data
-            document.querySelector('#dashboard-section .grid div:nth-child(1) .text-2xl').textContent = currentASR.totalAgents;
-            document.querySelector('#dashboard-section .grid div:nth-child(2) .text-2xl').textContent = currentASR.activeAgents;
-            document.querySelector('#dashboard-section .grid div:nth-child(3) .text-2xl').textContent = `TZS ${currentASR.floatBalance}`;
-            document.querySelector('#dashboard-section .grid div:nth-child(4) .text-2xl').textContent = `TZS ${currentASR.estimatedCommission}`;
-
-            const agentActivityCtx = document.getElementById('asrAgentActivityChart');
-            if (asrAgentActivityChartInstance) {
-                asrAgentActivityChartInstance.destroy();
+        function initAgentActivityChart() {
+            const ctx = document.getElementById('agentActivityChart');
+            if (agentActivityChartInstance) {
+                agentActivityChartInstance.destroy();
             }
-            asrAgentActivityChartInstance = new Chart(agentActivityCtx, {
+            agentActivityChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: currentASR.agentActivityData.length}, (_, i) => i + 1),
+                    labels: Array.from({length: new Date().getDate()}, (_, i) => i + 1),
                     datasets: [{
                         label: 'Active Agents',
-                        data: currentASR.agentActivityData,
+                        data: [120, 124, 126, 125, 128, 127, 129, 130, 128, 129, 131, 132, 130, 132, 131, 133, 132, 134, 133, 132, 131, 130, 132, 131, 133, 132, 134, 135, 134, 132].slice(0, new Date().getDate()),
                         borderColor: '#3b82f6',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.3,
                         fill: true
+                    }, {
+                        label: 'Base Agents',
+                        data: Array(new Date().getDate()).fill(125),
+                        borderColor: '#94a3b8',
+                        borderDash: [5, 5],
+                        borderWidth: 1,
+                        pointRadius: 0
                     }]
                 },
                 options: {
@@ -1879,38 +1892,40 @@
                         legend: {
                             position: 'top',
                         },
-                        title: {
-                            display: false,
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw}`;
+                                }
+                            }
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: false,
-                            min: Math.min(...currentASR.agentActivityData) - 5, // Dynamic min
-                            max: Math.max(...currentASR.agentActivityData) + 5, // Dynamic max
-                            ticks: {
-                                stepSize: 1
-                            }
+                            min: 110
                         }
                     }
                 }
             });
+        }
 
-            const floatDistributionCtx = document.getElementById('asrFloatDistributionChart');
-            if (asrFloatDistributionChartInstance) {
-                asrFloatDistributionChartInstance.destroy();
+        function initRegionalPerformanceChart() {
+            const ctx = document.getElementById('regionalPerformanceChart');
+            if (regionalPerformanceChartInstance) {
+                regionalPerformanceChartInstance.destroy();
             }
-            asrFloatDistributionChartInstance = new Chart(floatDistributionCtx, {
+            regionalPerformanceChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    labels: ['Eastern Region', 'Northern Region', 'Western Region', 'Southern Region'],
                     datasets: [{
-                        label: 'ASR to Agent',
-                        data: currentASR.floatDistributionData.aggregatorToAgent,
+                        label: 'Cash In',
+                        data: [98780, 75650, 65430, 54320],
                         backgroundColor: '#10b981'
                     }, {
-                        label: 'Agent to ASR',
-                        data: currentASR.floatDistributionData.agentToAggregator,
+                        label: 'Cash Out',
+                        data: [128450, 98760, 87650, 76540],
                         backgroundColor: '#3b82f6'
                     }]
                 },
@@ -1948,6 +1963,219 @@
             });
         }
 
+        function initASRActivityChart() {
+            const ctx = document.getElementById('asrActivityChart');
+            if (asrActivityChartInstance) {
+                asrActivityChartInstance.destroy();
+            }
+            asrActivityChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                    datasets: [{
+                        label: 'Active ASRs',
+                        data: asrActivityTrendData,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Daily ASR Activity',
+                            font: { size: 14 }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+        }
+
+        function initAggregatorActivityChart() {
+            const ctx = document.getElementById('aggregatorActivityChart');
+            if (aggregatorActivityChartInstance) {
+                aggregatorActivityChartInstance.destroy();
+            }
+            aggregatorActivityChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                    datasets: [{
+                        label: 'Active Aggregators',
+                        data: aggregatorActivityTrendData,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Daily Aggregator Activity',
+                            font: { size: 14 }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+        }
+
+        function initAgentCommissionSummaryChart() {
+            const ctx = document.getElementById('agentCommissionSummaryChart');
+            if (agentCommissionSummaryChartInstance) {
+                agentCommissionSummaryChartInstance.destroy();
+            }
+            agentCommissionSummaryChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: agentCommissionSummaryData.map(d => d.month),
+                    datasets: [{
+                        label: 'Total Agent Commission (TZS)',
+                        data: agentCommissionSummaryData.map(d => d.commission),
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Agent Commission Trend',
+                            font: { size: 14 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `TZS ${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'TZS ' + (value / 1000) + 'K';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        // Initialize specific sections' charts/tables
+        function initDashboardChartsAndTables() {
+            initAgentActivityChart();
+            initRecentActivityTable();
+        }
+
+        function initPerformanceChartsAndTables() {
+            initRegionalPerformanceChart();
+            initASRActivityChart();
+            initAggregatorActivityChart();
+            initAgentCommissionSummaryChart();
+        }
+
+        function initFraudTable() {
+            if (fraudTableInstance) {
+                fraudTableInstance.destroy();
+            }
+            fraudTableInstance = $('#fraudTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true,
+                data: fraudCasesData.map(fraud => [
+                    fraud.id, fraud.type, fraud.entity, `TZS ${fraud.amount.toLocaleString()}`, fraud.dateReported,
+                    `<span class="status-badge status-${fraud.status}">${fraud.status.charAt(0).toUpperCase() + fraud.status.slice(1)}</span>`,
+                    fraud.actions,
+                    `<button class="text-blue-600 hover:text-blue-800 mr-2" title="View Details" onclick="showCustomMessage('Admin Action', 'View details of fraud case ${fraud.id}.', 'alert')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Case" onclick="openFraudModal('${fraud.id}', '${fraud.type}', '${fraud.entity}', '${fraud.amount}', '${fraud.dateReported}', '${fraud.status}', '${fraud.actions}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-800" title="Delete Case" onclick="confirmDelete('Fraud Case ${fraud.id}')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>`
+                ]),
+                columns: [
+                    { title: "Case ID" }, { title: "Type" }, { title: "Aggregator/ASR/Agent" },
+                    { title: "Amount (TZS)" }, { title: "Date Reported" }, { title: "Status" },
+                    { title: "Actions Taken" }, { title: "Actions", orderable: false, searchable: false }
+                ],
+                retrieve: true,
+                initComplete: function() {
+                    this.api().columns(5).every(function() { // Column 5 is 'Status'
+                        var column = this;
+                        var select = $('#fraudFilter');
+                        select.off('change').on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val === 'all' ? '' : val, true, false).draw();
+                        });
+                    });
+                }
+            });
+        }
+
+        function initTasksTable() {
+            if (tasksTableInstance) {
+                tasksTableInstance.destroy();
+            }
+            tasksTableInstance = $('#tasksTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true,
+                data: tasksData.map(task => [
+                    task.description, task.assignedTo,
+                    `<span class="badge badge-${task.priority.toLowerCase()}">${task.priority}</span>`,
+                    task.dueDate,
+                    `<span class="status-badge status-${task.status.toLowerCase().replace(' ', '-')}">${task.status}</span>`,
+                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="openTaskModal('${task.description}', '${task.assignedTo}', '${task.priority}', '${task.dueDate}', '${task.status}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: ${task.description}')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>`
+                ]),
+                columns: [
+                    { title: "Task" }, { title: "Assigned To" }, { title: "Priority" },
+                    { title: "Due Date" }, { title: "Status" },
+                    { title: "Actions", orderable: false, searchable: false }
+                ],
+                retrieve: true,
+                initComplete: function() {
+                    this.api().columns(4).every(function() { // Column 4 is 'Status'
+                        var column = this;
+                        var select = $('#taskFilter');
+                        select.off('change').on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val === 'all' ? '' : val, true, false).draw();
+                        });
+                    });
+                }
+            });
+        }
+
         // Logout function
         function logout() {
             showCustomMessage('Logout', 'Logging out... Redirecting to login page.', 'alert');
@@ -1969,8 +2197,15 @@
                 const defaultDashboard = document.getElementById('dashboard-section');
                 if (defaultDashboard) {
                     defaultDashboard.classList.add('active');
-                    initASRDashboardChartsAndTables(); // Initialize dashboard charts if it's the default
+                    initDashboardChartsAndTables();
                 }
+            }
+            // Event listener for month select in performance section
+            const monthSelect = document.getElementById('month-select');
+            if (monthSelect) {
+                monthSelect.addEventListener('change', function() {
+                    initPerformanceChartsAndTables(); // Re-initialize all performance charts
+                });
             }
         });
     </script>

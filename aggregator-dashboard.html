@@ -2030,14 +2030,14 @@
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
                 responsive: true,
-                data: Object.values(agentsData).map(agent => [
-                    agent.name, agent.id, agent.tier, 
+                data: Object.entries(agentsData).map(([id, agent]) => [ // Corrected: Use Object.entries
+                    agent.name, id, agent.tier, 
                     `<span class="status-badge status-${agent.status}">${agent.status.charAt(0).toUpperCase() + agent.status.slice(1)}</span>`,
                     agent.lastActivity, agent.transactions, `TZS ${agent.volume}`,
-                    `<button class="text-blue-600 hover:text-blue-800 mr-2" title="View Profile" onclick="showAgentProfile('${agent.id}')">
+                    `<button class="text-blue-600 hover:text-blue-800 mr-2" title="View Profile" onclick="showAgentProfile('${id}')">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('${agent.id}', '${agent.name}', '${agent.tier}', '${agent.status}', '${agent.regDate}')">
+                    <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="openAgentModal('${id}', '${agent.name}', '${agent.tier}', '${agent.status}', '${agent.regDate}')">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent ${agent.name}')">
@@ -2051,10 +2051,10 @@
                 ],
                 initComplete: function() {
                     this.api().columns(3).every(function() { // Column 3 is 'Status'
-                        var column = this; // Changed let to var
-                        var select = $('#agentFilter'); // Changed const to var
+                        var column = this; 
+                        var select = $('#agentFilter'); 
                         select.off('change').on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); // Changed const to var
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); 
                             column.search(val === 'all' ? '' : val, true, false).draw();
                         });
                     });
@@ -2068,9 +2068,9 @@
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
                 responsive: true,
-                data: Object.values(asrsData).map(asr => [
-                    asr.name, asr.id, asr.area, asr.status,
-                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit ASR" onclick="openASRModal('${asr.id}', '${asr.name}', '${asr.area}', '${asr.status}')">
+                data: Object.entries(asrsData).map(([id, asr]) => [ // Corrected: Use Object.entries
+                    asr.name, id, asr.area, asr.status,
+                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit ASR" onclick="openASRModal('${id}', '${asr.name}', '${asr.area}', '${asr.status}')">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button class="text-red-600 hover:text-red-800" title="Remove ASR" onclick="confirmDelete('ASR ${asr.name}')">
@@ -2104,10 +2104,10 @@
                 responsive: true,
                 initComplete: function() {
                     this.api().columns(2).every(function() { // Column 2 is 'Assigned ASR'
-                        var column = this; // Changed let to var
-                        var select = $('#asrAgentFilter'); // Changed const to var
+                        var column = this; 
+                        var select = $('#asrAgentFilter'); 
                         select.off('change').on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); // Changed const to var
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); 
                             column.search(val === 'all' ? '' : val, true, false).draw();
                         });
                     });
@@ -2123,11 +2123,11 @@
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
                 responsive: true,
-                data: Object.values(merchantsData).map(merchant => [
-                    merchant.name, merchant.id, merchant.category,
+                data: Object.entries(merchantsData).map(([id, merchant]) => [ // Corrected: Use Object.entries
+                    merchant.name, id, merchant.category,
                     `<span class="status-badge status-${merchant.status}">${merchant.status.charAt(0).toUpperCase() + merchant.status.slice(1)}</span>`,
                     merchant.agents, 'Today, TZS 1,250', // Placeholder for last settlement
-                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit Merchant" onclick="openMerchantModal('${merchant.id}', '${merchant.name}', '${merchant.category}', '${merchant.status}', '${merchant.agents}')">
+                    `<button class="text-green-600 hover:text-green-800 mr-2" title="Edit Merchant" onclick="openMerchantModal('${id}', '${merchant.name}', '${merchant.category}', '${merchant.status}', '${merchant.agents}')">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button class="text-red-600 hover:text-red-800" title="Remove Merchant" onclick="confirmDelete('Merchant ${merchant.name}')">
@@ -2141,10 +2141,10 @@
                 ],
                 initComplete: function() {
                     this.api().columns(3).every(function() { // Column 3 is 'Status'
-                        var column = this; // Changed let to var
-                        var select = $('#merchantFilter'); // Changed const to var
+                        var column = this; 
+                        var select = $('#merchantFilter'); 
                         select.off('change').on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); // Changed const to var
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); 
                             column.search(val === 'all' ? '' : val, true, false).draw();
                         });
                     });
@@ -2153,8 +2153,9 @@
         }
 
         function initCommissionTable() {
-            if (commissionTableInstance) {
-                commissionTableInstance.destroy();
+            // Check if DataTable is already initialized on #commissionTable
+            if ($.fn.DataTable.isDataTable('#commissionTable')) {
+                $('#commissionTable').DataTable().destroy();
             }
             commissionTableInstance = $('#commissionTable').DataTable({
                 dom: 'Bfrtip',
@@ -2191,10 +2192,10 @@
                 ],
                 initComplete: function() {
                     this.api().columns(5).every(function() { // Column 5 is 'Status'
-                        var column = this; // Changed let to var
-                        var select = $('#requestFilter'); // Changed const to var
+                        var column = this; 
+                        var select = $('#requestFilter'); 
                         select.off('change').on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); // Changed const to var
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); 
                             column.search(val === 'all' ? '' : val, true, false).draw();
                         });
                     });
@@ -2229,10 +2230,10 @@
                 ],
                 initComplete: function() {
                     this.api().columns(4).every(function() { // Column 4 is 'Status'
-                        var column = this; // Changed let to var
-                        var select = $('#taskFilter'); // Changed const to var
+                        var column = this; 
+                        var select = $('#taskFilter'); 
                         select.off('change').on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); // Changed const to var
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val()); 
                             column.search(val === 'all' ? '' : val, true, false).draw();
                         });
                     });

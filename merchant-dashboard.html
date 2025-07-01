@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Mobile Web App - Merchant Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+        .role-display {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .dashboard-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        .dashboard-content h2 {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .dashboard-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .dashboard-content ul li {
+            background-color: #e9f7fe;
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            border-left: 5px solid #007bff;
+            border-radius: 5px;
+            font-size: 0.95em;
+            color: #2c3e50;
+        }
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            float: right;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+        .quick-actions button {
+            background-color: #28a745;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .quick-actions button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Merchant Dashboard</h1>
+        <div class="role-display">Role: <span id="currentUserRole">Merchant</span></div>
+    </div>
+
+    <div class="dashboard-content">
+        <h2>Welcome, Merchant Partner!</h2>
+        <p>This dashboard provides an overview of your service performance, transactions, and customer engagement within the A-Mobile platform.</p>
+        
+        <h3>Business Overview:</h3>
+        <ul>
+            <li>**Daily Transactions:** <strong style="color: #007bff;">18</strong></li>
+            <li>**Total Revenue (This Week):** <strong style="color: #28a745;">TZS 350,000</strong></li>
+            <li>**New Customers Acquired (Via Your Service):** <strong style="color: #007bff;">15</strong></li>
+            <li>**Service Uptime Status:** <strong style="color: #28a745;">Operational</strong></li>
+            <li>**Pending Service Requests:** <strong style="color: #dc3545;">1</strong></li>
+        </ul>
+
+        <h3>Quick Actions:</h3>
+        <div class="quick-actions">
+            <button onclick="alert('Navigating to Transaction History...')">View Transactions</button>
+            <button onclick="alert('Navigating to Service Management...')">Manage Services</button>
+            <button onclick="alert('Navigating to Customer Feedback...')">View Feedback</button>
+        </div>
+        
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userRole = sessionStorage.getItem('aMobileUserRole');
+            if (userRole !== 'Merchant') {
+                alert('Access Denied: You are not authorized to view this dashboard. Redirecting to role selection.');
+                window.location.href = 'index.html';
+                return;
+            }
+        });
+
+        function logout() {
+            sessionStorage.removeItem('aMobileUserRole');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

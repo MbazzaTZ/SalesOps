@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Mobile Web App - Login</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .select-custom {
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%231e40af%22%20d%3D%22M287%2C197.9c-3.2%2C3.2-8.3%2C3.2-11.6%2C0L146.2%2C68.9L16.8%2C197.9c-3.2%2C3.2-8.3%2C3.2-11.6%2C0c-3.2-3.2-3.2-8.3%2C0-11.6l135.2-135.2c3.2-3.2%2C8.3-3.2%2C11.6%2C0l135.2%2C135.2C290.2%2C189.6%2C290.2%2C194.7%2C287%2C197.9z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 12px auto;
+        }
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+        <!-- Logo/Header -->
+        <div class="flex items-center justify-center mb-8">
+            <h1 class="text-2xl font-bold text-blue-800">A-Mobile Operations</h1>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-6">
+            <!-- Role Selection -->
+            <div>
+                <label for="userRole" class="block text-gray-700 font-medium mb-2">Select Role</label>
+                <select id="userRole" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 select-custom">
+                    <option value="">-- Select your role --</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Zonal Manager">Zonal Manager</option>
+                    <option value="Account Developer">Account Developer</option>
+                    <option value="Sales Team">Sales Team</option>
+                    <option value="Aggregator">Aggregator</option>
+                    <option value="Agent">Agent</option>
+                    <option value="Merchant">Merchant</option>
+                    <option value="ASR">ASR</option>
+                    <option value="Freelancer">Freelancer</option>
+                </select>
+            </div>
+            
+            <!-- Username Field -->
+            <div class="relative">
+                <label for="username" class="block text-gray-700 font-medium mb-2">Username</label>
+                <div class="relative">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="username" class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your username">
+                </div>
+            </div>
+            
+            <!-- Password Field -->
+            <div class="relative">
+                <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+                <div class="relative">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your password">
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                </div>
+            </div>
+            
+            <!-- Remember Me & Forgot Password -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                </div>
+                <a href="#" id="forgotPassword" class="text-sm text-blue-600 hover:text-blue-800">Forgot password?</a>
+            </div>
+            
+            <!-- Login Button -->
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+                <i class="fas fa-sign-in-alt mr-2"></i> Login
+            </button>
+        </form>
+        
+        <!-- Password Reset Modal -->
+        <div id="resetModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl shadow-lg p-6 max-w-md w-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Reset Password</h3>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="resetForm">
+                    <div class="mb-4">
+                        <label for="resetRole" class="block text-gray-700 font-medium mb-2">Your Role</label>
+                        <select id="resetRole" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 select-custom" disabled>
+                            <option value="" id="selectedRoleOption">-- Select your role first --</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="resetEmail" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                        <input type="email" id="resetEmail" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your registered email">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200">
+                        Send Reset Link
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="mt-8 text-center text-sm text-gray-500">
+            <p>Need help? Contact support@amobile.com</p>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const password = document.getElementById('password');
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Forgot password modal
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            const selectedRole = document.getElementById('userRole').value;
+            
+            if (!selectedRole) {
+                alert('Please select your role first');
+                return;
+            }
+            
+            document.getElementById('selectedRoleOption').textContent = selectedRole;
+            document.getElementById('selectedRoleOption').value = selectedRole;
+            document.getElementById('resetModal').classList.remove('hidden');
+        });
+
+        // Close modal
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('resetModal').classList.add('hidden');
+        });
+
+        // Handle password reset
+        document.getElementById('resetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+            const role = document.getElementById('resetRole').value;
+            
+            // Here you would typically send a reset link to the email
+            alert(`Password reset link has been sent to ${email} for ${role} role`);
+            document.getElementById('resetModal').classList.add('hidden');
+            document.getElementById('resetEmail').value = '';
+        });
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userRole = document.getElementById('userRole').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!userRole || !username || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // In a real app, you would validate credentials with server here
+            sessionStorage.setItem('aMobileUserRole', userRole);
+            sessionStorage.setItem('aMobileUsername', username);
+            
+            // Redirect to appropriate dashboard
+            let dashboardPage = '';
+            switch (userRole) {
+                case 'Admin':
+                    dashboardPage = 'admin-dashboard.html';
+                    break;
+                case 'Zonal Manager':
+                    dashboardPage = 'zonal-manager-dashboard.html';
+                    break;
+                case 'Account Developer':
+                    dashboardPage = 'account-developer-dashboard.html';
+                    break;
+                case 'Sales Team':
+                    dashboardPage = 'sales-team-dashboard.html';
+                    break;
+                case 'Aggregator':
+                    dashboardPage = 'aggregator-dashboard.html';
+                    break;
+                case 'Agent':
+                    dashboardPage = 'agent-dashboard.html';
+                    break;
+                case 'Merchant':
+                    dashboardPage = 'merchant-dashboard.html';
+                    break;
+                case 'ASR':
+                    dashboardPage = 'asr.html';
+                    break;
+                case 'Freelancer':
+                    dashboardPage = 'freelancer-dashboard.html';
+                    break;
+                default:
+                    alert('Invalid role selected! Please choose an operational role.');
+                    return;
+            }
+            
+            // For demo purposes, we'll just show where we would redirect
+            alert(`Login successful! Redirecting to ${userRole} dashboard...`);
+            // window.location.href = dashboardPage;
+        });
+    </script>
+</body>
+</html>

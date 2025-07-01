@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telecom Sales Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Base styles */
+        .floating-card { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .dashboard-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; }
+        .telecom-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        .progress-bar { height: 8px; border-radius: 4px; background: #e5e7eb; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 4px; background: #3b82f6; }
+        .details-panel { display: none; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .badge { padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .chart-container { position: relative; height: 300px; width: 100%; }
+        .small-chart-container { position: relative; height: 250px; width: 100%; }
+        .submenu { display: none; padding-left: 1rem; }
+        .submenu.active { display: block; }
+        .has-submenu::after { content: '▸'; margin-left: auto; transition: transform 0.2s; }
+        .has-submenu.open::after { transform: rotate(90deg); }
+        
+        /* Modal styles */
+        .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
+        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 700px; border-radius: 8px; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover { color: black; }
+        
+        /* Status badges */
+        .status-active { background-color: #d1fae5; color: #065f46; }
+        .status-inactive { background-color: #e5e7eb; color: #4b5563; }
+        .status-suspended { background-color: #fee2e2; color: #b91c1c; }
+        .status-terminated { background-color: #1f2937; color: #f9fafb; }
+        .status-new { background-color: #dbeafe; color: #1e40af; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Sidebar Navigation -->
+    <div class="flex">
+        <div class="w-64 telecom-gradient text-white min-h-screen p-4">
+            <h1 class="text-2xl font-bold mb-8 mt-4 flex items-center">
+                <i class="fas fa-tower-cell mr-2"></i> TelecomSales
+            </h1>
+            <nav>
+                <ul>
+                    <li class="mb-2">
+                        <a href="#" class="block p-2 rounded hover:bg-blue-700 bg-blue-700">
+                            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                        </a>
+                    </li>
+                    
+                    <!-- Registration Menu -->
+                    <li class="mb-2">
+                        <a href="#" class="block p-2 rounded hover:bg-blue-700 flex items-center has-submenu" onclick="toggleSubmenu('registrationSubmenu', this)">
+                            <i class="fas fa-user-plus mr-2"></i> Registration
+                        </a>
+                        <ul id="registrationSubmenu" class="submenu">
+                            <li class="mt-1">
+                                <a href="#" class="block p-2 rounded hover:bg-blue-700 registration-link" data-section="customer-base">
+                                    <i class="fas fa-users mr-2"></i> Customer Base
+                                </a>
+                            </li>
+                            <li class="mt-1">
+                                <a href="#" class="block p-2 rounded hover:bg-blue-700 registration-link" data-section="freelancer-base">
+                                    <i class="fas fa-user-tie mr-2"></i> Freelancer Base
+                                </a>
+                            </li>
+                            <li class="mt-1">
+                                <a href="#" class="block p-2 rounded hover:bg-blue-700 registration-link" data-section="assigned-tasks">
+                                    <i class="fas fa-tasks mr-2"></i> Assigned Tasks
+                                </a>
+                            </li>
+                            <li class="mt-1">
+                                <a href="#" class="block p-2 rounded hover:bg-blue-700 registration-link" data-section="reports">
+                                    <i class="fas fa-chart-pie mr-2"></i> Reports
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <li class="mb-2">
+                        <a href="#" class="block p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-file-invoice-dollar mr-2"></i> ARPU Trend
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="block p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-user-slash mr-2"></i> Churn Rate
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-8">
+            <header class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Sales Performance Dashboard</h2>
+                <div class="flex items-center">
+                    <div class="relative mr-4">
+                        <select id="timePeriod" class="bg-gray-100 p-2 rounded-lg border">
+                            <option value="daily">Today</option>
+                            <option value="weekly">This Week</option>
+                            <option value="monthly">This Month</option>
+                        </select>
+                    </div>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-download mr-2"></i> Export
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dynamic Content Sections -->
+            <div id="dashboard-content">
+                <!-- Sales KPIs Section (Default View) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Customer Registration Card -->
+                    <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-500 font-medium">Customer Registration</p>
+                                <h3 class="text-2xl font-bold mt-1">1,248 <span class="text-sm text-gray-500">/ 1,500 target</span></h3>
+                                <p class="text-blue-600 font-medium mt-1">83% <span class="text-sm text-gray-500">achievement</span></p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-user-plus text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 83%"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 text-sm text-gray-500">
+                            <span>Active: 1,128 (90%)</span>
+                            <span>Inactive: 120 (10%)</span>
+                        </div>
+                    </div>
+
+                    <!-- Freelancer Management Card -->
+                    <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-500 font-medium">Freelancer Base</p>
+                                <h3 class="text-2xl font-bold mt-1">187 <span class="text-sm text-gray-500">total</span></h3>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-user-tie text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-center text-sm mb-3">
+                            <div>
+                                <p class="font-semibold">142</p>
+                                <p class="text-gray-500">Active</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">25</p>
+                                <p class="text-gray-500">New</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">20</p>
+                                <p class="text-gray-500">Other</p>
+                            </div>
+                        </div>
+                        <button onclick="openFreelancerModal()" class="w-full mt-2 bg-blue-600 text-white py-1 rounded-lg hover:bg-blue-700 text-sm">
+                            <i class="fas fa-plus mr-1"></i> Add Freelancer
+                        </button>
+                    </div>
+
+                    <!-- Conversion Rate Card -->
+                    <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-500 font-medium">Conversion Rate</p>
+                                <h3 class="text-2xl font-bold mt-1">24.7%</h3>
+                                <p class="text-green-500 font-medium mt-1">+2.1% <span class="text-sm text-gray-500">vs last month</span></p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-exchange-alt text-purple-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <div>
+                                <p class="font-semibold">Leads</p>
+                                <p class="text-gray-500">5,042</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Conversions</p>
+                                <p class="text-gray-500">1,248</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Value</p>
+                                <p class="text-gray-500">$42,180</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ARPU Trend Section -->
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-file-invoice-dollar mr-2 text-blue-600"></i> ARPU Trend Analysis
+                    </h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="chart-container">
+                            <canvas id="arpuTrendChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="arpuByPlanChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="arpuTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Plan Type</th>
+                                    <th class="p-3 text-left">Current ARPU</th>
+                                    <th class="p-3 text-left">QoQ Change</th>
+                                    <th class="p-3 text-left">YoY Change</th>
+                                    <th class="p-3 text-left">Customer Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">5G Unlimited</td>
+                                    <td class="p-3">$12.50</td>
+                                    <td class="p-3"><span class="text-green-500">+3.2%</span></td>
+                                    <td class="p-3"><span class="text-green-500">+8.7%</span></td>
+                                    <td class="p-3">3,058</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Fiber 1Gbps</td>
+                                    <td class="p-3">$15.20</td>
+                                    <td class="p-3"><span class="text-green-500">+1.8%</span></td>
+                                    <td class="p-3"><span class="text-green-500">+5.3%</span></td>
+                                    <td class="p-3">2,184</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Business Plan</td>
+                                    <td class="p-3">$45.80</td>
+                                    <td class="p-3"><span class="text-red-500">-1.2%</span></td>
+                                    <td class="p-3"><span class="text-green-500">+2.1%</span></td>
+                                    <td class="p-3">874</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Churn Rate Section -->
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-user-slash mr-2 text-blue-600"></i> Churn Rate Analysis
+                    </h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="chart-container">
+                            <canvas id="churnTrendChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="churnReasonsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="churnTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Segment</th>
+                                    <th class="p-3 text-left">Churn Rate</th>
+                                    <th class="p-3 text-left">At Risk</th>
+                                    <th class="p-3 text-left">Retention Rate</th>
+                                    <th class="p-3 text-left">LTV ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">5G Unlimited</td>
+                                    <td class="p-3">1.5%</td>
+                                    <td class="p-3">142</td>
+                                    <td class="p-3">92.5%</td>
+                                    <td class="p-3">$1,240</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Fiber 1Gbps</td>
+                                    <td class="p-3">1.2%</td>
+                                    <td class="p-3">98</td>
+                                    <td class="p-3">94.1%</td>
+                                    <td class="p-3">$1,580</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Business Plan</td>
+                                    <td class="p-3">2.8%</td>
+                                    <td class="p-3">56</td>
+                                    <td class="p-3">88.7%</td>
+                                    <td class="p-3">$3,420</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Sections (Hidden by default) -->
+            <div id="registration-sections" style="display: none;">
+                <!-- Freelancer Base Section -->
+                <div id="freelancer-base-section" class="registration-section">
+                    <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-semibold flex items-center">
+                                <i class="fas fa-user-tie mr-2 text-blue-600"></i> Freelancer Management
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button onclick="openFreelancerModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                    <i class="fas fa-plus mr-1"></i> New Freelancer
+                                </button>
+                                <select id="freelancerFilter" class="bg-gray-100 p-2 rounded-lg border">
+                                    <option value="all">All Statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="suspended">Suspended</option>
+                                    <option value="terminated">Terminated</option>
+                                    <option value="new">New</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table id="freelancerTable" class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3 text-left">Freelancer Name</th>
+                                        <th class="p-3 text-left">Freelancer ID</th>
+                                        <th class="p-3 text-left">Region</th>
+                                        <th class="p-3 text-left">District</th>
+                                        <th class="p-3 text-left">Status</th>
+                                        <th class="p-3 text-left">Customers</th>
+                                        <th class="p-3 text-left">Last Active</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">Alex Johnson</td>
+                                        <td class="p-3">FL-1001</td>
+                                        <td class="p-3">Metro</td>
+                                        <td class="p-3">Central</td>
+                                        <td class="p-3"><span class="badge status-active">Active</span></td>
+                                        <td class="p-3">128</td>
+                                        <td class="p-3">Today</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Sarah Williams</td>
+                                        <td class="p-3">FL-1002</td>
+                                        <td class="p-3">Suburban</td>
+                                        <td class="p-3">North</td>
+                                        <td class="p-3"><span class="badge status-active">Active</span></td>
+                                        <td class="p-3">105</td>
+                                        <td class="p-3">Yesterday</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Michael Brown</td>
+                                        <td class="p-3">FL-1003</td>
+                                        <td class="p-3">Rural</td>
+                                        <td class="p-3">East</td>
+                                        <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
+                                        <td class="p-3">82</td>
+                                        <td class="p-3">1 week ago</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">David Lee</td>
+                                        <td class="p-3">FL-1004</td>
+                                        <td class="p-3">Metro</td>
+                                        <td class="p-3">West</td>
+                                        <td class="p-3"><span class="badge status-suspended">Suspended</span></td>
+                                        <td class="p-3">76</td>
+                                        <td class="p-3">2 weeks ago</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Emily Smith</td>
+                                        <td class="p-3">FL-1005</td>
+                                        <td class="p-3">Suburban</td>
+                                        <td class="p-3">South</td>
+                                        <td class="p-3"><span class="badge status-new">New</span></td>
+                                        <td class="p-3">12</td>
+                                        <td class="p-3">Today</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Base Section -->
+                <div id="customer-base-section" class="registration-section" style="display: none;">
+                    <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-semibold flex items-center">
+                                <i class="fas fa-users mr-2 text-blue-600"></i> Customer Database
+                            </h3>
+                            <div class="flex space-x-2">
+                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                    <i class="fas fa-plus mr-1"></i> New Customer
+                                </button>
+                                <select class="bg-gray-100 p-2 rounded-lg border">
+                                    <option>All Statuses</option>
+                                    <option>Active</option>
+                                    <option>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table id="customerTable" class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3 text-left">Customer Name</th>
+                                        <th class="p-3 text-left">Customer ID</th>
+                                        <th class="p-3 text-left">Plan</th>
+                                        <th class="p-3 text-left">Status</th>
+                                        <th class="p-3 text-left">ARPU</th>
+                                        <th class="p-3 text-left">Registered By</th>
+                                        <th class="p-3 text-left">Registration Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">John Smith</td>
+                                        <td class="p-3">CUST-5001</td>
+                                        <td class="p-3">5G Unlimited</td>
+                                        <td class="p-3"><span class="badge status-active">Active</span></td>
+                                        <td class="p-3">$12.50</td>
+                                        <td class="p-3">Alex Johnson (FL-1001)</td>
+                                        <td class="p-3">2023-05-15</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Sarah Johnson</td>
+                                        <td class="p-3">CUST-5002</td>
+                                        <td class="p-3">Fiber 1Gbps</td>
+                                        <td class="p-3"><span class="badge status-active">Active</span></td>
+                                        <td class="p-3">$15.20</td>
+                                        <td class="p-3">Sarah Williams (FL-1002)</td>
+                                        <td class="p-3">2023-06-22</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Michael Brown</td>
+                                        <td class="p-3">CUST-5003</td>
+                                        <td class="p-3">Business Plan</td>
+                                        <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
+                                        <td class="p-3">$45.80</td>
+                                        <td class="p-3">Michael Brown (FL-1003)</td>
+                                        <td class="p-3">2023-04-10</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assigned Tasks Section -->
+                <div id="assigned-tasks-section" class="registration-section" style="display: none;">
+                    <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                        <h3 class="text-xl font-semibold mb-6 flex items-center">
+                            <i class="fas fa-tasks mr-2 text-blue-600"></i> Task Management
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <h4 class="font-medium mb-2">Create New Task</h4>
+                                <form class="space-y-4">
+                                    <div>
+                                        <label class="block text-gray-700 mb-1">Task Type</label>
+                                        <select class="w-full p-2 border rounded-lg">
+                                            <option>Customer Follow-up</option>
+                                            <option>New Registration</option>
+                                            <option>Churn Prevention</option>
+                                            <option>ARPU Improvement</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1">Assign To</label>
+                                        <select class="w-full p-2 border rounded-lg">
+                                            <option>Sales Manager</option>
+                                            <option>Freelancer Team</option>
+                                            <option>Specific Freelancer</option>
+                                        </select>
+                                    </div>
+                                    <div id="freelancerSelection" style="display: none;">
+                                        <label class="block text-gray-700 mb-1">Select Freelancer</label>
+                                        <select class="w-full p-2 border rounded-lg">
+                                            <option>Alex Johnson (FL-1001)</option>
+                                            <option>Sarah Williams (FL-1002)</option>
+                                            <option>Michael Brown (FL-1003)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1">Priority</label>
+                                        <select class="w-full p-2 border rounded-lg">
+                                            <option>High</option>
+                                            <option>Medium</option>
+                                            <option>Low</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 mb-1">Due Date</label>
+                                        <input type="date" class="w-full p-2 border rounded-lg">
+                                    </div>
+                                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                                        Assign Task
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="md:col-span-2">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="font-medium">Active Tasks</h4>
+                                    <select class="bg-gray-100 p-2 rounded-lg border text-sm">
+                                        <option>All Tasks</option>
+                                        <option>My Tasks</option>
+                                        <option>Overdue</option>
+                                        <option>Completed</option>
+                                    </select>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full border-collapse">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="p-3 text-left">Task</th>
+                                                <th class="p-3 text-left">Assigned To</th>
+                                                <th class="p-3 text-left">Priority</th>
+                                                <th class="p-3 text-left">Due Date</th>
+                                                <th class="p-3 text-left">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b">
+                                                <td class="p-3">Follow up with 5G leads</td>
+                                                <td class="p-3">Alex Johnson (FL-1001)</td>
+                                                <td class="p-3"><span class="badge bg-red-100 text-red-800">High</span></td>
+                                                <td class="p-3">Today</td>
+                                                <td class="p-3"><span class="badge bg-blue-100 text-blue-800">In Progress</span></td>
+                                            </tr>
+                                            <tr class="border-b">
+                                                <td class="p-3">Improve ARPU in Metro region</td>
+                                                <td class="p-3">Sales Manager</td>
+                                                <td class="p-3"><span class="badge bg-amber-100 text-amber-800">Medium</span></td>
+                                                <td class="p-3">Tomorrow</td>
+                                                <td class="p-3"><span class="badge bg-gray-100 text-gray-800">Pending</span></td>
+                                            </tr>
+                                            <tr class="border-b">
+                                                <td class="p-3">Reduce churn in Business segment</td>
+                                                <td class="p-3">Freelancer Team</td>
+                                                <td class="p-3"><span class="badge bg-green-100 text-green-800">Low</span></td>
+                                                <td class="p-3">Next Week</td>
+                                                <td class="p-3"><span class="badge bg-gray-100 text-gray-800">Pending</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Section -->
+                <div id="reports-section" class="registration-section" style="display: none;">
+                    <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                        <h3 class="text-xl font-semibold mb-6 flex items-center">
+                            <i class="fas fa-chart-pie mr-2 text-blue-600"></i> Registration Reports
+                        </h3>
+                        
+                        <!-- Daily/Weekly/Monthly Summary -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="border p-4 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-medium">Today</h4>
+                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Live</span>
+                                </div>
+                                <p class="text-2xl font-bold mt-2">42</p>
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>Active: 38</span>
+                                    <span>Inactive: 4</span>
+                                </div>
+                            </div>
+                            <div class="border p-4 rounded-lg">
+                                <h4 class="font-medium">Yesterday</h4>
+                                <p class="text-2xl font-bold mt-2">56</p>
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>Active: 51</span>
+                                    <span>Inactive: 5</span>
+                                </div>
+                            </div>
+                            <div class="border p-4 rounded-lg">
+                                <h4 class="font-medium">This Week</h4>
+                                <p class="text-2xl font-bold mt-2">290</p>
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>Active: 261</span>
+                                    <span>Inactive: 29</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Charts -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div class="chart-container">
+                                <canvas id="registrationTrendChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="registrationStatusChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Inactive Customers -->
+                        <div class="mb-6">
+                            <h4 class="font-medium mb-2 flex items-center">
+                                <i class="fas fa-user-slash mr-2 text-red-500"></i> Inactive Customers
+                            </h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full border-collapse">
+                                    <thead>
+                                        <tr class="bg-gray-100">
+                                            <th class="p-3 text-left">Customer ID</th>
+                                            <th class="p-3 text-left">Name</th>
+                                            <th class="p-3 text-left">Plan</th>
+                                            <th class="p-3 text-left">Days Inactive</th>
+                                            <th class="p-3 text-left">Last Activity</th>
+                                            <th class="p-3 text-left">Registered By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b">
+                                            <td class="p-3">CUST-5102</td>
+                                            <td class="p-3">Robert Taylor</td>
+                                            <td class="p-3">5G Unlimited</td>
+                                            <td class="p-3">45</td>
+                                            <td class="p-3">2023-06-15</td>
+                                            <td class="p-3">Alex Johnson (FL-1001)</td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3">CUST-5105</td>
+                                            <td class="p-3">Jennifer Wilson</td>
+                                            <td class="p-3">Fiber 1Gbps</td>
+                                            <td class="p-3">32</td>
+                                            <td class="p-3">2023-06-28</td>
+                                            <td class="p-3">Sarah Williams (FL-1002)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Full Customer Database -->
+                        <div>
+                            <h4 class="font-medium mb-2 flex items-center">
+                                <i class="fas fa-database mr-2 text-blue-500"></i> Full Customer Database
+                            </h4>
+                            <div class="overflow-x-auto">
+                                <table id="fullCustomerTable" class="w-full">
+                                    <thead>
+                                        <tr class="bg-gray-100">
+                                            <th class="p-3 text-left">Customer ID</th>
+                                            <th class="p-3 text-left">Name</th>
+                                            <th class="p-3 text-left">Plan</th>
+                                            <th class="p-3 text-left">Status</th>
+                                            <th class="p-3 text-left">ARPU</th>
+                                            <th class="p-3 text-left">Registration Date</th>
+                                            <th class="p-3 text-left">Registered By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b">
+                                            <td class="p-3">CUST-5001</td>
+                                            <td class="p-3">John Smith</td>
+                                            <td class="p-3">5G Unlimited</td>
+                                            <td class="p-3"><span class="badge status-active">Active</span></td>
+                                            <td class="p-3">$12.50</td>
+                                            <td class="p-3">2023-05-15</td>
+                                            <td class="p-3">Alex Johnson (FL-1001)</td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3">CUST-5002</td>
+                                            <td class="p-3">Sarah Johnson</td>
+                                            <td class="p-3">Fiber 1Gbps</td>
+                                            <td class="p-3"><span class="badge status-active">Active</span></td>
+                                            <td class="p-3">$15.20</td>
+                                            <td class="p-3">2023-06-22</td>
+                                            <td class="p-3">Sarah Williams (FL-1002)</td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3">CUST-5003</td>
+                                            <td class="p-3">Michael Brown</td>
+                                            <td class="p-3">Business Plan</td>
+                                            <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
+                                            <td class="p-3">$45.80</td>
+                                            <td class="p-3">2023-04-10</td>
+                                            <td class="p-3">Michael Brown (FL-1003)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Freelancer Registration Modal -->
+    <div id="freelancerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeFreelancerModal()">&times;</span>
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-user-plus mr-2 text-blue-600"></i> Register New Freelancer
+            </h3>
+            <form class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">First Name</label>
+                        <input type="text" class="w-full p-2 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">Last Name</label>
+                        <input type="text" class="w-full p-2 border rounded-lg">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Email</label>
+                    <input type="email" class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Phone Number</label>
+                    <input type="tel" class="w-full p-2 border rounded-lg">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">Region</label>
+                        <select class="w-full p-2 border rounded-lg">
+                            <option>Metro</option>
+                            <option>Suburban</option>
+                            <option>Rural</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">District</label>
+                        <input type="text" class="w-full p-2 border rounded-lg">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Specialization</label>
+                    <select class="w-full p-2 border rounded-lg">
+                        <option>Sales</option>
+                        <option>Technical Support</option>
+                        <option>Customer Onboarding</option>
+                        <option>Retention Specialist</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Status</label>
+                    <select class="w-full p-2 border rounded-lg">
+                        <option>New</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeFreelancerModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Register Freelancer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Toggle submenus in navigation
+        function toggleSubmenu(submenuId, element) {
+            const submenu = document.getElementById(submenuId);
+            element.classList.toggle('open');
+            submenu.classList.toggle('active');
+        }
+
+        // Handle registration menu clicks
+        document.querySelectorAll('.registration-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Hide all content sections
+                document.getElementById('dashboard-content').style.display = 'none';
+                document.getElementById('registration-sections').style.display = 'block';
+                
+                // Hide all registration sections
+                document.querySelectorAll('.registration-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show the selected section
+                const sectionId = this.getAttribute('data-section') + '-section';
+                document.getElementById(sectionId).style.display = 'block';
+                
+                // Update active state in navigation
+                document.querySelectorAll('.registration-link').forEach(navLink => {
+                    navLink.parentElement.classList.remove('bg-blue-700');
+                });
+                this.parentElement.classList.add('bg-blue-700');
+                
+                // Initialize DataTables and charts for the section
+                if (sectionId === 'freelancer-base-section') {
+                    initFreelancerTable();
+                } else if (sectionId === 'customer-base-section') {
+                    initCustomerTable();
+                } else if (sectionId === 'reports-section') {
+                    initRegistrationReports();
+                }
+            });
+        });
+
+        // Freelancer Modal Functions
+        function openFreelancerModal() {
+            document.getElementById('freelancerModal').style.display = 'block';
+        }
+
+        function closeFreelancerModal() {
+            document.getElementById('freelancerModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('freelancerModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize Freelancer Table with filtering
+        function initFreelancerTable() {
+            $('#freelancerTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                initComplete: function() {
+                    this.api().columns(4).every(function() {
+                        const column = this;
+                        const select = $('#freelancerFilter');
+                        
+                        select.on('change', function() {
+                            const val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val === 'all' ? '' : '^' + val + '$', true, false).draw();
+                        });
+                    });
+                }
+            });
+        }
+
+        // Initialize Customer Table
+        function initCustomerTable() {
+            $('#customerTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel']
+            });
+        }
+
+        // Initialize Full Customer Table
+        function initFullCustomerTable() {
+            $('#fullCustomerTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                pageLength: 10
+            });
+        }
+
+        // Initialize Registration Reports
+        function initRegistrationReports() {
+            initFullCustomerTable();
+            
+            // Registration Trend Chart
+            const trendCtx = document.getElementById('registrationTrendChart').getContext('2d');
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'New Customers',
+                        data: [420, 480, 510, 590, 620, 680, 720],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Registration Trend',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Registration Status Chart
+            const statusCtx = document.getElementById('registrationStatusChart').getContext('2d');
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Active', 'Inactive', 'Churned'],
+                    datasets: [{
+                        data: [7915, 827, 342],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Customer Status Distribution',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize ARPU Charts
+        function initARPUCharts() {
+            // ARPU Trend Chart
+            const arpuTrendCtx = document.getElementById('arpuTrendChart').getContext('2d');
+            new Chart(arpuTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Overall ARPU ($)',
+                        data: [10.2, 10.5, 10.8, 11.2, 11.5, 11.7, 12.0],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ARPU Trend (Last 7 Months)',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+
+            // ARPU By Plan Chart
+            const arpuPlanCtx = document.getElementById('arpuByPlanChart').getContext('2d');
+            new Chart(arpuPlanCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['5G Unlimited', 'Fiber 1Gbps', 'Business Plan'],
+                    datasets: [{
+                        label: 'Current ARPU ($)',
+                        data: [12.5, 15.2, 45.8],
+                        backgroundColor: ['#3b82f6', '#10b981', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ARPU by Plan Type',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize Churn Rate Charts
+        function initChurnRateCharts() {
+            // Churn Trend Chart
+            const churnTrendCtx = document.getElementById('churnTrendChart').getContext('2d');
+            new Chart(churnTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Churn Rate (%)',
+                        data: [2.1, 2.0, 1.9, 1.8, 1.7, 1.8, 1.8],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Churn Rate Trend (Last 7 Months)',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 3
+                        }
+                    }
+                }
+            });
+
+            // Churn Reasons Chart
+            const churnReasonsCtx = document.getElementById('churnReasonsChart').getContext('2d');
+            new Chart(churnReasonsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Price', 'Service', 'Competitor', 'Relocation', 'Other'],
+                    datasets: [{
+                        data: [42, 28, 15, 8, 7],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Churn Reasons Breakdown',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize all tables and charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize DataTables
+            $('#arpuTable').DataTable();
+            $('#churnTable').DataTable();
+            
+            // Initialize charts
+            initARPUCharts();
+            initChurnRateCharts();
+            
+            // Show assign freelancer dropdown when "Specific Freelancer" is selected
+            $('select').on('change', function() {
+                if ($(this).val() === 'Specific Freelancer') {
+                    $('#freelancerSelection').show();
+                } else {
+                    $('#freelancerSelection').hide();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

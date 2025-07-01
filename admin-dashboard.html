@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A-Mobile - Admin Dashboard</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
+        /* Custom styles for status badges */
         .status-badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -37,11 +38,15 @@
             background-color: #fee2e2;
             color: #b91c1c;
         }
+
+        /* Chart container styling for responsiveness */
         .chart-container {
             position: relative;
             height: 300px;
             width: 100%;
         }
+
+        /* Priority badges */
         .priority-high {
             background-color: #fee2e2;
             color: #b91c1c;
@@ -54,6 +59,8 @@
             background-color: #dcfce7;
             color: #166534;
         }
+
+        /* Role badges */
         .role-badge {
             padding: 4px 8px;
             border-radius: 4px;
@@ -76,9 +83,8 @@
             background-color: #f59e0b;
             color: white;
         }
-        .nav-item.active {
-            background-color: #1e40af;
-        }
+
+        /* Content section display */
         .content-section {
             display: none;
         }
@@ -94,7 +100,7 @@
             <div class="flex items-center justify-between mb-8 mt-4">
                 <h1 class="text-xl font-bold">A-Mobile Admin</h1>
             </div>
-            
+
             <!-- Admin Profile -->
             <div class="bg-blue-700 p-4 rounded-lg mb-6">
                 <div class="flex items-center mb-3">
@@ -109,42 +115,87 @@
                     <span class="text-sm">System Admin</span>
                 </div>
             </div>
-            
+
             <nav>
                 <ul>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700 active" onclick="showSection('dashboard')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700 active" onclick="showSection(event, 'dashboard')">
                             <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('user-management')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'user-management')">
                             <i class="fas fa-users-cog mr-2"></i> User Management
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('approvals')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'content-management')">
+                            <i class="fas fa-file-alt mr-2"></i> Content Management
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'kpi-management')">
+                            <i class="fas fa-crosshairs mr-2"></i> KPI Management
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'approvals')">
                             <i class="fas fa-clipboard-check mr-2"></i> Pending Approvals
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('system-health')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'system-health')">
                             <i class="fas fa-server mr-2"></i> System Health
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('audit-logs')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'audit-logs')">
                             <i class="fas fa-clipboard-list mr-2"></i> Audit Logs
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('reports')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'reports')">
                             <i class="fas fa-chart-pie mr-2"></i> Reports
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('settings')">
+                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection(event, 'settings')">
                             <i class="fas fa-cog mr-2"></i> Settings
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="account-developer-dashboard.html" class="nav-item block p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-code mr-2"></i> Developer Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="agent-dashboard.html" class="nav-item block p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-user-tie mr-2"></i> Agent Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="aggregator-dashboard.html" class="nav-item block p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-layer-group mr-2"></i> Aggregator Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="asr.html" class="nav-item block p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-microphone-alt mr-2"></i> ASR
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="freelancer-dashboard.html" class="nav-item block p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-user-tag mr-2"></i> Freelancer Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="sales-team-dashboard.html" class="nav-item block p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-chart-line mr-2"></i> Sales Team Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="zonal%20Manager-dashboard.html" class="nav-item block p-2 rounded hover:bg-blue-700">
+                            <i class="fas fa-map-marker-alt mr-2"></i> Zonal Manager Dashboard
                         </a>
                     </li>
                 </ul>
@@ -168,7 +219,7 @@
                     </div>
                 </header>
 
-                <!-- System Overview -->
+                <!-- System Overview Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-white p-4 rounded-xl shadow">
                         <p class="text-gray-500">Total Users</p>
@@ -198,12 +249,12 @@
                     </div>
                 </div>
 
-                <!-- Main Dashboard Content -->
+                <!-- Main Dashboard Content Area -->
                 <div class="bg-white p-6 rounded-xl shadow mb-8">
                     <h3 class="text-xl font-semibold mb-6 flex items-center">
                         <i class="fas fa-chart-line mr-2 text-blue-600"></i> System Overview
                     </h3>
-                    
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         <!-- User Growth Chart -->
                         <div>
@@ -212,7 +263,7 @@
                                 <canvas id="userGrowthChart"></canvas>
                             </div>
                         </div>
-                        
+
                         <!-- Recent Activity -->
                         <div>
                             <h4 class="font-medium mb-3">Recent System Activity</h4>
@@ -249,22 +300,22 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Quick Actions -->
                     <div>
                         <h3 class="text-xl font-semibold mb-4 flex items-center">
                             <i class="fas fa-bolt mr-2 text-blue-600"></i> Quick Actions
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <button class="bg-blue-100 text-blue-800 p-4 rounded-lg hover:bg-blue-200 flex items-center" onclick="showSection('approvals')">
+                            <button class="bg-blue-100 text-blue-800 p-4 rounded-lg hover:bg-blue-200 flex items-center" onclick="showSection(event, 'approvals')">
                                 <i class="fas fa-clipboard-check text-xl mr-3"></i>
                                 <span>Review Pending Approvals</span>
                             </button>
-                            <button class="bg-green-100 text-green-800 p-4 rounded-lg hover:bg-green-200 flex items-center" onclick="showSection('user-management')">
+                            <button class="bg-green-100 text-green-800 p-4 rounded-lg hover:bg-green-200 flex items-center" onclick="showSection(event, 'user-management')">
                                 <i class="fas fa-user-edit text-xl mr-3"></i>
                                 <span>Manage Users</span>
                             </button>
-                            <button class="bg-purple-100 text-purple-800 p-4 rounded-lg hover:bg-purple-200 flex items-center" onclick="showSection('reports')">
+                            <button class="bg-purple-100 text-purple-800 p-4 rounded-lg hover:bg-purple-200 flex items-center" onclick="showSection(event, 'reports')">
                                 <i class="fas fa-file-export text-xl mr-3"></i>
                                 <span>Generate Reports</span>
                             </button>
@@ -273,12 +324,12 @@
                 </div>
             </div>
 
-            <!-- User Management Section -->
+           <!-- User Management Section -->
             <div id="user-management" class="content-section">
                 <header class="flex justify-between items-center mb-8">
                     <h2 class="text-2xl font-bold text-gray-800">User Management</h2>
                     <div class="flex items-center space-x-4">
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="showUserModal('add')">
                             <i class="fas fa-user-plus mr-2"></i> Add User
                         </button>
                         <div class="relative">
@@ -288,6 +339,79 @@
                     </div>
                 </header>
 
+                <!-- Excel Upload for Bulk User Management -->
+                <div class="bg-white p-4 rounded-xl shadow mb-6">
+                    <h3 class="text-lg font-semibold mb-3">Bulk User Management</h3>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Upload Excel File</label>
+                            <div class="flex items-center">
+                                <input type="file" id="userExcelUpload" accept=".xlsx, .xls" class="hidden">
+                                <button onclick="document.getElementById('userExcelUpload').click()"
+                                        class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-l-lg border">
+                                    Choose File
+                                </button>
+                                <span id="excelFileName" class="px-4 py-2 border-t border-b border-r rounded-r-lg text-gray-500 flex-1 truncate max-w-xs">
+                                    No file chosen
+                                </span>
+                            </div>
+                        </div>
+                        <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                            <i class="fas fa-upload mr-2"></i> Process File
+                        </button>
+                        <button class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg hover:bg-blue-200">
+                            <i class="fas fa-download mr-2"></i> Download Template
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Role-Based Access Control Table -->
+                <div class="bg-white p-6 rounded-xl shadow mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Role Permissions</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Role</th>
+                                    <th class="p-3 text-left">User Management</th>
+                                    <th class="p-3 text-left">Content Management</th>
+                                    <th class="p-3 text-left">Approvals</th>
+                                    <th class="p-3 text-left">Reports</th>
+                                    <th class="p-3 text-left">Settings</th>
+                                    <th class="p-3 text-left">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3 font-medium">Admin</td>
+                                    <td class="p-3">
+                                        <span class="status-badge status-active">Full Access</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <span class="status-badge status-active">Full Access</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <span class="status-badge status-active">Full Access</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <span class="status-badge status-active">Full Access</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <span class="status-badge status-active">Full Access</span>
+                                    </td>
+                                    <td class="p-3">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2" onclick="showRolePermissionsModal('admin')">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Additional roles would be listed here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- User List Table -->
                 <div class="bg-white p-6 rounded-xl shadow">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xl font-semibold">All System Users</h3>
@@ -299,13 +423,15 @@
                             <option>Customer</option>
                         </select>
                     </div>
-                    
+
+                    <!-- User table remains the same as before -->
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse">
                             <thead>
                                 <tr class="bg-gray-100">
                                     <th class="p-3 text-left">User ID</th>
                                     <th class="p-3 text-left">Name</th>
+                                    <th class="p-3 text-left">Email</th>
                                     <th class="p-3 text-left">Role</th>
                                     <th class="p-3 text-left">Status</th>
                                     <th class="p-3 text-left">Last Active</th>
@@ -316,26 +442,12 @@
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">AD-001</td>
                                     <td class="p-3">Admin User</td>
+                                    <td class="p-3">admin@example.com</td>
                                     <td class="p-3"><span class="role-badge role-admin">Admin</span></td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
                                     <td class="p-3">Today, 09:30 AM</td>
                                     <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-800">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">FL-1001</td>
-                                    <td class="p-3">Alex Johnson</td>
-                                    <td class="p-3"><span class="role-badge role-freelancer">Freelancer</span></td>
-                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">Today, 08:45 AM</td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2" onclick="showUserModal('edit', 'AD-001')">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="text-red-600 hover:text-red-800">
@@ -346,11 +458,12 @@
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">MN-2001</td>
                                     <td class="p-3">Sarah Williams</td>
+                                    <td class="p-3">sarah.w@example.com</td>
                                     <td class="p-3"><span class="role-badge role-manager">Manager</span></td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">Yesterday, 5:30 PM</td>
+                                    <td class="p-3">Today, 10:15 AM</td>
                                     <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2" onclick="showUserModal('edit', 'MN-2001')">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="text-red-600 hover:text-red-800">
@@ -359,13 +472,14 @@
                                     </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">FL-1002</td>
-                                    <td class="p-3">Michael Brown</td>
+                                    <td class="p-3">FL-1001</td>
+                                    <td class="p-3">Alex Johnson</td>
+                                    <td class="p-3">alex.j@example.com</td>
                                     <td class="p-3"><span class="role-badge role-freelancer">Freelancer</span></td>
                                     <td class="p-3"><span class="status-badge status-pending">Pending</span></td>
-                                    <td class="p-3">Never</td>
+                                    <td class="p-3">Yesterday, 04:00 PM</td>
                                     <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2" onclick="showUserModal('edit', 'FL-1001')">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="text-red-600 hover:text-red-800">
@@ -375,12 +489,13 @@
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">CUST-5001</td>
-                                    <td class="p-3">John Smith</td>
+                                    <td class="p-3">Jane Doe</td>
+                                    <td class="p-3">jane.d@example.com</td>
                                     <td class="p-3"><span class="role-badge role-customer">Customer</span></td>
-                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">Today, 10:15 AM</td>
+                                    <td class="p-3"><span class="status-badge status-inactive">Inactive</span></td>
+                                    <td class="p-3">2 days ago</td>
                                     <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2" onclick="showUserModal('edit', 'CUST-5001')">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="text-red-600 hover:text-red-800">
@@ -391,15 +506,191 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="flex justify-between items-center mt-4">
-                        <span class="text-sm text-gray-500">Showing 1 to 5 of 1,842 users</span>
+                        <span class="text-sm text-gray-500">Showing 1 to 4 of 1,842 users</span>
                         <div class="flex space-x-2">
                             <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Previous</button>
                             <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">1</button>
                             <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">2</button>
                             <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">3</button>
                             <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Management Section -->
+            <div id="content-management" class="content-section">
+                <header class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">Content Management</h2>
+                    <div class="flex items-center space-x-4">
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="showContentEditor()">
+                            <i class="fas fa-plus mr-2"></i> Add New Content
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Excel Upload for Content Population -->
+                <div class="bg-white p-6 rounded-xl shadow mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Bulk Content Update</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Section</label>
+                            <select class="w-full p-2 border rounded-lg">
+                                <option>Home Page</option>
+                                <option>Pricing Plans</option>
+                                <option>FAQ Section</option>
+                                <option>Blog Posts</option>
+                                <option>Testimonials</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Upload Excel File</label>
+                            <div class="flex items-center">
+                                <input type="file" id="contentExcelUpload" accept=".xlsx, .xls" class="hidden">
+                                <button onclick="document.getElementById('contentExcelUpload').click()"
+                                        class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-l-lg border">
+                                    Choose File
+                                </button>
+                                <span id="contentExcelFileName" class="px-4 py-2 border-t border-b border-r rounded-r-lg text-gray-500 flex-1 truncate max-w-xs">
+                                    No file chosen
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-end space-x-3">
+                        <button class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200">
+                            <i class="fas fa-download mr-2"></i> Download Template
+                        </button>
+                        <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                            <i class="fas fa-upload mr-2"></i> Update Content
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Content Editor -->
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <h3 class="text-xl font-semibold mb-4">Current Content</h3>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Section to Edit</label>
+                        <select class="w-full p-2 border rounded-lg" onchange="loadSectionContent(this.value)">
+                            <option value="">-- Select Section --</option>
+                            <option value="home_hero">Home Page Hero</option>
+                            <option value="pricing_plans">Pricing Plans</option>
+                            <option value="faq_section">FAQ Section</option>
+                        </select>
+                    </div>
+
+                    <div id="contentEditor" class="border rounded-lg p-4 hidden">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Content Title</label>
+                            <input type="text" id="contentTitle" class="w-full p-2 border rounded-lg">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Content Body</label>
+                            <textarea id="contentBody" class="w-full p-2 border rounded-lg" rows="6"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Featured Image</label>
+                            <input type="file" class="w-full p-2 border rounded-lg">
+                        </div>
+                        <div class="flex justify-end space-x-3">
+                            <button class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200">
+                                Cancel
+                            </button>
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                Save Changes
+                            </button>
+                            <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                                Delete Section
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Management Section -->
+            <div id="kpi-management" class="content-section">
+                <header class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">KPI & Target Management</h2>
+                    <div class="flex items-center space-x-4">
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="showKPIModal()">
+                            <i class="fas fa-plus mr-2"></i> Add KPI
+                        </button>
+                    </div>
+                </header>
+
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold">Role-Specific KPIs</h3>
+                        <select class="bg-gray-100 p-2 rounded-lg border" onchange="filterKPIsByRole(this.value)">
+                            <option value="all">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="manager">Manager</option>
+                            <option value="freelancer">Freelancer</option>
+                            <option value="customer">Customer</option>
+                        </select>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">KPI Name</th>
+                                    <th class="p-3 text-left">Applicable Roles</th>
+                                    <th class="p-3 text-left">Target Value</th>
+                                    <th class="p-3 text-left">Measurement Period</th>
+                                    <th class="p-3 text-left">Weight</th>
+                                    <th class="p-3 text-left">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3 font-medium">New Customer Acquisition</td>
+                                    <td class="p-3">
+                                        <span class="role-badge role-manager mr-1">Manager</span>
+                                        <span class="role-badge role-freelancer">Freelancer</span>
+                                    </td>
+                                    <td class="p-3">25/month</td>
+                                    <td class="p-3">Monthly</td>
+                                    <td class="p-3">30%</td>
+                                    <td class="p-3">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- Additional KPIs would be listed here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-6">
+                        <h3 class="text-xl font-semibold mb-4">Bulk KPI Assignment</h3>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Upload KPI Excel File</label>
+                                <div class="flex items-center">
+                                    <input type="file" id="kpiExcelUpload" accept=".xlsx, .xls" class="hidden">
+                                    <button onclick="document.getElementById('kpiExcelUpload').click()"
+                                            class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-l-lg border">
+                                        Choose File
+                                    </button>
+                                    <span id="kpiExcelFileName" class="px-4 py-2 border-t border-b border-r rounded-r-lg text-gray-500 flex-1 truncate max-w-xs">
+                                        No file chosen
+                                    </span>
+                                </div>
+                            </div>
+                            <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                                <i class="fas fa-upload mr-2"></i> Process File
+                            </button>
+                            <button class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg hover:bg-blue-200">
+                                <i class="fas fa-download mr-2"></i> Download Template
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -494,7 +785,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="flex justify-between items-center mt-4">
                         <span class="text-sm text-gray-500">Showing 1 to 3 of 24 pending approvals</span>
                         <div class="flex space-x-2">
@@ -556,7 +847,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-white p-6 rounded-xl shadow">
                         <h3 class="text-lg font-semibold mb-4">Resource Usage</h3>
                         <div class="space-y-4">
@@ -590,7 +881,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white p-6 rounded-xl shadow">
                     <h3 class="text-xl font-semibold mb-4">Recent System Events</h3>
                     <div class="overflow-x-auto">
@@ -697,7 +988,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="flex justify-between items-center mt-4">
                         <span class="text-sm text-gray-500">Showing 1 to 5 of 1,284 log entries</span>
                         <div class="flex space-x-2">
@@ -735,7 +1026,7 @@
                             <canvas id="userGrowthReportChart"></canvas>
                         </div>
                     </div>
-                    
+
                     <div class="bg-white p-6 rounded-xl shadow">
                         <h3 class="text-lg font-semibold mb-4">Commission Distribution</h3>
                         <div class="chart-container">
@@ -743,7 +1034,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white p-6 rounded-xl shadow">
                     <h3 class="text-xl font-semibold mb-4">Freelancer Performance</h3>
                     <div class="overflow-x-auto">
@@ -827,7 +1118,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Commission Settings -->
                         <div>
                             <h3 class="text-xl font-semibold mb-4 border-b pb-2">Commission Settings</h3>
@@ -857,7 +1148,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Security Settings -->
                     <div class="mt-8">
                         <h3 class="text-xl font-semibold mb-4 border-b pb-2">Security Settings</h3>
@@ -903,25 +1194,78 @@
         </div>
     </div>
 
+    <!-- Custom Modal Structure (for alerts) -->
+    <div id="customModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle"></h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500" id="modalMessage"></p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="modalCloseButton" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script>
-        // Navigation functionality
-        function showSection(sectionId) {
-            // Hide all sections
+        // Global Chart instances to prevent re-initialization issues
+        let userGrowthChartInstance = null;
+        let userGrowthReportChartInstance = null;
+        let commissionDistributionChartInstance = null;
+
+        /**
+         * Displays a custom modal instead of a native alert.
+         * @param {string} title - The title of the modal.
+         * @param {string} message - The message content of the modal.
+         */
+        function showCustomModal(title, message) {
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            modal.classList.remove('hidden');
+
+            // Close modal when OK button is clicked
+            document.getElementById('modalCloseButton').onclick = function() {
+                modal.classList.add('hidden');
+            };
+
+            // Close modal when clicking outside (optional)
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            };
+        }
+
+        /**
+         * Handles navigation by showing the selected section and updating active nav item.
+         * @param {Event} event - The click event.
+         * @param {string} sectionId - The ID of the section to show.
+         */
+        function showSection(event, sectionId) {
+            // Prevent default anchor behavior
+            event.preventDefault();
+
+            // Hide all content sections
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
             });
-            
-            // Show selected section
+
+            // Show the selected section
             document.getElementById(sectionId).classList.add('active');
-            
+
             // Update active nav item
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             event.currentTarget.classList.add('active');
-            
-            // Initialize charts when section is shown
+
+            // Initialize charts specific to the section when it becomes active
             if (sectionId === 'dashboard') {
                 initUserGrowthChart();
             } else if (sectionId === 'reports') {
@@ -929,10 +1273,17 @@
             }
         }
 
-        // Initialize User Growth Chart
+        /**
+         * Initializes the User Growth Chart on the Dashboard.
+         */
         function initUserGrowthChart() {
+            // Destroy existing chart instance if it exists to prevent re-rendering issues
+            if (userGrowthChartInstance) {
+                userGrowthChartInstance.destroy();
+            }
+
             const ctx = document.getElementById('userGrowthChart').getContext('2d');
-            new Chart(ctx, {
+            userGrowthChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -967,11 +1318,21 @@
             });
         }
 
-        // Initialize Report Charts
+        /**
+         * Initializes the charts on the Reports section.
+         */
         function initReportCharts() {
+            // Destroy existing chart instances if they exist
+            if (userGrowthReportChartInstance) {
+                userGrowthReportChartInstance.destroy();
+            }
+            if (commissionDistributionChartInstance) {
+                commissionDistributionChartInstance.destroy();
+            }
+
             // User Growth Report Chart
             const userGrowthCtx = document.getElementById('userGrowthReportChart').getContext('2d');
-            new Chart(userGrowthCtx, {
+            userGrowthReportChartInstance = new Chart(userGrowthCtx, {
                 type: 'bar',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
@@ -998,10 +1359,10 @@
                     }
                 }
             });
-            
+
             // Commission Distribution Chart
             const commissionCtx = document.getElementById('commissionDistributionChart').getContext('2d');
-            new Chart(commissionCtx, {
+            commissionDistributionChartInstance = new Chart(commissionCtx, {
                 type: 'pie',
                 data: {
                     labels: ['5G Unlimited', 'Fiber 1Gbps', 'Business Plan', 'Other'],
@@ -1027,29 +1388,118 @@
             });
         }
 
-        // Active logout function
+        /**
+         * Handles the logout process.
+         * In a real application, this would involve an API call and session invalidation.
+         */
         function logout() {
-            // Clear any user session data
-            sessionStorage.removeItem('aMobileAdminToken');
-            sessionStorage.removeItem('aMobileUserRole');
-            
-            // In a real application, you would call your logout API here
-            // For this demo, we'll just redirect to a login page
-            window.location.href = 'login.html';
-            
-            // Optional: Show logout confirmation
-            alert('You have been successfully logged out. Redirecting to login page.');
+            showCustomModal('Logout', 'Logging out... Redirecting to login page.');
+            // Simulate a delay before redirecting
+            setTimeout(() => {
+                window.location.href = 'index.html'; // Redirect to index.html
+            }, 1500);
         }
 
-        // Initialize charts on page load
+        /**
+         * Shows the user add/edit modal.
+         * @param {string} action - 'add' or 'edit'.
+         * @param {string|null} userId - The ID of the user if editing.
+         */
+        function showUserModal(action, userId = null) {
+            const title = action === 'add' ? 'Add New User' : `Edit User ${userId}`;
+            const message = `This would open a modal form to ${action} user ${userId || ''}.`;
+            showCustomModal(title, message);
+        }
+
+        /**
+         * Shows the role permissions modal.
+         * @param {string} role - The role to edit permissions for.
+         */
+        function showRolePermissionsModal(role) {
+            const title = `Edit Permissions for ${role} Role`;
+            const message = `This would open a modal with checkboxes to manage permissions for the ${role} role.`;
+            showCustomModal(title, message);
+        }
+
+        /**
+         * Displays the content editor section.
+         */
+        function showContentEditor() {
+            document.getElementById('contentEditor').classList.remove('hidden');
+            showCustomModal('Content Editor', 'This would allow you to add new content. Select a section below to edit existing content.');
+        }
+
+        /**
+         * Loads content for the selected section into the editor.
+         * @param {string} sectionId - The ID of the content section to load.
+         */
+        function loadSectionContent(sectionId) {
+            const contentEditor = document.getElementById('contentEditor');
+            const contentTitle = document.getElementById('contentTitle');
+            const contentBody = document.getElementById('contentBody');
+
+            if (!sectionId) {
+                contentEditor.classList.add('hidden');
+                contentTitle.value = '';
+                contentBody.value = '';
+                return;
+            }
+
+            // In a real implementation, this would fetch content from the server based on sectionId
+            console.log(`Loading content for section: ${sectionId}`);
+
+            // Simulate loading content
+            contentTitle.value = "Sample " + sectionId.replace('_', ' ') + " Title";
+            contentBody.value = "This is sample content for the " +
+                sectionId.replace('_', ' ') + " section. You can edit this content live and save changes.";
+
+            contentEditor.classList.remove('hidden');
+            showCustomModal('Content Loaded', `Content for "${sectionId.replace('_', ' ')}" loaded successfully.`);
+        }
+
+        /**
+         * Filters KPI table by role.
+         * @param {string} role - The role to filter KPIs by ('all', 'admin', 'manager', etc.).
+         */
+        function filterKPIsByRole(role) {
+            console.log(`Filtering KPIs for role: ${role}`);
+            showCustomModal('KPI Filter', `Filtering KPIs for role: ${role}. (In a real app, the table would update)`);
+            // In a real implementation, this would filter the KPI table dynamically
+        }
+
+        /**
+         * Shows the KPI add/edit modal.
+         */
+        function showKPIModal() {
+            console.log("Showing KPI modal");
+            showCustomModal('KPI Management', 'This would show a modal for adding/editing KPIs.');
+        }
+
+        // Initialize functionality on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize file upload displays
+            document.getElementById('userExcelUpload').addEventListener('change', function(e) {
+                document.getElementById('excelFileName').textContent = e.target.files[0]?.name || 'No file chosen';
+            });
+
+            document.getElementById('contentExcelUpload').addEventListener('change', function(e) {
+                document.getElementById('contentExcelFileName').textContent = e.target.files[0]?.name || 'No file chosen';
+            });
+
+            document.getElementById('kpiExcelUpload').addEventListener('change', function(e) {
+                document.getElementById('kpiExcelFileName').textContent = e.target.files[0]?.name || 'No file chosen';
+            });
+
+            // Initialize the dashboard chart on initial load
             initUserGrowthChart();
-            
-            // Check admin authentication (simplified for demo)
-            const adminToken = sessionStorage.getItem('aMobileAdminToken');
-            if (!adminToken) {
-                alert('Please login to access the admin dashboard.');
-                window.location.href = 'login.html';
+
+            // Optional: Verify role from sessionStorage for added security/consistency
+            const userRole = 'Admin'; // In a real app, you would get this from sessionStorage or a secure backend
+            if (userRole !== 'Admin') {
+                showCustomModal('Access Denied', 'You are not authorized to view the Admin Dashboard. Redirecting to role selection.');
+                setTimeout(() => {
+                    window.location.href = 'index.html'; // Redirect to a login page or role selection
+                }, 1500);
                 return;
             }
         });

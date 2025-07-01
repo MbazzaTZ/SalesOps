@@ -127,7 +127,12 @@
                             </li>
                             <li class="mt-1">
                                 <a href="#freelancer-base-section" class="nav-item block p-3 rounded hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'freelancer-base-section')">
-                                    <i class="fas fa-user-tie mr-3 text-lg"></i> Freelancer Base
+                                    <i class="fas fa-user-tie mr-3 text-lg"></i> Agent Base
+                                </a>
+                            </li>
+                            <li class="mt-1">
+                                <a href="#merchant-base-section" class="nav-item block p-3 rounded hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'merchant-base-section')">
+                                    <i class="fas fa-store mr-3 text-lg"></i> Merchant Base
                                 </a>
                             </li>
                             <li class="mt-1">
@@ -143,6 +148,25 @@
                         </ul>
                     </li>
                     
+                    <!-- Projects Menu -->
+                    <li class="mb-2">
+                        <a href="#" class="nav-item block p-3 rounded-lg hover:bg-blue-700 flex items-center has-submenu" onclick="toggleSubmenu('projectsSubmenu', this)">
+                            <i class="fas fa-project-diagram mr-3 text-lg"></i> Projects
+                        </a>
+                        <ul id="projectsSubmenu" class="submenu">
+                            <li class="mt-1">
+                                <a href="#university-project-section" class="nav-item block p-3 rounded hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'university-project-section')">
+                                    <i class="fas fa-graduation-cap mr-3 text-lg"></i> University Project
+                                </a>
+                            </li>
+                            <li class="mt-1">
+                                <a href="#" class="nav-item block p-3 rounded hover:bg-blue-700 transition duration-200 ease-in-out" onclick="openAddProjectModal()">
+                                    <i class="fas fa-plus-circle mr-3 text-lg"></i> Add New Project
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li class="mb-2">
                         <a href="#arpu-trend-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'arpu-trend-section')">
                             <i class="fas fa-file-invoice-dollar mr-3 text-lg"></i> ARPU Trend
@@ -184,7 +208,7 @@
             <!-- Dashboard Section (Default View) -->
             <section id="dashboard-section" class="content-section active">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <!-- Customer Registration Card -->
+                    <!-- Customer Registration Card (Enhanced) -->
                     <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
                         <div class="flex justify-between items-start mb-4">
                             <div>
@@ -208,40 +232,103 @@
                         </button>
                     </div>
 
-                    <!-- Freelancer Management Card -->
+                    <!-- Sales Reps Card -->
                     <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <p class="text-gray-500 font-medium">Freelancer Base</p>
-                                <h3 class="text-2xl font-bold mt-1">187 <span class="text-sm text-gray-500">total</span></h3>
+                                <p class="text-gray-500 font-medium">Sales Representatives</p>
+                                <h3 class="text-2xl font-bold mt-1">50 <span class="text-sm text-gray-500">total</span></h3>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">
+                                <i class="fas fa-users-line text-yellow-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-center text-sm mb-3">
+                            <div>
+                                <p class="font-semibold">45</p>
+                                <p class="text-gray-500">Active</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">5</p>
+                                <p class="text-gray-500">Inactive</p>
+                            </div>
+                        </div>
+                        <div class="progress-bar mt-2">
+                            <div class="progress-fill bg-yellow-500" style="width: 90%"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 text-sm text-gray-500">
+                            <span>90% Active Rate</span>
+                        </div>
+                        <button onclick="showCustomMessage('Admin Action', 'This button would open a modal to manage sales representatives.', 'alert')" class="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage Sales Reps
+                        </button>
+                    </div>
+
+                    <!-- Freelancer Management Card (Enhanced - now Agent Base) -->
+                    <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-500 font-medium">Agent Base (Freelancers)</p>
+                                <h3 class="text-2xl font-bold mt-1">142 <span class="text-sm text-gray-500">/ 150 target</span></h3>
+                                <p class="text-green-600 font-medium mt-1">94.7% <span class="text-sm text-gray-500">recruitment</span></p>
                             </div>
                             <div class="bg-green-100 p-3 rounded-full">
                                 <i class="fas fa-user-tie text-green-600 text-xl"></i>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-2 text-center text-sm mb-3">
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-green-500" style="width: 94.7%"></div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-center text-sm mb-3 mt-2">
                             <div>
-                                <p class="font-semibold">142</p>
+                                <p class="font-semibold">130</p>
                                 <p class="text-gray-500">Active</p>
                             </div>
                             <div>
-                                <p class="font-semibold">25</p>
+                                <p class="font-semibold">12</p>
                                 <p class="text-gray-500">New</p>
                             </div>
                             <div>
                                 <p class="font-semibold">20</p>
-                                <p class="text-gray-500">Other</p>
+                                <p class="text-gray-500">Inactive</p>
                             </div>
                         </div>
                         <button onclick="openFreelancerModal()" class="w-full mt-2 bg-blue-600 text-white py-1 rounded-lg hover:bg-blue-700 text-sm">
-                            <i class="fas fa-plus mr-1"></i> Add Freelancer
+                            <i class="fas fa-plus mr-1"></i> Add Agent
                         </button>
-                        <button onclick="showCustomMessage('Admin Action', 'This button would open a modal to manage freelancer data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 text-sm">
-                            <i class="fas fa-cogs mr-1"></i> Manage Data
+                        <button onclick="showCustomMessage('Admin Action', 'This button would open a modal to manage agent data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage Agents
                         </button>
                     </div>
 
-                    <!-- Conversion Rate Card -->
+                    <!-- Merchant Recruitment Card -->
+                    <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-500 font-medium">Merchant Recruitment</p>
+                                <h3 class="text-2xl font-bold mt-1">85 <span class="text-sm text-gray-500">/ 100 target</span></h3>
+                                <p class="text-indigo-600 font-medium mt-1">85% <span class="text-sm text-gray-500">achievement</span></p>
+                            </div>
+                            <div class="bg-indigo-100 p-3 rounded-full">
+                                <i class="fas fa-store text-indigo-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-indigo-500" style="width: 85%"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 text-sm text-gray-500">
+                            <span>Active: 78 (91.7%)</span>
+                            <span>New: 7 (8.3%)</span>
+                        </div>
+                        <button onclick="openMerchantModal()" class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 text-sm">
+                            <i class="fas fa-plus mr-1"></i> Add Merchant
+                        </button>
+                        <button onclick="showCustomMessage('Admin Action', 'This button would open a modal to manage merchant data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage Merchants
+                        </button>
+                    </div>
+
+                    <!-- Conversion Rate Card (Existing) -->
                     <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
                         <div class="flex justify-between items-start mb-4">
                             <div>
@@ -408,16 +495,16 @@
                 </div>
             </section>
 
-            <!-- Freelancer Base Section -->
+            <!-- Freelancer Base Section (Agent Base) -->
             <section id="freelancer-base-section" class="content-section">
                 <div class="bg-white p-6 rounded-xl shadow-md mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xl font-semibold flex items-center">
-                            <i class="fas fa-user-tie mr-2 text-blue-600"></i> Freelancer Management
+                            <i class="fas fa-user-tie mr-2 text-blue-600"></i> Agent Management
                         </h3>
                         <div class="flex space-x-2">
                             <button onclick="openFreelancerModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                <i class="fas fa-plus mr-1"></i> New Freelancer
+                                <i class="fas fa-plus mr-1"></i> New Agent
                             </button>
                             <select id="freelancerFilter" class="bg-gray-100 p-2 rounded-lg border">
                                 <option value="all">All Statuses</option>
@@ -427,7 +514,7 @@
                                 <option value="terminated">Terminated</option>
                                 <option value="new">New</option>
                             </select>
-                            <button onclick="showCustomMessage('Admin Action', 'This button would open a panel to manage freelancer data sources or settings.', 'alert')" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                            <button onclick="showCustomMessage('Admin Action', 'This button would open a panel to manage agent data sources or settings.', 'alert')" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
                                 <i class="fas fa-cogs mr-1"></i> Manage Data
                             </button>
                         </div>
@@ -437,8 +524,8 @@
                         <table id="freelancerTable" class="w-full">
                             <thead>
                                 <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">Freelancer Name</th>
-                                    <th class="p-3 text-left">Freelancer ID</th>
+                                    <th class="p-3 text-left">Agent Name</th>
+                                    <th class="p-3 text-left">Agent ID</th>
                                     <th class="p-3 text-left">Region</th>
                                     <th class="p-3 text-left">District</th>
                                     <th class="p-3 text-left">Status</th>
@@ -457,10 +544,10 @@
                                     <td class="p-3">128</td>
                                     <td class="p-3">Today</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer Alex Johnson.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit agent Alex Johnson.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer Alex Johnson')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent Alex Johnson')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -474,10 +561,10 @@
                                     <td class="p-3">105</td>
                                     <td class="p-3">Yesterday</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer Sarah Williams.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit agent Sarah Williams.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer Sarah Williams')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent Sarah Williams')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -491,10 +578,10 @@
                                     <td class="p-3">82</td>
                                     <td class="p-3">1 week ago</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer Michael Brown.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit agent Michael Brown.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer Michael Brown')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent Michael Brown')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -508,10 +595,10 @@
                                     <td class="p-3">76</td>
                                     <td class="p-3">2 weeks ago</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer David Lee.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit agent David Lee.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer David Lee')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent David Lee')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -525,10 +612,88 @@
                                     <td class="p-3">12</td>
                                     <td class="p-3">Today</td>
                                     <td class="p-3 text-center">
-                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer Emily Smith.', 'alert')">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Agent" onclick="showCustomMessage('Admin Action', 'Edit agent Emily Smith.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer Emily Smith')">
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Agent" onclick="confirmDelete('Agent Emily Smith')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Merchant Base Section -->
+            <section id="merchant-base-section" class="content-section">
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold flex items-center">
+                            <i class="fas fa-store mr-2 text-blue-600"></i> Merchant Management
+                        </h3>
+                        <div class="flex space-x-2">
+                            <button onclick="openMerchantModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                <i class="fas fa-plus mr-1"></i> New Merchant
+                            </button>
+                            <select id="merchantFilter" class="bg-gray-100 p-2 rounded-lg border">
+                                <option value="all">All Statuses</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                            <button onclick="showCustomMessage('Admin Action', 'This button would open a panel to manage merchant data sources or settings.', 'alert')" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                                <i class="fas fa-cogs mr-1"></i> Manage Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table id="merchantTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Merchant Name</th>
+                                    <th class="p-3 text-left">Merchant ID</th>
+                                    <th class="p-3 text-left">Type</th>
+                                    <th class="p-3 text-left">Location</th>
+                                    <th class="p-3 text-left">Status</th>
+                                    <th class="p-3 text-left">Registered By</th>
+                                    <th class="p-3 text-left">Registration Date</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">ABC Store</td>
+                                    <td class="p-3">MER-001</td>
+                                    <td class="p-3">Retail</td>
+                                    <td class="p-3">City Center</td>
+                                    <td class="p-3"><span class="badge status-active">Active</span></td>
+                                    <td class="p-3">Alex Johnson (FL-1001)</td>
+                                    <td class="p-3">2023-01-20</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Merchant" onclick="showCustomMessage('Admin Action', 'Edit merchant ABC Store.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Merchant" onclick="confirmDelete('Merchant ABC Store')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">XYZ Cafe</td>
+                                    <td class="p-3">MER-002</td>
+                                    <td class="p-3">Food & Beverage</td>
+                                    <td class="p-3">University Area</td>
+                                    <td class="p-3"><span class="badge status-pending">Pending</span></td>
+                                    <td class="p-3">Sarah Williams (FL-1002)</td>
+                                    <td class="p-3">2023-03-10</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Merchant" onclick="showCustomMessage('Admin Action', 'Edit merchant XYZ Cafe.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Merchant" onclick="confirmDelete('Merchant XYZ Cafe')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -617,12 +782,120 @@
                                     <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
                                     <td class="p-3">TZS 45.80</td>
                                     <td class="p-3">Michael Brown (FL-1003)</td>
-                                    <td class="p-3">2023-04-10</td>
                                     <td class="p-3 text-center">
                                         <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer Michael Brown.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer Michael Brown')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- University Project Section -->
+            <section id="university-project-section" class="content-section">
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold flex items-center">
+                            <i class="fas fa-graduation-cap mr-2 text-blue-600"></i> University of Dar es Salaam Project
+                        </h3>
+                        <button onclick="openAddProjectModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-plus mr-1"></i> Add New Project
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="border p-4 rounded-lg bg-gray-50">
+                            <h4 class="font-medium text-lg mb-2">Project Overview</h4>
+                            <p class="text-gray-700">This project focuses on expanding network coverage and customer acquisition within the University of Dar es Salaam campus and surrounding student residential areas. Key objectives include increasing student registrations for data plans and promoting mobile money services.</p>
+                            <ul class="mt-4 text-sm text-gray-600 space-y-1">
+                                <li><strong>Status:</strong> <span class="badge bg-green-100 text-green-800">In Progress</span></li>
+                                <li><strong>Start Date:</strong> 2024-03-01</li>
+                                <li><strong>Expected Completion:</strong> 2025-02-28</li>
+                                <li><strong>Assigned Lead:</strong> Jane Doe (Sales Manager)</li>
+                            </ul>
+                        </div>
+                        <div class="border p-4 rounded-lg bg-gray-50">
+                            <h4 class="font-medium text-lg mb-2">Key Metrics</h4>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-500">Student Registrations</p>
+                                    <p class="text-xl font-bold">850 <span class="text-sm text-gray-500">/ 1,000 target</span></p>
+                                    <div class="progress-bar mt-1"><div class="progress-fill" style="width: 85%"></div></div>
+                                    <p class="text-xs text-gray-500 mt-1">Active: 780</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500">Mobile Money Activations</p>
+                                    <p class="text-xl font-bold">320 <span class="text-sm text-gray-500">/ 400 target</span></p>
+                                    <div class="progress-bar mt-1"><div class="progress-fill bg-purple-500" style="width: 80%"></div></div>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500">Active Agents</p>
+                                    <p class="text-xl font-bold">12 <span class="text-sm text-gray-500">/ 15 assigned</span></p>
+                                    <div class="progress-bar mt-1"><div class="progress-fill bg-green-500" style="width: 80%"></div></div>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500">Active Merchants</p>
+                                    <p class="text-xl font-bold">5 <span class="text-sm text-gray-500">/ 8 target</span></p>
+                                    <div class="progress-bar mt-1"><div class="progress-fill bg-indigo-500" style="width: 62.5%"></div></div>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500">ARPU (University Segment)</p>
+                                    <p class="text-xl font-bold">TZS 9.50</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500">Agent Performance</p>
+                                    <p class="text-xl font-bold">88% <span class="text-sm text-gray-500">vs target</span></p>
+                                    <div class="progress-bar mt-1"><div class="progress-fill bg-yellow-500" style="width: 88%"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="font-medium mb-4 flex items-center">
+                        <i class="fas fa-tasks mr-2 text-gray-600"></i> Project Tasks
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table id="universityProjectTasksTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Task Name</th>
+                                    <th class="p-3 text-left">Assigned To</th>
+                                    <th class="p-3 text-left">Due Date</th>
+                                    <th class="p-3 text-left">Status</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">Campus outreach event planning</td>
+                                    <td class="p-3">Alex Johnson (FL-1001)</td>
+                                    <td class="p-3">2024-07-15</td>
+                                    <td class="p-3"><span class="badge bg-blue-100 text-blue-800">In Progress</span></td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit campus outreach task.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Campus outreach event planning task')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Data plan sign-up drive</td>
+                                    <td class="p-3">Sarah Williams (FL-1002)</td>
+                                    <td class="p-3">2024-08-01</td>
+                                    <td class="p-3"><span class="badge bg-amber-100 text-amber-800">Pending</span></td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit data plan sign-up drive task.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Data plan sign-up drive task')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
@@ -650,18 +923,19 @@
                                         <option>New Registration</option>
                                         <option>Churn Prevention</option>
                                         <option>ARPU Improvement</option>
+                                        <option>Project Related</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 mb-1">Assign To</label>
                                     <select id="assign-to" class="w-full p-2 border rounded-lg" onchange="toggleFreelancerSelection()">
                                         <option>Sales Manager</option>
-                                        <option>Freelancer Team</option>
-                                        <option>Specific Freelancer</option>
+                                        <option>Agent Team</option>
+                                        <option>Specific Agent</option>
                                     </select>
                                 </div>
                                 <div id="freelancerSelection" style="display: none;">
-                                    <label class="block text-gray-700 mb-1">Select Freelancer</label>
+                                    <label class="block text-gray-700 mb-1">Select Agent</label>
                                     <select id="select-freelancer" class="w-full p-2 border rounded-lg">
                                         <option>Alex Johnson (FL-1001)</option>
                                         <option>Sarah Williams (FL-1002)</option>
@@ -740,7 +1014,7 @@
                                         </tr>
                                         <tr class="border-b">
                                             <td class="p-3">Reduce churn in Business segment</td>
-                                            <td class="p-3">Freelancer Team</td>
+                                            <td class="p-3">Agent Team</td>
                                             <td class="p-3"><span class="badge bg-green-100 text-green-800">Low</span></td>
                                             <td class="p-3">Next Week</td>
                                             <td class="p-3"><span class="badge bg-gray-100 text-gray-800">Pending</span></td>
@@ -765,14 +1039,14 @@
             <section id="reports-section" class="content-section">
                 <div class="bg-white p-6 rounded-xl shadow-md mb-8">
                     <h3 class="text-xl font-semibold mb-6 flex items-center">
-                        <i class="fas fa-chart-pie mr-2 text-blue-600"></i> Registration Reports
+                        <i class="fas fa-chart-pie mr-2 text-blue-600"></i> Sales Reports Overview
                     </h3>
                     
                     <!-- Daily/Weekly/Monthly Summary -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div class="border p-4 rounded-lg">
                             <div class="flex justify-between items-center">
-                                <h4 class="font-medium">Today</h4>
+                                <h4 class="font-medium">Today's Registrations</h4>
                                 <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Live</span>
                             </div>
                             <p class="text-2xl font-bold mt-2">42</p>
@@ -782,7 +1056,7 @@
                             </div>
                         </div>
                         <div class="border p-4 rounded-lg">
-                            <h4 class="font-medium">Yesterday</h4>
+                            <h4 class="font-medium">Yesterday's Registrations</h4>
                             <p class="text-2xl font-bold mt-2">56</p>
                             <div class="flex justify-between text-xs text-gray-500 mt-1">
                                 <span>Active: 51</span>
@@ -790,7 +1064,7 @@
                             </div>
                         </div>
                         <div class="border p-4 rounded-lg">
-                            <h4 class="font-medium">This Week</h4>
+                            <h4 class="font-medium">This Week's Registrations</h4>
                             <p class="text-2xl font-bold mt-2">290</p>
                             <div class="flex justify-between text-xs text-gray-500 mt-1">
                                 <span>Active: 261</span>
@@ -799,6 +1073,9 @@
                         </div>
                     </div>
                     
+                    <h4 class="font-medium mb-4 flex items-center">
+                        <i class="fas fa-users mr-2 text-blue-500"></i> Customer Registration Base Report
+                    </h4>
                     <!-- Charts -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                         <div class="chart-container">
@@ -903,8 +1180,8 @@
                                         </td>
                                     </tr>
                                     <tr class="border-b">
-                                        <td class="p-3">CUST-5002</td>
                                         <td class="p-3">Sarah Johnson</td>
+                                        <td class="p-3">CUST-5002</td>
                                         <td class="p-3">Fiber 1Gbps</td>
                                         <td class="p-3"><span class="badge status-active">Active</span></td>
                                         <td class="p-3">TZS 15.20</td>
@@ -939,6 +1216,110 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+
+                    <h4 class="font-medium mb-4 mt-8 flex items-center">
+                        <i class="fas fa-user-tie mr-2 text-green-500"></i> Agent Base Report
+                    </h4>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <div class="chart-container">
+                            <canvas id="agentRecruitmentTrendChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="agentStatusChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto mb-6">
+                        <table id="agentReportTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Agent ID</th>
+                                    <th class="p-3 text-left">Name</th>
+                                    <th class="p-3 text-left">Status</th>
+                                    <th class="p-3 text-left">Customers Acquired</th>
+                                    <th class="p-3 text-left">Last Activity</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">FL-1001</td>
+                                    <td class="p-3">Alex Johnson</td>
+                                    <td class="p-3"><span class="badge status-active">Active</span></td>
+                                    <td class="p-3">128</td>
+                                    <td class="p-3">Today</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="View Details" onclick="showCustomMessage('Admin Action', 'View details for Agent Alex Johnson.', 'alert')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">FL-1002</td>
+                                    <td class="p-3">Sarah Williams</td>
+                                    <td class="p-3"><span class="badge status-active">Active</span></td>
+                                    <td class="p-3">105</td>
+                                    <td class="p-3">Yesterday</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="View Details" onclick="showCustomMessage('Admin Action', 'View details for Agent Sarah Williams.', 'alert')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 class="font-medium mb-4 mt-8 flex items-center">
+                        <i class="fas fa-store mr-2 text-indigo-500"></i> Merchant Base Report
+                    </h4>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <div class="chart-container">
+                            <canvas id="merchantRecruitmentTrendChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="merchantStatusChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="merchantReportTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Merchant ID</th>
+                                    <th class="p-3 text-left">Name</th>
+                                    <th class="p-3 text-left">Status</th>
+                                    <th class="p-3 text-left">Type</th>
+                                    <th class="p-3 text-left">Registration Date</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">MER-001</td>
+                                    <td class="p-3">ABC Store</td>
+                                    <td class="p-3"><span class="badge status-active">Active</span></td>
+                                    <td class="p-3">Retail</td>
+                                    <td class="p-3">2023-01-20</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="View Details" onclick="showCustomMessage('Admin Action', 'View details for Merchant ABC Store.', 'alert')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">MER-002</td>
+                                    <td class="p-3">XYZ Cafe</td>
+                                    <td class="p-3"><span class="badge status-pending">Pending</span></td>
+                                    <td class="p-3">Food & Beverage</td>
+                                    <td class="p-3">2023-03-10</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="View Details" onclick="showCustomMessage('Admin Action', 'View details for Merchant XYZ Cafe.', 'alert')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
@@ -1088,7 +1469,7 @@
         <div class="modal-content">
             <span class="close-button" onclick="closeFreelancerModal()">&times;</span>
             <h3 class="text-xl font-semibold mb-4 flex items-center">
-                <i class="fas fa-user-plus mr-2 text-blue-600"></i> Register New Freelancer
+                <i class="fas fa-user-plus mr-2 text-blue-600"></i> Register New Agent
             </h3>
             <form class="space-y-4" onsubmit="saveFreelancer(event)">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1145,7 +1526,66 @@
                         Cancel
                     </button>
                     <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                        Register Freelancer
+                        Register Agent
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Merchant Registration Modal -->
+    <div id="merchantModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeMerchantModal()">&times;</span>
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-store mr-2 text-blue-600"></i> Register New Merchant
+            </h3>
+            <form class="space-y-4" onsubmit="saveMerchant(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">Merchant Name</label>
+                        <input type="text" id="merchant-name" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">Merchant ID</label>
+                        <input type="text" id="merchant-id" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Merchant Type</label>
+                    <select id="merchant-type" class="w-full p-2 border rounded-lg">
+                        <option>Retail</option>
+                        <option>Food & Beverage</option>
+                        <option>Services</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Location</label>
+                    <input type="text" id="merchant-location" class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Status</label>
+                    <select id="merchant-status" class="w-full p-2 border rounded-lg">
+                        <option>Active</option>
+                        <option>Pending</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Registered By (Agent ID)</label>
+                    <input type="text" id="merchant-registered-by" class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Registration Date</label>
+                    <input type="date" id="merchant-reg-date" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeMerchantModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Register Merchant
                     </button>
                 </div>
             </form>
@@ -1192,7 +1632,7 @@
                     <input type="number" step="0.01" id="customer-arpu" class="w-full p-2 border rounded-lg" required>
                 </div>
                 <div>
-                    <label class="block text-gray-700 mb-1">Registered By (Freelancer ID)</label>
+                    <label class="block text-gray-700 mb-1">Registered By (Agent ID)</label>
                     <input type="text" id="customer-registered-by" class="w-full p-2 border rounded-lg">
                 </div>
                 <div>
@@ -1205,6 +1645,62 @@
                     </button>
                     <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                         Register Customer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add New Project Modal -->
+    <div id="addProjectModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeAddProjectModal()">&times;</span>
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-plus-circle mr-2 text-blue-600"></i> Add New Project
+            </h3>
+            <form class="space-y-4" onsubmit="saveProject(event)">
+                <div>
+                    <label class="block text-gray-700 mb-1">Project Name</label>
+                    <input type="text" id="project-name" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Description</label>
+                    <textarea id="project-description" class="w-full p-2 border rounded-lg" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">University/Client</label>
+                    <input type="text" id="project-client" class="w-full p-2 border rounded-lg">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">Start Date</label>
+                        <input type="date" id="project-start-date" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">End Date</label>
+                        <input type="date" id="project-end-date" class="w-full p-2 border rounded-lg">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Status</label>
+                    <select id="project-status" class="w-full p-2 border rounded-lg">
+                        <option>Planning</option>
+                        <option>In Progress</option>
+                        <option>Completed</option>
+                        <option>On Hold</option>
+                        <option>Cancelled</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Assigned Lead/Team</label>
+                    <input type="text" id="project-assigned-lead" class="w-full p-2 border rounded-lg">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeAddProjectModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Add Project
                     </button>
                 </div>
             </form>
@@ -1242,7 +1738,16 @@
         let fullCustomerTableInstance = null;
         let registrationTrendChartInstance = null;
         let registrationStatusChartInstance = null;
-        let tasksTableInstance = null; // New DataTable instance for tasks
+        let tasksTableInstance = null;
+        let merchantTableInstance = null; // New DataTable instance for merchants
+        let universityProjectTasksTableInstance = null; // New DataTable instance for university project tasks
+        let agentReportTableInstance = null; // New DataTable instance for agent reports
+        let merchantReportTableInstance = null; // New DataTable instance for merchant reports
+        let agentRecruitmentTrendChartInstance = null; // New Chart instance for agent recruitment trend
+        let agentStatusChartInstance = null; // New Chart instance for agent status
+        let merchantRecruitmentTrendChartInstance = null; // New Chart instance for merchant recruitment trend
+        let merchantStatusChartInstance = null; // New Chart instance for merchant status
+
 
         // Function to show custom modal messages (replaces alert/confirm)
         let confirmCallback = null; // To store the callback for confirmation
@@ -1341,10 +1846,16 @@
                 initTasksTable();
             } else if (sectionId === 'reports-section') {
                 initRegistrationReports();
+                initAgentReports(); // Initialize agent reports
+                initMerchantReports(); // Initialize merchant reports
             } else if (sectionId === 'arpu-trend-section') {
                 initARPUCharts();
             } else if (sectionId === 'churn-rate-section') {
                 initChurnRateCharts();
+            } else if (sectionId === 'merchant-base-section') {
+                initMerchantTable();
+            } else if (sectionId === 'university-project-section') {
+                initUniversityProjectTasksTable();
             }
         }
 
@@ -1362,14 +1873,36 @@
             const firstName = document.getElementById('freelancer-first-name').value;
             const lastName = document.getElementById('freelancer-last-name').value;
             // In a real application, you would send this data to a backend API
-            console.log('Saving Freelancer:', { firstName, lastName });
-            showCustomMessage('Freelancer Registered!', `${firstName} ${lastName} has been registered.`, 'alert');
+            console.log('Saving Agent (Freelancer):', { firstName, lastName });
+            showCustomMessage('Agent Registered!', `${firstName} ${lastName} has been registered.`, 'alert');
             closeFreelancerModal();
             // Optionally, refresh the freelancer table
             if ($.fn.DataTable.isDataTable('#freelancerTable')) {
                 $('#freelancerTable').DataTable().destroy();
             }
             initFreelancerTable();
+        }
+
+        // Merchant Modal Functions
+        function openMerchantModal() {
+            document.getElementById('merchantModal').style.display = 'flex'; // Use flex for centering
+        }
+
+        function closeMerchantModal() {
+            document.getElementById('merchantModal').style.display = 'none';
+        }
+
+        function saveMerchant(event) {
+            event.preventDefault(); // Prevent default form submission
+            const merchantName = document.getElementById('merchant-name').value;
+            const merchantId = document.getElementById('merchant-id').value;
+            console.log('Saving Merchant:', { merchantName, merchantId });
+            showCustomMessage('Merchant Registered!', `${merchantName} (ID: ${merchantId}) has been registered.`, 'alert');
+            closeMerchantModal();
+            if ($.fn.DataTable.isDataTable('#merchantTable')) {
+                $('#merchantTable').DataTable().destroy();
+            }
+            initMerchantTable();
         }
 
         // Customer Modal Functions
@@ -1398,6 +1931,29 @@
                 $('#fullCustomerTable').DataTable().destroy();
             }
             initFullCustomerTable();
+        }
+
+        // Add Project Modal Functions
+        function openAddProjectModal() {
+            document.getElementById('addProjectModal').style.display = 'flex';
+        }
+
+        function closeAddProjectModal() {
+            document.getElementById('addProjectModal').style.display = 'none';
+        }
+
+        function saveProject(event) {
+            event.preventDefault();
+            const projectName = document.getElementById('project-name').value;
+            const projectClient = document.getElementById('project-client').value;
+            console.log('Saving Project:', { projectName, projectClient });
+            showCustomMessage('Project Added!', `Project "${projectName}" for ${projectClient} has been added.`, 'alert');
+            closeAddProjectModal();
+            // In a real app, you might want to refresh the projects section or a projects table
+            if ($.fn.DataTable.isDataTable('#universityProjectTasksTable')) {
+                $('#universityProjectTasksTable').DataTable().destroy();
+            }
+            initUniversityProjectTasksTable();
         }
 
         // Task Management Functions
@@ -1449,6 +2005,28 @@
             });
         }
 
+        function initMerchantTable() {
+            if (merchantTableInstance) {
+                merchantTableInstance.destroy();
+            }
+            merchantTableInstance = $('#merchantTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true,
+                initComplete: function() {
+                    this.api().columns(4).every(function() { // Column 4 is 'Status'
+                        const column = this;
+                        const select = $('#merchantFilter');
+                        
+                        select.off('change').on('change', function() { // Remove previous event listener
+                            const val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val === 'all' ? '' : '^' + val + '$', true, false).draw();
+                        });
+                    });
+                }
+            });
+        }
+
         function initCustomerTable() {
             if (customerTableInstance) {
                 customerTableInstance.destroy();
@@ -1477,6 +2055,39 @@
                 tasksTableInstance.destroy();
             }
             tasksTableInstance = $('#tasksTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true
+            });
+        }
+
+        function initUniversityProjectTasksTable() {
+            if (universityProjectTasksTableInstance) {
+                universityProjectTasksTableInstance.destroy();
+            }
+            universityProjectTasksTableInstance = $('#universityProjectTasksTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true
+            });
+        }
+
+        function initAgentReportTable() {
+            if (agentReportTableInstance) {
+                agentReportTableInstance.destroy();
+            }
+            agentReportTableInstance = $('#agentReportTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true
+            });
+        }
+
+        function initMerchantReportTable() {
+            if (merchantReportTableInstance) {
+                merchantReportTableInstance.destroy();
+            }
+            merchantReportTableInstance = $('#merchantReportTable').DataTable({
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
                 responsive: true
@@ -1660,7 +2271,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Monthly Registration Trend',
+                            text: 'Monthly Customer Registration Trend',
                             font: {
                                 size: 14
                             }
@@ -1697,6 +2308,135 @@
                 }
             });
         }
+
+        function initAgentReports() {
+            initAgentReportTable();
+
+            const agentTrendCtx = document.getElementById('agentRecruitmentTrendChart');
+            if (agentRecruitmentTrendChartInstance) {
+                agentRecruitmentTrendChartInstance.destroy();
+            }
+            agentRecruitmentTrendChartInstance = new Chart(agentTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'New Agents',
+                        data: [10, 12, 8, 15, 11, 13, 9],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Agent Recruitment Trend',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+
+            const agentStatusCtx = document.getElementById('agentStatusChart');
+            if (agentStatusChartInstance) {
+                agentStatusChartInstance.destroy();
+            }
+            agentStatusChartInstance = new Chart(agentStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Active', 'Inactive', 'New'],
+                    datasets: [{
+                        data: [130, 20, 12],
+                        backgroundColor: ['#3b82f6', '#f59e0b', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Agent Status Distribution',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initMerchantReports() {
+            initMerchantReportTable();
+
+            const merchantTrendCtx = document.getElementById('merchantRecruitmentTrendChart');
+            if (merchantRecruitmentTrendChartInstance) {
+                merchantRecruitmentTrendChartInstance.destroy();
+            }
+            merchantRecruitmentTrendChartInstance = new Chart(merchantTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'New Merchants',
+                        data: [5, 8, 7, 10, 6, 9, 12],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.05)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Merchant Recruitment Trend',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+
+            const merchantStatusCtx = document.getElementById('merchantStatusChart');
+            if (merchantStatusChartInstance) {
+                merchantStatusChartInstance.destroy();
+            }
+            merchantStatusChartInstance = new Chart(merchantStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Active', 'Pending', 'Inactive'],
+                    datasets: [{
+                        data: [78, 7, 15],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Merchant Status Distribution',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
 
         // Initialize dashboard charts and tables
         function initDashboardChartsAndTables() {

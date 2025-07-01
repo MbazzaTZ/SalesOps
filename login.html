@@ -3,422 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A-Mobile - Admin Dashboard</title>
-    
+    <title>A-Mobile - Admin Login</title>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Font Awesome Icons -->
+
+    <!-- Font Awesome Icons (optional, but good for consistent styling) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .status-active {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-        .status-pending {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-        .status-inactive {
-            background-color: #e5e7eb;
-            color: #4b5563;
-        }
-        .status-suspended {
-            background-color: #fee2e2;
-            color: #b91c1c;
-        }
-        .chart-container {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
-        .priority-high {
-            background-color: #fee2e2;
-            color: #b91c1c;
-        }
-        .priority-medium {
-            background-color: #fef9c3;
-            color: #b45309;
-        }
-        .priority-low {
-            background-color: #dcfce7;
-            color: #166534;
-        }
-        .role-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .role-admin {
-            background-color: #6366f1;
-            color: white;
-        }
-        .role-manager {
-            background-color: #8b5cf6;
-            color: white;
-        }
-        .role-freelancer {
-            background-color: #10b981;
-            color: white;
-        }
-        .role-customer {
-            background-color: #f59e0b;
-            color: white;
-        }
-        .nav-item.active {
-            background-color: #1e40af;
-        }
-        .content-section {
-            display: none;
-        }
-        .content-section.active {
-            display: block;
-        }
+        /* Basic styling for the login container */
         #login-container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f3f4f6;
+            background-color: #f3f4f6; /* Light gray background */
+            font-family: 'Inter', sans-serif; /* Using Inter font */
         }
         .login-form {
             background: white;
             padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Soft shadow */
             width: 100%;
             max-width: 400px;
+            border: 1px solid #e5e7eb; /* Light border */
+        }
+        /* Input and button styling */
+        input[type="text"],
+        input[type="password"] {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            width: 100%;
+            box-sizing: border-box; /* Include padding in width */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #3b82f6; /* Blue border on focus */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Light blue shadow on focus */
+        }
+        button {
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+        button:hover {
+            transform: translateY(-1px); /* Slight lift on hover */
+        }
+        button:active {
+            transform: translateY(0); /* Return to original position on click */
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen (initially shown) -->
+    <!-- Login Screen -->
     <div id="login-container">
         <div class="login-form">
-            <h1 class="text-2xl font-bold text-center mb-6">A-Mobile Admin Login</h1>
+            <h1 class="text-3xl font-extrabold text-center mb-8 text-gray-800">A-Mobile Login</h1>
             <div class="mb-4">
-                <label class="block text-gray-700 mb-2">Username</label>
-                <input type="text" id="username" class="w-full p-2 border rounded-lg">
+                <label for="username" class="block text-gray-700 text-sm font-medium mb-2">Username</label>
+                <input type="text" id="username" class="w-full p-2 border rounded-lg" placeholder="Enter your username">
             </div>
             <div class="mb-6">
-                <label class="block text-gray-700 mb-2">Password</label>
-                <input type="password" id="password" class="w-full p-2 border rounded-lg">
+                <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
+                <input type="password" id="password" class="w-full p-2 border rounded-lg" placeholder="Enter your password">
             </div>
-            <button onclick="handleLogin()" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+            <button onclick="handleLogin()" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold text-lg shadow-md">
                 Login
             </button>
         </div>
     </div>
 
-    <!-- Admin Dashboard (initially hidden) -->
-    <div id="dashboard-container" class="hidden">
-        <div class="flex">
-            <!-- Sidebar Navigation -->
-            <div class="w-64 bg-blue-800 text-white min-h-screen p-4">
-                <div class="flex items-center justify-between mb-8 mt-4">
-                    <h1 class="text-xl font-bold">A-Mobile Admin</h1>
+    <!-- Custom Modal Structure (for alerts) -->
+    <div id="customModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modalTitle"></h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500" id="modalMessage"></p>
                 </div>
-                
-                <!-- Admin Profile -->
-                <div class="bg-blue-700 p-4 rounded-lg mb-6">
-                    <div class="flex items-center mb-3">
-                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">AD</div>
-                        <div>
-                            <p class="font-medium">Admin User</p>
-                            <p class="text-sm text-blue-200">AD-001</p>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="status-badge status-active">Active</span>
-                        <span class="text-sm">System Admin</span>
-                    </div>
+                <div class="items-center px-4 py-3">
+                    <button id="modalCloseButton" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                        OK
+                    </button>
                 </div>
-                
-                <nav>
-                    <ul>
-                        <li class="mb-2">
-                            <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700 active" onclick="showSection('dashboard')">
-                                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('user-management')">
-                                <i class="fas fa-users-cog mr-2"></i> User Management
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('approvals')">
-                                <i class="fas fa-clipboard-check mr-2"></i> Pending Approvals
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('system-health')">
-                                <i class="fas fa-server mr-2"></i> System Health
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('audit-logs')">
-                                <i class="fas fa-clipboard-list mr-2"></i> Audit Logs
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('reports')">
-                                <i class="fas fa-chart-pie mr-2"></i> Reports
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('settings')">
-                                <i class="fas fa-cog mr-2"></i> Settings
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <!-- Main Content -->
-            <div class="flex-1 p-8">
-                <!-- Dashboard Section -->
-                <div id="dashboard" class="content-section active">
-                    <header class="flex justify-between items-center mb-8">
-                        <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
-                        <div class="flex items-center space-x-4">
-                            <div class="bg-white p-2 rounded-lg shadow">
-                                <span class="text-gray-500 mr-2">Last Login:</span>
-                                <span class="font-medium">Today, 09:30 AM</span>
-                            </div>
-                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" onclick="logout()">
-                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                            </button>
-                        </div>
-                    </header>
-
-                    <!-- System Overview -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <div class="bg-white p-4 rounded-xl shadow">
-                            <p class="text-gray-500">Total Users</p>
-                            <p class="text-2xl font-bold mt-1">1,842</p>
-                            <div class="flex items-center mt-2">
-                                <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 12%</span>
-                                <span class="text-sm text-gray-500">from last month</span>
-                            </div>
-                        </div>
-                        <div class="bg-white p-4 rounded-xl shadow">
-                            <p class="text-gray-500">Active Freelancers</p>
-                            <p class="text-2xl font-bold mt-1">128</p>
-                            <p class="text-sm text-gray-500 mt-2">86% active rate</p>
-                        </div>
-                        <div class="bg-white p-4 rounded-xl shadow">
-                            <p class="text-gray-500">Pending Approvals</p>
-                            <p class="text-2xl font-bold mt-1">24</p>
-                            <div class="flex items-center mt-2">
-                                <span class="text-red-500 mr-1"><i class="fas fa-exclamation-circle"></i></span>
-                                <span class="text-sm text-gray-500">Require attention</span>
-                            </div>
-                        </div>
-                        <div class="bg-white p-4 rounded-xl shadow">
-                            <p class="text-gray-500">System Health</p>
-                            <p class="text-2xl font-bold mt-1">100%</p>
-                            <p class="text-sm text-gray-500 mt-2">All systems operational</p>
-                        </div>
-                    </div>
-
-                    <!-- Main Dashboard Content -->
-                    <div class="bg-white p-6 rounded-xl shadow mb-8">
-                        <h3 class="text-xl font-semibold mb-6 flex items-center">
-                            <i class="fas fa-chart-line mr-2 text-blue-600"></i> System Overview
-                        </h3>
-                        
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                            <!-- User Growth Chart -->
-                            <div>
-                                <h4 class="font-medium mb-3">User Growth (Last 6 Months)</h4>
-                                <div class="chart-container">
-                                    <canvas id="userGrowthChart"></canvas>
-                                </div>
-                            </div>
-                            
-                            <!-- Recent Activity -->
-                            <div>
-                                <h4 class="font-medium mb-3">Recent System Activity</h4>
-                                <div class="bg-gray-50 p-4 rounded-lg h-full">
-                                    <div class="space-y-4">
-                                        <div class="flex items-start">
-                                            <div class="bg-blue-100 p-2 rounded-full mr-3">
-                                                <i class="fas fa-user-plus text-blue-600"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-medium">New freelancer registered</p>
-                                                <p class="text-sm text-gray-500">Alex Johnson completed registration (2 mins ago)</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-start">
-                                            <div class="bg-green-100 p-2 rounded-full mr-3">
-                                                <i class="fas fa-check-circle text-green-600"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-medium">Commission processed</p>
-                                                <p class="text-sm text-gray-500">Monthly commissions paid to 128 freelancers (1 hour ago)</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-start">
-                                            <div class="bg-yellow-100 p-2 rounded-full mr-3">
-                                                <i class="fas fa-exclamation-triangle text-yellow-600"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-medium">System maintenance</p>
-                                                <p class="text-sm text-gray-500">Scheduled maintenance completed (3 hours ago)</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Quick Actions -->
-                        <div>
-                            <h3 class="text-xl font-semibold mb-4 flex items-center">
-                                <i class="fas fa-bolt mr-2 text-blue-600"></i> Quick Actions
-                            </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <button class="bg-blue-100 text-blue-800 p-4 rounded-lg hover:bg-blue-200 flex items-center" onclick="showSection('approvals')">
-                                    <i class="fas fa-clipboard-check text-xl mr-3"></i>
-                                    <span>Review Pending Approvals</span>
-                                </button>
-                                <button class="bg-green-100 text-green-800 p-4 rounded-lg hover:bg-green-200 flex items-center" onclick="showSection('user-management')">
-                                    <i class="fas fa-user-edit text-xl mr-3"></i>
-                                    <span>Manage Users</span>
-                                </button>
-                                <button class="bg-purple-100 text-purple-800 p-4 rounded-lg hover:bg-purple-200 flex items-center" onclick="showSection('reports')">
-                                    <i class="fas fa-file-export text-xl mr-3"></i>
-                                    <span>Generate Reports</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Other sections (user-management, approvals, etc.) would go here -->
-                <!-- They are omitted for brevity but would be similar to previous examples -->
-                
             </div>
         </div>
     </div>
 
     <script>
-        // Simulated login function
+        /**
+         * Displays a custom modal instead of a native alert.
+         * @param {string} title - The title of the modal.
+         * @param {string} message - The message content of the modal.
+         */
+        function showCustomModal(title, message) {
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            modal.classList.remove('hidden');
+
+            // Close modal when OK button is clicked
+            document.getElementById('modalCloseButton').onclick = function() {
+                modal.classList.add('hidden');
+            };
+
+            // Close modal when clicking outside (optional)
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            };
+        }
+
+        /**
+         * Handles the login attempt.
+         * Validates credentials and redirects to the appropriate dashboard.
+         */
         function handleLogin() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            
-            // Simple validation - in a real app, you would call your authentication API
-            if (username === 'admin' && password === 'password') {
-                // Hide login, show dashboard
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('dashboard-container').classList.remove('hidden');
-                
-                // Initialize the dashboard
-                initDashboard();
+
+            // Simple validation: username 'admin', password '12345'
+            if (username === 'admin' && password === '12345') {
+                showCustomModal('Login Successful', 'Redirecting to Admin Dashboard...');
+                // Redirect to the admin dashboard after a short delay
+                setTimeout(() => {
+                    window.location.href = 'admin-dashboard.html';
+                }, 1000);
             } else {
-                alert('Invalid credentials. Try admin/password');
+                showCustomModal('Login Failed', 'Invalid username or password. Please try again. (Hint: admin/12345)');
             }
-        }
-
-        // Logout function
-        function logout() {
-            // Hide dashboard, show login
-            document.getElementById('dashboard-container').classList.add('hidden');
-            document.getElementById('login-container').style.display = 'flex';
-            
-            // Clear form
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            
-            // Optional: Show logout message
-            alert('You have been logged out successfully.');
-        }
-
-        // Initialize dashboard components
-        function initDashboard() {
-            // Initialize charts
-            initUserGrowthChart();
-            
-            // Set default section
-            showSection('dashboard');
-        }
-
-        // Navigation functionality
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show selected section
-            document.getElementById(sectionId).classList.add('active');
-            
-            // Update active nav item
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-        }
-
-        // Initialize User Growth Chart
-        function initUserGrowthChart() {
-            const ctx = document.getElementById('userGrowthChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                    datasets: [
-                        {
-                            label: 'Total Users',
-                            data: [1200, 1350, 1420, 1550, 1680, 1750, 1842],
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            tension: 0.3,
-                            fill: true
-                        },
-                        {
-                            label: 'Active Users',
-                            data: [980, 1120, 1250, 1320, 1450, 1580, 1620],
-                            borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            tension: 0.3,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    }
-                }
-            });
         }
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Default to showing login screen
-            document.getElementById('dashboard-container').classList.add('hidden');
+            // Ensure the login screen is visible and focus the username field
             document.getElementById('login-container').style.display = 'flex';
-            
-            // Focus username field
             document.getElementById('username').focus();
         });
     </script>

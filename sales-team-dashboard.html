@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telecom Sales Dashboard</title>
+    <title>Sales Team Dashboard - Admin View</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -38,10 +38,46 @@
         .has-submenu.open::after { transform: rotate(90deg); }
         
         /* Modal styles */
-        .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
-        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 700px; border-radius: 8px; }
-        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .close:hover { color: black; }
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1000; /* Ensure modals are on top */
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content { 
+            background-color: #fefefe; 
+            margin: auto; /* Centering */
+            padding: 20px; 
+            border: 1px solid #888; 
+            width: 90%; 
+            max-width: 700px; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative; /* For close button positioning */
+        }
+        .close-button { 
+            color: #aaa; 
+            float: right; 
+            font-size: 28px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            position: absolute; /* Position relative to modal-content */
+            top: 10px;
+            right: 20px;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
         
         /* Status badges */
         .status-active { background-color: #d1fae5; color: #065f46; }
@@ -49,69 +85,87 @@
         .status-suspended { background-color: #fee2e2; color: #b91c1c; }
         .status-terminated { background-color: #1f2937; color: #f9fafb; }
         .status-new { background-color: #dbeafe; color: #1e40af; }
+
+        /* Content section display */
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        /* Navigation item active state */
+        .nav-item.active {
+            background-color: #1e40af; /* Darker blue for active state */
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
     <!-- Sidebar Navigation -->
-    <div class="flex">
-        <div class="w-64 telecom-gradient text-white min-h-screen p-4">
+    <div class="flex min-h-screen">
+        <div class="w-64 telecom-gradient text-white p-4 flex flex-col shadow-lg">
             <h1 class="text-2xl font-bold mb-8 mt-4 flex items-center">
                 <i class="fas fa-tower-cell mr-2"></i> TelecomSales
             </h1>
-            <nav>
+            <nav class="flex-grow">
                 <ul>
                     <li class="mb-2">
-                        <a href="#" class="block p-2 rounded hover:bg-blue-700 bg-blue-700">
-                            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                        <a href="#dashboard-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'dashboard-section')">
+                            <i class="fas fa-tachometer-alt mr-3 text-lg"></i> Dashboard
                         </a>
                     </li>
                     
                     <!-- Registration Menu -->
                     <li class="mb-2">
-                        <a href="#" class="block p-2 rounded hover:bg-blue-700 flex items-center has-submenu" onclick="toggleSubmenu('registrationSubmenu', this)">
-                            <i class="fas fa-user-plus mr-2"></i> Registration
+                        <a href="#" class="nav-item block p-3 rounded-lg hover:bg-blue-700 flex items-center has-submenu" onclick="toggleSubmenu('registrationSubmenu', this)">
+                            <i class="fas fa-user-plus mr-3 text-lg"></i> Registration
                         </a>
                         <ul id="registrationSubmenu" class="submenu">
                             <li class="mt-1">
-                                <a href="#" class="block p-2 rounded hover:bg-blue-700 registration-link" data-section="customer-base">
-                                    <i class="fas fa-users mr-2"></i> Customer Base
+                                <a href="#customer-base-section" class="nav-item block p-3 rounded hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'customer-base-section')">
+                                    <i class="fas fa-users mr-3 text-lg"></i> Customer Base
                                 </a>
                             </li>
                             <li class="mt-1">
-                                <a href="#" class="block p-2 rounded hover:bg-blue-700 registration-link" data-section="freelancer-base">
-                                    <i class="fas fa-user-tie mr-2"></i> Freelancer Base
+                                <a href="#freelancer-base-section" class="nav-item block p-3 rounded hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'freelancer-base-section')">
+                                    <i class="fas fa-user-tie mr-3 text-lg"></i> Freelancer Base
                                 </a>
                             </li>
                             <li class="mt-1">
-                                <a href="#" class="block p-2 rounded hover:bg-blue-700 registration-link" data-section="assigned-tasks">
-                                    <i class="fas fa-tasks mr-2"></i> Assigned Tasks
+                                <a href="#assigned-tasks-section" class="nav-item block p-3 rounded hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'assigned-tasks-section')">
+                                    <i class="fas fa-tasks mr-3 text-lg"></i> Assigned Tasks
                                 </a>
                             </li>
                             <li class="mt-1">
-                                <a href="#" class="block p-2 rounded hover:bg-blue-700 registration-link" data-section="reports">
-                                    <i class="fas fa-chart-pie mr-2"></i> Reports
+                                <a href="#reports-section" class="nav-item block p-3 rounded hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'reports-section')">
+                                    <i class="fas fa-chart-pie mr-3 text-lg"></i> Reports
                                 </a>
                             </li>
                         </ul>
                     </li>
                     
                     <li class="mb-2">
-                        <a href="#" class="block p-2 rounded hover:bg-blue-700">
-                            <i class="fas fa-file-invoice-dollar mr-2"></i> ARPU Trend
+                        <a href="#arpu-trend-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'arpu-trend-section')">
+                            <i class="fas fa-file-invoice-dollar mr-3 text-lg"></i> ARPU Trend
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="block p-2 rounded hover:bg-blue-700">
-                            <i class="fas fa-user-slash mr-2"></i> Churn Rate
+                        <a href="#churn-rate-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'churn-rate-section')">
+                            <i class="fas fa-user-slash mr-3 text-lg"></i> Churn Rate
                         </a>
                     </li>
                 </ul>
             </nav>
+            <!-- Logout Button -->
+            <div class="mt-auto pt-6 border-t border-blue-700">
+                <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="logout()">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
+            </div>
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 p-8">
-            <header class="flex justify-between items-center mb-8">
+            <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
                 <h2 class="text-3xl font-bold text-gray-800">Sales Performance Dashboard</h2>
                 <div class="flex items-center">
                     <div class="relative mr-4">
@@ -127,9 +181,8 @@
                 </div>
             </header>
 
-            <!-- Dynamic Content Sections -->
-            <div id="dashboard-content">
-                <!-- Sales KPIs Section (Default View) -->
+            <!-- Dashboard Section (Default View) -->
+            <section id="dashboard-section" class="content-section active">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <!-- Customer Registration Card -->
                     <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
@@ -150,6 +203,9 @@
                             <span>Active: 1,128 (90%)</span>
                             <span>Inactive: 120 (10%)</span>
                         </div>
+                        <button onclick="showCustomMessage('Admin Action', 'This button would open a modal to manage customer registration data.', 'alert')" class="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage Data
+                        </button>
                     </div>
 
                     <!-- Freelancer Management Card -->
@@ -180,6 +236,9 @@
                         <button onclick="openFreelancerModal()" class="w-full mt-2 bg-blue-600 text-white py-1 rounded-lg hover:bg-blue-700 text-sm">
                             <i class="fas fa-plus mr-1"></i> Add Freelancer
                         </button>
+                        <button onclick="showCustomMessage('Admin Action', 'This button would open a modal to manage freelancer data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage Data
+                        </button>
                     </div>
 
                     <!-- Conversion Rate Card -->
@@ -205,13 +264,553 @@
                             </div>
                             <div>
                                 <p class="font-semibold">Value</p>
-                                <p class="text-gray-500">$42,180</p>
+                                <p class="text-gray-500">TZS 42,180</p>
+                            </div>
+                        </div>
+                        <button onclick="showCustomMessage('Admin Action', 'This button would open a modal to manage conversion rate data.', 'alert')" class="w-full mt-4 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage Data
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Freelancer Base Section -->
+            <section id="freelancer-base-section" class="content-section">
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold flex items-center">
+                            <i class="fas fa-user-tie mr-2 text-blue-600"></i> Freelancer Management
+                        </h3>
+                        <div class="flex space-x-2">
+                            <button onclick="openFreelancerModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                <i class="fas fa-plus mr-1"></i> New Freelancer
+                            </button>
+                            <select id="freelancerFilter" class="bg-gray-100 p-2 rounded-lg border">
+                                <option value="all">All Statuses</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                                <option value="terminated">Terminated</option>
+                                <option value="new">New</option>
+                            </select>
+                            <button onclick="showCustomMessage('Admin Action', 'This button would open a panel to manage freelancer data sources or settings.', 'alert')" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                                <i class="fas fa-cogs mr-1"></i> Manage Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table id="freelancerTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Freelancer Name</th>
+                                    <th class="p-3 text-left">Freelancer ID</th>
+                                    <th class="p-3 text-left">Region</th>
+                                    <th class="p-3 text-left">District</th>
+                                    <th class="p-3 text-left">Status</th>
+                                    <th class="p-3 text-left">Customers</th>
+                                    <th class="p-3 text-left">Last Active</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">Alex Johnson</td>
+                                    <td class="p-3">FL-1001</td>
+                                    <td class="p-3">Metro</td>
+                                    <td class="p-3">Central</td>
+                                    <td class="p-3"><span class="badge status-active">Active</span></td>
+                                    <td class="p-3">128</td>
+                                    <td class="p-3">Today</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer Alex Johnson.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer Alex Johnson')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Sarah Williams</td>
+                                    <td class="p-3">FL-1002</td>
+                                    <td class="p-3">Suburban</td>
+                                    <td class="p-3">North</td>
+                                    <td class="p-3"><span class="badge status-active">Active</span></td>
+                                    <td class="p-3">105</td>
+                                    <td class="p-3">Yesterday</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer Sarah Williams.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer Sarah Williams')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Michael Brown</td>
+                                    <td class="p-3">FL-1003</td>
+                                    <td class="p-3">Rural</td>
+                                    <td class="p-3">East</td>
+                                    <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
+                                    <td class="p-3">82</td>
+                                    <td class="p-3">1 week ago</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer Michael Brown.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer Michael Brown')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">David Lee</td>
+                                    <td class="p-3">FL-1004</td>
+                                    <td class="p-3">Metro</td>
+                                    <td class="p-3">West</td>
+                                    <td class="p-3"><span class="badge status-suspended">Suspended</span></td>
+                                    <td class="p-3">76</td>
+                                    <td class="p-3">2 weeks ago</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer David Lee.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer David Lee')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Emily Smith</td>
+                                    <td class="p-3">FL-1005</td>
+                                    <td class="p-3">Suburban</td>
+                                    <td class="p-3">South</td>
+                                    <td class="p-3"><span class="badge status-new">New</span></td>
+                                    <td class="p-3">12</td>
+                                    <td class="p-3">Today</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Freelancer" onclick="showCustomMessage('Admin Action', 'Edit freelancer Emily Smith.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Freelancer" onclick="confirmDelete('Freelancer Emily Smith')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer Base Section -->
+            <section id="customer-base-section" class="content-section">
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold flex items-center">
+                            <i class="fas fa-users mr-2 text-blue-600"></i> Customer Database
+                        </h3>
+                        <div class="flex space-x-2">
+                            <button onclick="openCustomerModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                <i class="fas fa-plus mr-1"></i> New Customer
+                            </button>
+                            <select class="bg-gray-100 p-2 rounded-lg border">
+                                <option>All Statuses</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                            </select>
+                            <button onclick="showCustomMessage('Admin Action', 'This button would open a panel to manage customer data sources or settings.', 'alert')" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                                <i class="fas fa-cogs mr-1"></i> Manage Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table id="customerTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Customer Name</th>
+                                    <th class="p-3 text-left">Customer ID</th>
+                                    <th class="p-3 text-left">Plan</th>
+                                    <th class="p-3 text-left">Status</th>
+                                    <th class="p-3 text-left">ARPU (TZS)</th>
+                                    <th class="p-3 text-left">Registered By</th>
+                                    <th class="p-3 text-left">Registration Date</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">John Smith</td>
+                                    <td class="p-3">CUST-5001</td>
+                                    <td class="p-3">5G Unlimited</td>
+                                    <td class="p-3"><span class="badge status-active">Active</span></td>
+                                    <td class="p-3">TZS 12.50</td>
+                                    <td class="p-3">Alex Johnson (FL-1001)</td>
+                                    <td class="p-3">2023-05-15</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer John Smith.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer John Smith')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Sarah Johnson</td>
+                                    <td class="p-3">CUST-5002</td>
+                                    <td class="p-3">Fiber 1Gbps</td>
+                                    <td class="p-3"><span class="badge status-active">Active</span></td>
+                                    <td class="p-3">TZS 15.20</td>
+                                    <td class="p-3">Sarah Williams (FL-1002)</td>
+                                    <td class="p-3">2023-06-22</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer Sarah Johnson.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer Sarah Johnson')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Michael Brown</td>
+                                    <td class="p-3">CUST-5003</td>
+                                    <td class="p-3">Business Plan</td>
+                                    <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
+                                    <td class="p-3">TZS 45.80</td>
+                                    <td class="p-3">Michael Brown (FL-1003)</td>
+                                    <td class="p-3">2023-04-10</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer Michael Brown.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer Michael Brown')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assigned Tasks Section -->
+            <section id="assigned-tasks-section" class="content-section">
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <h3 class="text-xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-tasks mr-2 text-blue-600"></i> Task Management
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <h4 class="font-medium mb-2">Create New Task</h4>
+                            <form class="space-y-4" onsubmit="saveTask(event)">
+                                <div>
+                                    <label class="block text-gray-700 mb-1">Task Type</label>
+                                    <select id="task-type" class="w-full p-2 border rounded-lg">
+                                        <option>Customer Follow-up</option>
+                                        <option>New Registration</option>
+                                        <option>Churn Prevention</option>
+                                        <option>ARPU Improvement</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-1">Assign To</label>
+                                    <select id="assign-to" class="w-full p-2 border rounded-lg" onchange="toggleFreelancerSelection()">
+                                        <option>Sales Manager</option>
+                                        <option>Freelancer Team</option>
+                                        <option>Specific Freelancer</option>
+                                    </select>
+                                </div>
+                                <div id="freelancerSelection" style="display: none;">
+                                    <label class="block text-gray-700 mb-1">Select Freelancer</label>
+                                    <select id="select-freelancer" class="w-full p-2 border rounded-lg">
+                                        <option>Alex Johnson (FL-1001)</option>
+                                        <option>Sarah Williams (FL-1002)</option>
+                                        <option>Michael Brown (FL-1003)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-1">Priority</label>
+                                    <select id="task-priority" class="w-full p-2 border rounded-lg">
+                                        <option>High</option>
+                                        <option>Medium</option>
+                                        <option>Low</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-1">Due Date</label>
+                                    <input type="date" id="task-due-date" class="w-full p-2 border rounded-lg">
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                                    Assign Task
+                                </button>
+                            </form>
+                        </div>
+                        <div class="md:col-span-2">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-medium">Active Tasks</h4>
+                                <select class="bg-gray-100 p-2 rounded-lg border text-sm">
+                                    <option>All Tasks</option>
+                                    <option>My Tasks</option>
+                                    <option>Overdue</option>
+                                    <option>Completed</option>
+                                </select>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table id="tasksTable" class="w-full">
+                                    <thead>
+                                        <tr class="bg-gray-100">
+                                            <th class="p-3 text-left">Task</th>
+                                            <th class="p-3 text-left">Assigned To</th>
+                                            <th class="p-3 text-left">Priority</th>
+                                            <th class="p-3 text-left">Due Date</th>
+                                            <th class="p-3 text-left">Status</th>
+                                            <th class="p-3 text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b">
+                                            <td class="p-3">Follow up with 5G leads</td>
+                                            <td class="p-3">Alex Johnson (FL-1001)</td>
+                                            <td class="p-3"><span class="badge bg-red-100 text-red-800">High</span></td>
+                                            <td class="p-3">Today</td>
+                                            <td class="p-3"><span class="badge bg-blue-100 text-blue-800">In Progress</span></td>
+                                            <td class="p-3 text-center">
+                                                <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Follow up with 5G leads.', 'alert')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Follow up with 5G leads')">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3">Improve ARPU in Metro region</td>
+                                            <td class="p-3">Sales Manager</td>
+                                            <td class="p-3"><span class="badge bg-amber-100 text-amber-800">Medium</span></td>
+                                            <td class="p-3">Tomorrow</td>
+                                            <td class="p-3"><span class="badge bg-gray-100 text-gray-800">Pending</span></td>
+                                            <td class="p-3 text-center">
+                                                <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Improve ARPU in Metro region.', 'alert')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Improve ARPU in Metro region')">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3">Reduce churn in Business segment</td>
+                                            <td class="p-3">Freelancer Team</td>
+                                            <td class="p-3"><span class="badge bg-green-100 text-green-800">Low</span></td>
+                                            <td class="p-3">Next Week</td>
+                                            <td class="p-3"><span class="badge bg-gray-100 text-gray-800">Pending</span></td>
+                                            <td class="p-3 text-center">
+                                                <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Reduce churn in Business segment.', 'alert')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Reduce churn in Business segment')">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- ARPU Trend Section -->
+            <!-- Reports Section -->
+            <section id="reports-section" class="content-section">
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <h3 class="text-xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-chart-pie mr-2 text-blue-600"></i> Registration Reports
+                    </h3>
+                    
+                    <!-- Daily/Weekly/Monthly Summary -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="border p-4 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-medium">Today</h4>
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Live</span>
+                            </div>
+                            <p class="text-2xl font-bold mt-2">42</p>
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>Active: 38</span>
+                                <span>Inactive: 4</span>
+                            </div>
+                        </div>
+                        <div class="border p-4 rounded-lg">
+                            <h4 class="font-medium">Yesterday</h4>
+                            <p class="text-2xl font-bold mt-2">56</p>
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>Active: 51</span>
+                                <span>Inactive: 5</span>
+                            </div>
+                        </div>
+                        <div class="border p-4 rounded-lg">
+                            <h4 class="font-medium">This Week</h4>
+                            <p class="text-2xl font-bold mt-2">290</p>
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>Active: 261</span>
+                                <span>Inactive: 29</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <div class="chart-container">
+                            <canvas id="registrationTrendChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="registrationStatusChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Inactive Customers -->
+                    <div class="mb-6">
+                        <h4 class="font-medium mb-2 flex items-center">
+                            <i class="fas fa-user-slash mr-2 text-red-500"></i> Inactive Customers
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3 text-left">Customer ID</th>
+                                        <th class="p-3 text-left">Name</th>
+                                        <th class="p-3 text-left">Plan</th>
+                                        <th class="p-3 text-left">Days Inactive</th>
+                                        <th class="p-3 text-left">Last Activity</th>
+                                        <th class="p-3 text-left">Registered By</th>
+                                        <th class="p-3 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">CUST-5102</td>
+                                        <td class="p-3">Robert Taylor</td>
+                                        <td class="p-3">5G Unlimited</td>
+                                        <td class="p-3">45</td>
+                                        <td class="p-3">2023-06-15</td>
+                                        <td class="p-3">Alex Johnson (FL-1001)</td>
+                                        <td class="p-3 text-center">
+                                            <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit inactive customer Robert Taylor.', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Inactive Customer Robert Taylor')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">CUST-5105</td>
+                                        <td class="p-3">Jennifer Wilson</td>
+                                        <td class="p-3">Fiber 1Gbps</td>
+                                        <td class="p-3">32</td>
+                                        <td class="p-3">2023-06-28</td>
+                                        <td class="p-3">Sarah Williams (FL-1002)</td>
+                                        <td class="p-3 text-center">
+                                            <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit inactive customer Jennifer Wilson.', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Inactive Customer Jennifer Wilson')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Full Customer Database -->
+                    <div>
+                        <h4 class="font-medium mb-2 flex items-center">
+                            <i class="fas fa-database mr-2 text-blue-500"></i> Full Customer Database
+                        </h4>
+                        <div class="overflow-x-auto">
+                            <table id="fullCustomerTable" class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="p-3 text-left">Customer ID</th>
+                                        <th class="p-3 text-left">Name</th>
+                                        <th class="p-3 text-left">Plan</th>
+                                        <th class="p-3 text-left">Status</th>
+                                        <th class="p-3 text-left">ARPU (TZS)</th>
+                                        <th class="p-3 text-left">Registration Date</th>
+                                        <th class="p-3 text-left">Registered By</th>
+                                        <th class="p-3 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-3">CUST-5001</td>
+                                        <td class="p-3">John Smith</td>
+                                        <td class="p-3">5G Unlimited</td>
+                                        <td class="p-3"><span class="badge status-active">Active</span></td>
+                                        <td class="p-3">TZS 12.50</td>
+                                        <td class="p-3">2023-05-15</td>
+                                        <td class="p-3">Alex Johnson (FL-1001)</td>
+                                        <td class="p-3 text-center">
+                                            <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer John Smith from full database.', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer John Smith from full database')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">CUST-5002</td>
+                                        <td class="p-3">Sarah Johnson</td>
+                                        <td class="p-3">Fiber 1Gbps</td>
+                                        <td class="p-3"><span class="badge status-active">Active</span></td>
+                                        <td class="p-3">TZS 15.20</td>
+                                        <td class="p-3">2023-06-22</td>
+                                        <td class="p-3">Sarah Williams (FL-1002)</td>
+                                        <td class="p-3 text-center">
+                                            <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer Sarah Johnson from full database.', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer Sarah Johnson from full database')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">CUST-5003</td>
+                                        <td class="p-3">Michael Brown</td>
+                                        <td class="p-3">Business Plan</td>
+                                        <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
+                                        <td class="p-3">TZS 45.80</td>
+                                        <td class="p-3">2023-04-10</td>
+                                        <td class="p-3">Michael Brown (FL-1003)</td>
+                                        <td class="p-3 text-center">
+                                            <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer Michael Brown from full database.', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer Michael Brown from full database')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ARPU Trend Section -->
+            <section id="arpu-trend-section" class="content-section">
                 <div class="bg-white p-6 rounded-xl shadow-md mb-8">
                     <h3 class="text-xl font-semibold mb-4 flex items-center">
                         <i class="fas fa-file-invoice-dollar mr-2 text-blue-600"></i> ARPU Trend Analysis
@@ -229,40 +828,58 @@
                             <thead>
                                 <tr class="bg-gray-100">
                                     <th class="p-3 text-left">Plan Type</th>
-                                    <th class="p-3 text-left">Current ARPU</th>
+                                    <th class="p-3 text-left">Current ARPU (TZS)</th>
                                     <th class="p-3 text-left">QoQ Change</th>
                                     <th class="p-3 text-left">YoY Change</th>
                                     <th class="p-3 text-left">Customer Count</th>
+                                    <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-b">
                                     <td class="p-3">5G Unlimited</td>
-                                    <td class="p-3">$12.50</td>
+                                    <td class="p-3">TZS 12.50</td>
                                     <td class="p-3"><span class="text-green-500">+3.2%</span></td>
                                     <td class="p-3"><span class="text-green-500">+8.7%</span></td>
                                     <td class="p-3">3,058</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit ARPU Data" onclick="showCustomMessage('Admin Action', 'Edit ARPU data for 5G Unlimited plan.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b">
                                     <td class="p-3">Fiber 1Gbps</td>
-                                    <td class="p-3">$15.20</td>
+                                    <td class="p-3">TZS 15.20</td>
                                     <td class="p-3"><span class="text-green-500">+1.8%</span></td>
                                     <td class="p-3"><span class="text-green-500">+5.3%</span></td>
                                     <td class="p-3">2,184</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit ARPU Data" onclick="showCustomMessage('Admin Action', 'Edit ARPU data for Fiber 1Gbps plan.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b">
                                     <td class="p-3">Business Plan</td>
-                                    <td class="p-3">$45.80</td>
+                                    <td class="p-3">TZS 45.80</td>
                                     <td class="p-3"><span class="text-red-500">-1.2%</span></td>
                                     <td class="p-3"><span class="text-green-500">+2.1%</span></td>
                                     <td class="p-3">874</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit ARPU Data" onclick="showCustomMessage('Admin Action', 'Edit ARPU data for Business Plan.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </section>
 
-                <!-- Churn Rate Section -->
+            <!-- Churn Rate Section -->
+            <section id="churn-rate-section" class="content-section">
                 <div class="bg-white p-6 rounded-xl shadow-md mb-8">
                     <h3 class="text-xl font-semibold mb-4 flex items-center">
                         <i class="fas fa-user-slash mr-2 text-blue-600"></i> Churn Rate Analysis
@@ -283,7 +900,8 @@
                                     <th class="p-3 text-left">Churn Rate</th>
                                     <th class="p-3 text-left">At Risk</th>
                                     <th class="p-3 text-left">Retention Rate</th>
-                                    <th class="p-3 text-left">LTV ($)</th>
+                                    <th class="p-3 text-left">LTV (TZS)</th>
+                                    <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -292,459 +910,75 @@
                                     <td class="p-3">1.5%</td>
                                     <td class="p-3">142</td>
                                     <td class="p-3">92.5%</td>
-                                    <td class="p-3">$1,240</td>
+                                    <td class="p-3">TZS 1,240</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit Churn Data" onclick="showCustomMessage('Admin Action', 'Edit churn data for 5G Unlimited segment.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b">
                                     <td class="p-3">Fiber 1Gbps</td>
                                     <td class="p-3">1.2%</td>
                                     <td class="p-3">98</td>
                                     <td class="p-3">94.1%</td>
-                                    <td class="p-3">$1,580</td>
+                                    <td class="p-3">TZS 1,580</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit Churn Data" onclick="showCustomMessage('Admin Action', 'Edit churn data for Fiber 1Gbps segment.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b">
                                     <td class="p-3">Business Plan</td>
                                     <td class="p-3">2.8%</td>
                                     <td class="p-3">56</td>
                                     <td class="p-3">88.7%</td>
-                                    <td class="p-3">$3,420</td>
+                                    <td class="p-3">TZS 3,420</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit Churn Data" onclick="showCustomMessage('Admin Action', 'Edit churn data for Business Plan segment.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-
-            <!-- Registration Sections (Hidden by default) -->
-            <div id="registration-sections" style="display: none;">
-                <!-- Freelancer Base Section -->
-                <div id="freelancer-base-section" class="registration-section">
-                    <div class="bg-white p-6 rounded-xl shadow-md mb-8">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-semibold flex items-center">
-                                <i class="fas fa-user-tie mr-2 text-blue-600"></i> Freelancer Management
-                            </h3>
-                            <div class="flex space-x-2">
-                                <button onclick="openFreelancerModal()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                    <i class="fas fa-plus mr-1"></i> New Freelancer
-                                </button>
-                                <select id="freelancerFilter" class="bg-gray-100 p-2 rounded-lg border">
-                                    <option value="all">All Statuses</option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                    <option value="suspended">Suspended</option>
-                                    <option value="terminated">Terminated</option>
-                                    <option value="new">New</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table id="freelancerTable" class="w-full">
-                                <thead>
-                                    <tr class="bg-gray-100">
-                                        <th class="p-3 text-left">Freelancer Name</th>
-                                        <th class="p-3 text-left">Freelancer ID</th>
-                                        <th class="p-3 text-left">Region</th>
-                                        <th class="p-3 text-left">District</th>
-                                        <th class="p-3 text-left">Status</th>
-                                        <th class="p-3 text-left">Customers</th>
-                                        <th class="p-3 text-left">Last Active</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b">
-                                        <td class="p-3">Alex Johnson</td>
-                                        <td class="p-3">FL-1001</td>
-                                        <td class="p-3">Metro</td>
-                                        <td class="p-3">Central</td>
-                                        <td class="p-3"><span class="badge status-active">Active</span></td>
-                                        <td class="p-3">128</td>
-                                        <td class="p-3">Today</td>
-                                    </tr>
-                                    <tr class="border-b">
-                                        <td class="p-3">Sarah Williams</td>
-                                        <td class="p-3">FL-1002</td>
-                                        <td class="p-3">Suburban</td>
-                                        <td class="p-3">North</td>
-                                        <td class="p-3"><span class="badge status-active">Active</span></td>
-                                        <td class="p-3">105</td>
-                                        <td class="p-3">Yesterday</td>
-                                    </tr>
-                                    <tr class="border-b">
-                                        <td class="p-3">Michael Brown</td>
-                                        <td class="p-3">FL-1003</td>
-                                        <td class="p-3">Rural</td>
-                                        <td class="p-3">East</td>
-                                        <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
-                                        <td class="p-3">82</td>
-                                        <td class="p-3">1 week ago</td>
-                                    </tr>
-                                    <tr class="border-b">
-                                        <td class="p-3">David Lee</td>
-                                        <td class="p-3">FL-1004</td>
-                                        <td class="p-3">Metro</td>
-                                        <td class="p-3">West</td>
-                                        <td class="p-3"><span class="badge status-suspended">Suspended</span></td>
-                                        <td class="p-3">76</td>
-                                        <td class="p-3">2 weeks ago</td>
-                                    </tr>
-                                    <tr class="border-b">
-                                        <td class="p-3">Emily Smith</td>
-                                        <td class="p-3">FL-1005</td>
-                                        <td class="p-3">Suburban</td>
-                                        <td class="p-3">South</td>
-                                        <td class="p-3"><span class="badge status-new">New</span></td>
-                                        <td class="p-3">12</td>
-                                        <td class="p-3">Today</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Customer Base Section -->
-                <div id="customer-base-section" class="registration-section" style="display: none;">
-                    <div class="bg-white p-6 rounded-xl shadow-md mb-8">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-semibold flex items-center">
-                                <i class="fas fa-users mr-2 text-blue-600"></i> Customer Database
-                            </h3>
-                            <div class="flex space-x-2">
-                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                    <i class="fas fa-plus mr-1"></i> New Customer
-                                </button>
-                                <select class="bg-gray-100 p-2 rounded-lg border">
-                                    <option>All Statuses</option>
-                                    <option>Active</option>
-                                    <option>Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table id="customerTable" class="w-full">
-                                <thead>
-                                    <tr class="bg-gray-100">
-                                        <th class="p-3 text-left">Customer Name</th>
-                                        <th class="p-3 text-left">Customer ID</th>
-                                        <th class="p-3 text-left">Plan</th>
-                                        <th class="p-3 text-left">Status</th>
-                                        <th class="p-3 text-left">ARPU</th>
-                                        <th class="p-3 text-left">Registered By</th>
-                                        <th class="p-3 text-left">Registration Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b">
-                                        <td class="p-3">John Smith</td>
-                                        <td class="p-3">CUST-5001</td>
-                                        <td class="p-3">5G Unlimited</td>
-                                        <td class="p-3"><span class="badge status-active">Active</span></td>
-                                        <td class="p-3">$12.50</td>
-                                        <td class="p-3">Alex Johnson (FL-1001)</td>
-                                        <td class="p-3">2023-05-15</td>
-                                    </tr>
-                                    <tr class="border-b">
-                                        <td class="p-3">Sarah Johnson</td>
-                                        <td class="p-3">CUST-5002</td>
-                                        <td class="p-3">Fiber 1Gbps</td>
-                                        <td class="p-3"><span class="badge status-active">Active</span></td>
-                                        <td class="p-3">$15.20</td>
-                                        <td class="p-3">Sarah Williams (FL-1002)</td>
-                                        <td class="p-3">2023-06-22</td>
-                                    </tr>
-                                    <tr class="border-b">
-                                        <td class="p-3">Michael Brown</td>
-                                        <td class="p-3">CUST-5003</td>
-                                        <td class="p-3">Business Plan</td>
-                                        <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
-                                        <td class="p-3">$45.80</td>
-                                        <td class="p-3">Michael Brown (FL-1003)</td>
-                                        <td class="p-3">2023-04-10</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Assigned Tasks Section -->
-                <div id="assigned-tasks-section" class="registration-section" style="display: none;">
-                    <div class="bg-white p-6 rounded-xl shadow-md mb-8">
-                        <h3 class="text-xl font-semibold mb-6 flex items-center">
-                            <i class="fas fa-tasks mr-2 text-blue-600"></i> Task Management
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <h4 class="font-medium mb-2">Create New Task</h4>
-                                <form class="space-y-4">
-                                    <div>
-                                        <label class="block text-gray-700 mb-1">Task Type</label>
-                                        <select class="w-full p-2 border rounded-lg">
-                                            <option>Customer Follow-up</option>
-                                            <option>New Registration</option>
-                                            <option>Churn Prevention</option>
-                                            <option>ARPU Improvement</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-700 mb-1">Assign To</label>
-                                        <select class="w-full p-2 border rounded-lg">
-                                            <option>Sales Manager</option>
-                                            <option>Freelancer Team</option>
-                                            <option>Specific Freelancer</option>
-                                        </select>
-                                    </div>
-                                    <div id="freelancerSelection" style="display: none;">
-                                        <label class="block text-gray-700 mb-1">Select Freelancer</label>
-                                        <select class="w-full p-2 border rounded-lg">
-                                            <option>Alex Johnson (FL-1001)</option>
-                                            <option>Sarah Williams (FL-1002)</option>
-                                            <option>Michael Brown (FL-1003)</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-700 mb-1">Priority</label>
-                                        <select class="w-full p-2 border rounded-lg">
-                                            <option>High</option>
-                                            <option>Medium</option>
-                                            <option>Low</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-700 mb-1">Due Date</label>
-                                        <input type="date" class="w-full p-2 border rounded-lg">
-                                    </div>
-                                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
-                                        Assign Task
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="md:col-span-2">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h4 class="font-medium">Active Tasks</h4>
-                                    <select class="bg-gray-100 p-2 rounded-lg border text-sm">
-                                        <option>All Tasks</option>
-                                        <option>My Tasks</option>
-                                        <option>Overdue</option>
-                                        <option>Completed</option>
-                                    </select>
-                                </div>
-                                <div class="overflow-x-auto">
-                                    <table class="w-full border-collapse">
-                                        <thead>
-                                            <tr class="bg-gray-100">
-                                                <th class="p-3 text-left">Task</th>
-                                                <th class="p-3 text-left">Assigned To</th>
-                                                <th class="p-3 text-left">Priority</th>
-                                                <th class="p-3 text-left">Due Date</th>
-                                                <th class="p-3 text-left">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="border-b">
-                                                <td class="p-3">Follow up with 5G leads</td>
-                                                <td class="p-3">Alex Johnson (FL-1001)</td>
-                                                <td class="p-3"><span class="badge bg-red-100 text-red-800">High</span></td>
-                                                <td class="p-3">Today</td>
-                                                <td class="p-3"><span class="badge bg-blue-100 text-blue-800">In Progress</span></td>
-                                            </tr>
-                                            <tr class="border-b">
-                                                <td class="p-3">Improve ARPU in Metro region</td>
-                                                <td class="p-3">Sales Manager</td>
-                                                <td class="p-3"><span class="badge bg-amber-100 text-amber-800">Medium</span></td>
-                                                <td class="p-3">Tomorrow</td>
-                                                <td class="p-3"><span class="badge bg-gray-100 text-gray-800">Pending</span></td>
-                                            </tr>
-                                            <tr class="border-b">
-                                                <td class="p-3">Reduce churn in Business segment</td>
-                                                <td class="p-3">Freelancer Team</td>
-                                                <td class="p-3"><span class="badge bg-green-100 text-green-800">Low</span></td>
-                                                <td class="p-3">Next Week</td>
-                                                <td class="p-3"><span class="badge bg-gray-100 text-gray-800">Pending</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reports Section -->
-                <div id="reports-section" class="registration-section" style="display: none;">
-                    <div class="bg-white p-6 rounded-xl shadow-md mb-8">
-                        <h3 class="text-xl font-semibold mb-6 flex items-center">
-                            <i class="fas fa-chart-pie mr-2 text-blue-600"></i> Registration Reports
-                        </h3>
-                        
-                        <!-- Daily/Weekly/Monthly Summary -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                            <div class="border p-4 rounded-lg">
-                                <div class="flex justify-between items-center">
-                                    <h4 class="font-medium">Today</h4>
-                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Live</span>
-                                </div>
-                                <p class="text-2xl font-bold mt-2">42</p>
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>Active: 38</span>
-                                    <span>Inactive: 4</span>
-                                </div>
-                            </div>
-                            <div class="border p-4 rounded-lg">
-                                <h4 class="font-medium">Yesterday</h4>
-                                <p class="text-2xl font-bold mt-2">56</p>
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>Active: 51</span>
-                                    <span>Inactive: 5</span>
-                                </div>
-                            </div>
-                            <div class="border p-4 rounded-lg">
-                                <h4 class="font-medium">This Week</h4>
-                                <p class="text-2xl font-bold mt-2">290</p>
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>Active: 261</span>
-                                    <span>Inactive: 29</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Charts -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                            <div class="chart-container">
-                                <canvas id="registrationTrendChart"></canvas>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="registrationStatusChart"></canvas>
-                            </div>
-                        </div>
-                        
-                        <!-- Inactive Customers -->
-                        <div class="mb-6">
-                            <h4 class="font-medium mb-2 flex items-center">
-                                <i class="fas fa-user-slash mr-2 text-red-500"></i> Inactive Customers
-                            </h4>
-                            <div class="overflow-x-auto">
-                                <table class="w-full border-collapse">
-                                    <thead>
-                                        <tr class="bg-gray-100">
-                                            <th class="p-3 text-left">Customer ID</th>
-                                            <th class="p-3 text-left">Name</th>
-                                            <th class="p-3 text-left">Plan</th>
-                                            <th class="p-3 text-left">Days Inactive</th>
-                                            <th class="p-3 text-left">Last Activity</th>
-                                            <th class="p-3 text-left">Registered By</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="border-b">
-                                            <td class="p-3">CUST-5102</td>
-                                            <td class="p-3">Robert Taylor</td>
-                                            <td class="p-3">5G Unlimited</td>
-                                            <td class="p-3">45</td>
-                                            <td class="p-3">2023-06-15</td>
-                                            <td class="p-3">Alex Johnson (FL-1001)</td>
-                                        </tr>
-                                        <tr class="border-b">
-                                            <td class="p-3">CUST-5105</td>
-                                            <td class="p-3">Jennifer Wilson</td>
-                                            <td class="p-3">Fiber 1Gbps</td>
-                                            <td class="p-3">32</td>
-                                            <td class="p-3">2023-06-28</td>
-                                            <td class="p-3">Sarah Williams (FL-1002)</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        
-                        <!-- Full Customer Database -->
-                        <div>
-                            <h4 class="font-medium mb-2 flex items-center">
-                                <i class="fas fa-database mr-2 text-blue-500"></i> Full Customer Database
-                            </h4>
-                            <div class="overflow-x-auto">
-                                <table id="fullCustomerTable" class="w-full">
-                                    <thead>
-                                        <tr class="bg-gray-100">
-                                            <th class="p-3 text-left">Customer ID</th>
-                                            <th class="p-3 text-left">Name</th>
-                                            <th class="p-3 text-left">Plan</th>
-                                            <th class="p-3 text-left">Status</th>
-                                            <th class="p-3 text-left">ARPU</th>
-                                            <th class="p-3 text-left">Registration Date</th>
-                                            <th class="p-3 text-left">Registered By</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="border-b">
-                                            <td class="p-3">CUST-5001</td>
-                                            <td class="p-3">John Smith</td>
-                                            <td class="p-3">5G Unlimited</td>
-                                            <td class="p-3"><span class="badge status-active">Active</span></td>
-                                            <td class="p-3">$12.50</td>
-                                            <td class="p-3">2023-05-15</td>
-                                            <td class="p-3">Alex Johnson (FL-1001)</td>
-                                        </tr>
-                                        <tr class="border-b">
-                                            <td class="p-3">CUST-5002</td>
-                                            <td class="p-3">Sarah Johnson</td>
-                                            <td class="p-3">Fiber 1Gbps</td>
-                                            <td class="p-3"><span class="badge status-active">Active</span></td>
-                                            <td class="p-3">$15.20</td>
-                                            <td class="p-3">2023-06-22</td>
-                                            <td class="p-3">Sarah Williams (FL-1002)</td>
-                                        </tr>
-                                        <tr class="border-b">
-                                            <td class="p-3">CUST-5003</td>
-                                            <td class="p-3">Michael Brown</td>
-                                            <td class="p-3">Business Plan</td>
-                                            <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
-                                            <td class="p-3">$45.80</td>
-                                            <td class="p-3">2023-04-10</td>
-                                            <td class="p-3">Michael Brown (FL-1003)</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </section>
         </div>
     </div>
 
     <!-- Freelancer Registration Modal -->
     <div id="freelancerModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeFreelancerModal()">&times;</span>
+            <span class="close-button" onclick="closeFreelancerModal()">&times;</span>
             <h3 class="text-xl font-semibold mb-4 flex items-center">
                 <i class="fas fa-user-plus mr-2 text-blue-600"></i> Register New Freelancer
             </h3>
-            <form class="space-y-4">
+            <form class="space-y-4" onsubmit="saveFreelancer(event)">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-gray-700 mb-1">First Name</label>
-                        <input type="text" class="w-full p-2 border rounded-lg">
+                        <input type="text" id="freelancer-first-name" class="w-full p-2 border rounded-lg" required>
                     </div>
                     <div>
                         <label class="block text-gray-700 mb-1">Last Name</label>
-                        <input type="text" class="w-full p-2 border rounded-lg">
+                        <input type="text" id="freelancer-last-name" class="w-full p-2 border rounded-lg" required>
                     </div>
                 </div>
                 <div>
                     <label class="block text-gray-700 mb-1">Email</label>
-                    <input type="email" class="w-full p-2 border rounded-lg">
+                    <input type="email" id="freelancer-email" class="w-full p-2 border rounded-lg" required>
                 </div>
                 <div>
                     <label class="block text-gray-700 mb-1">Phone Number</label>
-                    <input type="tel" class="w-full p-2 border rounded-lg">
+                    <input type="tel" id="freelancer-phone" class="w-full p-2 border rounded-lg" required>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-gray-700 mb-1">Region</label>
-                        <select class="w-full p-2 border rounded-lg">
+                        <select id="freelancer-region" class="w-full p-2 border rounded-lg">
                             <option>Metro</option>
                             <option>Suburban</option>
                             <option>Rural</option>
@@ -752,12 +986,12 @@
                     </div>
                     <div>
                         <label class="block text-gray-700 mb-1">District</label>
-                        <input type="text" class="w-full p-2 border rounded-lg">
+                        <input type="text" id="freelancer-district" class="w-full p-2 border rounded-lg">
                     </div>
                 </div>
                 <div>
                     <label class="block text-gray-700 mb-1">Specialization</label>
-                    <select class="w-full p-2 border rounded-lg">
+                    <select id="freelancer-specialization" class="w-full p-2 border rounded-lg">
                         <option>Sales</option>
                         <option>Technical Support</option>
                         <option>Customer Onboarding</option>
@@ -766,7 +1000,7 @@
                 </div>
                 <div>
                     <label class="block text-gray-700 mb-1">Status</label>
-                    <select class="w-full p-2 border rounded-lg">
+                    <select id="freelancer-status" class="w-full p-2 border rounded-lg">
                         <option>New</option>
                         <option>Active</option>
                         <option>Inactive</option>
@@ -784,8 +1018,157 @@
         </div>
     </div>
 
+    <!-- Customer Registration Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeCustomerModal()">&times;</span>
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-users mr-2 text-blue-600"></i> Register New Customer
+            </h3>
+            <form class="space-y-4" onsubmit="saveCustomer(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">Customer Name</label>
+                        <input type="text" id="customer-name" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">Customer ID</label>
+                        <input type="text" id="customer-id" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Plan</label>
+                    <select id="customer-plan" class="w-full p-2 border rounded-lg">
+                        <option>5G Unlimited</option>
+                        <option>Fiber 1Gbps</option>
+                        <option>Business Plan</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Status</label>
+                    <select id="customer-status" class="w-full p-2 border rounded-lg">
+                        <option>Active</option>
+                        <option>Inactive</option>
+                        <option>Suspended</option>
+                        <option>Terminated</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">ARPU (TZS)</label>
+                    <input type="number" step="0.01" id="customer-arpu" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Registered By (Freelancer ID)</label>
+                    <input type="text" id="customer-registered-by" class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Registration Date</label>
+                    <input type="date" id="customer-reg-date" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeCustomerModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Register Customer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation/Alert Message Box -->
+    <div id="custom-message-box" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeCustomMessageBox()">&times;</span>
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="message-box-title"></h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500" id="message-box-text"></p>
+            </div>
+            <div class="items-center px-4 py-3 flex justify-center space-x-4">
+                <button id="message-box-cancel" class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    Cancel
+                </button>
+                <button id="message-box-confirm" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script>
+        // Global Chart instances to prevent re-initialization issues
+        let arpuTrendChartInstance = null;
+        let arpuByPlanChartInstance = null;
+        let churnTrendChartInstance = null;
+        let churnReasonsChartInstance = null;
+        let freelancerTableInstance = null;
+        let customerTableInstance = null;
+        let fullCustomerTableInstance = null;
+        let registrationTrendChartInstance = null;
+        let registrationStatusChartInstance = null;
+        let tasksTableInstance = null; // New DataTable instance for tasks
+
+        // Function to show custom modal messages (replaces alert/confirm)
+        let confirmCallback = null; // To store the callback for confirmation
+
+        function showCustomMessage(title, message, type = 'alert', onConfirm = null) {
+            const messageBox = document.getElementById('custom-message-box');
+            document.getElementById('message-box-title').textContent = title;
+            document.getElementById('message-box-text').textContent = message;
+            
+            const confirmButton = document.getElementById('message-box-confirm');
+            const cancelButton = document.getElementById('message-box-cancel');
+
+            if (type === 'confirm') {
+                confirmButton.style.display = 'inline-block';
+                cancelButton.style.display = 'inline-block';
+                confirmButton.textContent = 'Confirm';
+                confirmButton.onclick = () => {
+                    if (confirmCallback) confirmCallback(true);
+                    messageBox.style.display = 'none';
+                };
+                cancelButton.onclick = () => {
+                    if (confirmCallback) confirmCallback(false);
+                    messageBox.style.display = 'none';
+                };
+                confirmCallback = onConfirm;
+            } else { // 'alert' type
+                confirmButton.style.display = 'inline-block';
+                cancelButton.style.display = 'none';
+                confirmButton.textContent = 'OK';
+                confirmButton.onclick = () => {
+                    messageBox.style.display = 'none';
+                };
+                confirmCallback = null;
+            }
+            messageBox.style.display = 'flex'; // Use flex to center
+        }
+
+        function closeCustomMessageBox() {
+            document.getElementById('custom-message-box').style.display = 'none';
+        }
+
+        function confirmDelete(itemName) {
+            showCustomMessage(
+                'Confirm Deletion',
+                `Are you sure you want to delete ${itemName}? This action cannot be undone.`,
+                'confirm',
+                (result) => {
+                    if (result) {
+                        console.log(`Deleting ${itemName}... (simulated)`);
+                        showCustomMessage('Deleted!', `${itemName} has been deleted.`, 'alert');
+                        // In a real app, you'd send a DELETE request to your backend here
+                        // For demonstration, you might want to remove the row from the table dynamically
+                    } else {
+                        console.log(`Deletion of ${itemName} cancelled.`);
+                        showCustomMessage('Cancelled', `Deletion of ${itemName} was cancelled.`, 'alert');
+                    }
+                }
+            );
+        }
+
         // Toggle submenus in navigation
         function toggleSubmenu(submenuId, element) {
             const submenu = document.getElementById(submenuId);
@@ -793,69 +1176,137 @@
             submenu.classList.toggle('active');
         }
 
-        // Handle registration menu clicks
-        document.querySelectorAll('.registration-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Hide all content sections
-                document.getElementById('dashboard-content').style.display = 'none';
-                document.getElementById('registration-sections').style.display = 'block';
-                
-                // Hide all registration sections
-                document.querySelectorAll('.registration-section').forEach(section => {
-                    section.style.display = 'none';
-                });
-                
-                // Show the selected section
-                const sectionId = this.getAttribute('data-section') + '-section';
-                document.getElementById(sectionId).style.display = 'block';
-                
-                // Update active state in navigation
-                document.querySelectorAll('.registration-link').forEach(navLink => {
-                    navLink.parentElement.classList.remove('bg-blue-700');
-                });
-                this.parentElement.classList.add('bg-blue-700');
-                
-                // Initialize DataTables and charts for the section
-                if (sectionId === 'freelancer-base-section') {
-                    initFreelancerTable();
-                } else if (sectionId === 'customer-base-section') {
-                    initCustomerTable();
-                } else if (sectionId === 'reports-section') {
-                    initRegistrationReports();
-                }
+        // Handles navigation by showing the selected section and updating active nav item.
+        function showSection(element, sectionId) {
+            // Remove 'active' class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
             });
-        });
+            // Add 'active' class to the clicked nav item
+            element.classList.add('active');
+
+            // Hide all content sections
+            document.querySelectorAll('section.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Initialize charts/tables specific to the section when it becomes active
+            if (sectionId === 'dashboard-section') {
+                initDashboardChartsAndTables();
+            } else if (sectionId === 'freelancer-base-section') {
+                initFreelancerTable();
+            } else if (sectionId === 'customer-base-section') {
+                initCustomerTable();
+            } else if (sectionId === 'assigned-tasks-section') {
+                initTasksTable();
+            } else if (sectionId === 'reports-section') {
+                initRegistrationReports();
+            } else if (sectionId === 'arpu-trend-section') {
+                initARPUCharts();
+            } else if (sectionId === 'churn-rate-section') {
+                initChurnRateCharts();
+            }
+        }
 
         // Freelancer Modal Functions
         function openFreelancerModal() {
-            document.getElementById('freelancerModal').style.display = 'block';
+            document.getElementById('freelancerModal').style.display = 'flex'; // Use flex for centering
         }
 
         function closeFreelancerModal() {
             document.getElementById('freelancerModal').style.display = 'none';
         }
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('freelancerModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
+        function saveFreelancer(event) {
+            event.preventDefault(); // Prevent default form submission
+            const firstName = document.getElementById('freelancer-first-name').value;
+            const lastName = document.getElementById('freelancer-last-name').value;
+            // In a real application, you would send this data to a backend API
+            console.log('Saving Freelancer:', { firstName, lastName });
+            showCustomMessage('Freelancer Registered!', `${firstName} ${lastName} has been registered.`, 'alert');
+            closeFreelancerModal();
+            // Optionally, refresh the freelancer table
+            if ($.fn.DataTable.isDataTable('#freelancerTable')) {
+                $('#freelancerTable').DataTable().destroy();
+            }
+            initFreelancerTable();
+        }
+
+        // Customer Modal Functions
+        function openCustomerModal() {
+            document.getElementById('customerModal').style.display = 'flex'; // Use flex for centering
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('customerModal').style.display = 'none';
+        }
+
+        function saveCustomer(event) {
+            event.preventDefault(); // Prevent default form submission
+            const customerName = document.getElementById('customer-name').value;
+            const customerId = document.getElementById('customer-id').value;
+            // In a real application, you would send this data to a backend API
+            console.log('Saving Customer:', { customerName, customerId });
+            showCustomMessage('Customer Registered!', `${customerName} (ID: ${customerId}) has been registered.`, 'alert');
+            closeCustomerModal();
+            // Optionally, refresh the customer table
+            if ($.fn.DataTable.isDataTable('#customerTable')) {
+                $('#customerTable').DataTable().destroy();
+            }
+            initCustomerTable();
+            if ($.fn.DataTable.isDataTable('#fullCustomerTable')) {
+                $('#fullCustomerTable').DataTable().destroy();
+            }
+            initFullCustomerTable();
+        }
+
+        // Task Management Functions
+        function toggleFreelancerSelection() {
+            const assignTo = document.getElementById('assign-to').value;
+            if (assignTo === 'Specific Freelancer') {
+                document.getElementById('freelancerSelection').style.display = 'block';
+            } else {
+                document.getElementById('freelancerSelection').style.display = 'none';
             }
         }
 
-        // Initialize Freelancer Table with filtering
+        function saveTask(event) {
+            event.preventDefault(); // Prevent default form submission
+            const taskType = document.getElementById('task-type').value;
+            const assignTo = document.getElementById('assign-to').value;
+            const taskPriority = document.getElementById('task-priority').value;
+            const taskDueDate = document.getElementById('task-due-date').value;
+
+            console.log('Assigning Task:', { taskType, assignTo, taskPriority, taskDueDate });
+            showCustomMessage('Task Assigned!', `Task "${taskType}" assigned to ${assignTo}.`, 'alert');
+            // Optionally, refresh the tasks table
+            if ($.fn.DataTable.isDataTable('#tasksTable')) {
+                $('#tasksTable').DataTable().destroy();
+            }
+            initTasksTable();
+        }
+
+        // Initialize DataTables
         function initFreelancerTable() {
-            $('#freelancerTable').DataTable({
+            if (freelancerTableInstance) {
+                freelancerTableInstance.destroy();
+            }
+            freelancerTableInstance = $('#freelancerTable').DataTable({
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
+                responsive: true,
                 initComplete: function() {
-                    this.api().columns(4).every(function() {
+                    this.api().columns(4).every(function() { // Column 4 is 'Status'
                         const column = this;
                         const select = $('#freelancerFilter');
                         
-                        select.on('change', function() {
+                        select.off('change').on('change', function() { // Remove previous event listener
                             const val = $.fn.dataTable.util.escapeRegex($(this).val());
                             column.search(val === 'all' ? '' : '^' + val + '$', true, false).draw();
                         });
@@ -864,94 +1315,53 @@
             });
         }
 
-        // Initialize Customer Table
         function initCustomerTable() {
-            $('#customerTable').DataTable({
-                dom: 'Bfrtip',
-                buttons: ['copy', 'csv', 'excel']
-            });
-        }
-
-        // Initialize Full Customer Table
-        function initFullCustomerTable() {
-            $('#fullCustomerTable').DataTable({
+            if (customerTableInstance) {
+                customerTableInstance.destroy();
+            }
+            customerTableInstance = $('#customerTable').DataTable({
                 dom: 'Bfrtip',
                 buttons: ['copy', 'csv', 'excel'],
-                pageLength: 10
+                responsive: true
             });
         }
 
-        // Initialize Registration Reports
-        function initRegistrationReports() {
-            initFullCustomerTable();
-            
-            // Registration Trend Chart
-            const trendCtx = document.getElementById('registrationTrendChart').getContext('2d');
-            new Chart(trendCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                    datasets: [{
-                        label: 'New Customers',
-                        data: [420, 480, 510, 590, 620, 680, 720],
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.05)',
-                        tension: 0.3,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Monthly Registration Trend',
-                            font: {
-                                size: 14
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Registration Status Chart
-            const statusCtx = document.getElementById('registrationStatusChart').getContext('2d');
-            new Chart(statusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Active', 'Inactive', 'Churned'],
-                    datasets: [{
-                        data: [7915, 827, 342],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Customer Status Distribution',
-                            font: {
-                                size: 14
-                            }
-                        }
-                    }
-                }
+        function initFullCustomerTable() {
+            if (fullCustomerTableInstance) {
+                fullCustomerTableInstance.destroy();
+            }
+            fullCustomerTableInstance = $('#fullCustomerTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                pageLength: 10,
+                responsive: true
             });
         }
 
-        // Initialize ARPU Charts
+        function initTasksTable() {
+            if (tasksTableInstance) {
+                tasksTableInstance.destroy();
+            }
+            tasksTableInstance = $('#tasksTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true
+            });
+        }
+
+
+        // Initialize Chart.js Charts
         function initARPUCharts() {
-            // ARPU Trend Chart
-            const arpuTrendCtx = document.getElementById('arpuTrendChart').getContext('2d');
-            new Chart(arpuTrendCtx, {
+            const arpuTrendCtx = document.getElementById('arpuTrendChart');
+            if (arpuTrendChartInstance) {
+                arpuTrendChartInstance.destroy();
+            }
+            arpuTrendChartInstance = new Chart(arpuTrendCtx, {
                 type: 'line',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
                     datasets: [{
-                        label: 'Overall ARPU ($)',
+                        label: 'Overall ARPU (TZS)',
                         data: [10.2, 10.5, 10.8, 11.2, 11.5, 11.7, 12.0],
                         borderColor: '#3b82f6',
                         backgroundColor: 'rgba(59, 130, 246, 0.05)',
@@ -970,18 +1380,29 @@
                                 size: 14
                             }
                         }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return 'TZS ' + value;
+                                }
+                            }
+                        }
                     }
                 }
             });
 
-            // ARPU By Plan Chart
-            const arpuPlanCtx = document.getElementById('arpuByPlanChart').getContext('2d');
-            new Chart(arpuPlanCtx, {
+            const arpuPlanCtx = document.getElementById('arpuByPlanChart');
+            if (arpuByPlanChartInstance) {
+                arpuByPlanChartInstance.destroy();
+            }
+            arpuByPlanChartInstance = new Chart(arpuPlanCtx, {
                 type: 'bar',
                 data: {
                     labels: ['5G Unlimited', 'Fiber 1Gbps', 'Business Plan'],
                     datasets: [{
-                        label: 'Current ARPU ($)',
+                        label: 'Current ARPU (TZS)',
                         data: [12.5, 15.2, 45.8],
                         backgroundColor: ['#3b82f6', '#10b981', '#8b5cf6']
                     }]
@@ -997,16 +1418,26 @@
                                 size: 14
                             }
                         }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return 'TZS ' + value;
+                                }
+                            }
+                        }
                     }
                 }
             });
         }
 
-        // Initialize Churn Rate Charts
         function initChurnRateCharts() {
-            // Churn Trend Chart
-            const churnTrendCtx = document.getElementById('churnTrendChart').getContext('2d');
-            new Chart(churnTrendCtx, {
+            const churnTrendCtx = document.getElementById('churnTrendChart');
+            if (churnTrendChartInstance) {
+                churnTrendChartInstance.destroy();
+            }
+            churnTrendChartInstance = new Chart(churnTrendCtx, {
                 type: 'line',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -1040,9 +1471,11 @@
                 }
             });
 
-            // Churn Reasons Chart
-            const churnReasonsCtx = document.getElementById('churnReasonsChart').getContext('2d');
-            new Chart(churnReasonsCtx, {
+            const churnReasonsCtx = document.getElementById('churnReasonsChart');
+            if (churnReasonsChartInstance) {
+                churnReasonsChartInstance.destroy();
+            }
+            churnReasonsChartInstance = new Chart(churnReasonsCtx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Price', 'Service', 'Competitor', 'Relocation', 'Other'],
@@ -1067,24 +1500,96 @@
             });
         }
 
-        // Initialize all tables and charts when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize DataTables
-            $('#arpuTable').DataTable();
-            $('#churnTable').DataTable();
-            
-            // Initialize charts
-            initARPUCharts();
-            initChurnRateCharts();
-            
-            // Show assign freelancer dropdown when "Specific Freelancer" is selected
-            $('select').on('change', function() {
-                if ($(this).val() === 'Specific Freelancer') {
-                    $('#freelancerSelection').show();
-                } else {
-                    $('#freelancerSelection').hide();
+        function initRegistrationReports() {
+            initFullCustomerTable(); // Ensure this table is initialized when reports are viewed
+
+            const trendCtx = document.getElementById('registrationTrendChart');
+            if (registrationTrendChartInstance) {
+                registrationTrendChartInstance.destroy();
+            }
+            registrationTrendChartInstance = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'New Customers',
+                        data: [420, 480, 510, 590, 620, 680, 720],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Monthly Registration Trend',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
                 }
             });
+
+            const statusCtx = document.getElementById('registrationStatusChart');
+            if (registrationStatusChartInstance) {
+                registrationStatusChartInstance.destroy();
+            }
+            registrationStatusChartInstance = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Active', 'Inactive', 'Churned'],
+                    datasets: [{
+                        data: [7915, 827, 342],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Customer Status Distribution',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize dashboard charts and tables
+        function initDashboardChartsAndTables() {
+            // No specific charts directly on the main sales dashboard, but if there were, they'd be initialized here.
+            // The ARPU and Churn charts are in their own sections.
+        }
+
+        // Logout function
+        function logout() {
+            showCustomMessage('Logout', 'Logging out... This is a placeholder for actual logout logic.', 'alert');
+            // In a real application, you would clear session data and redirect to a login page.
+            // window.location.href = 'login.html'; 
+        }
+
+        // Initialize functionality on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial active nav item (Dashboard) and show its section
+            const initialNavItem = document.querySelector('.nav-item[href="#dashboard-section"]');
+            if (initialNavItem) {
+                showSection(initialNavItem, 'dashboard-section');
+            } else {
+                // Fallback: if no active class, default to dashboard
+                const defaultDashboard = document.getElementById('dashboard-section');
+                if (defaultDashboard) {
+                    defaultDashboard.classList.add('active');
+                }
+            }
         });
     </script>
 </body>

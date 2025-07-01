@@ -984,6 +984,7 @@
         let customerTableInstance = null;
         let tasksTableInstance = null;
         let freelancerTableInstance = null; // New instance for freelancer table
+        let commissionTableInstance = null; // New instance for commission table
 
         // Function to show custom modal messages (replaces alert/confirm)
         let confirmCallback = null; // To store the callback for confirmation
@@ -1074,10 +1075,6 @@
             // Initialize charts/tables specific to the section when it becomes active
             if (sectionId === 'dashboard-section') {
                 initDailyPerformanceChart();
-                // The dashboard section contains ARPU and Churn charts in the original file,
-                // so ensure they are initialized if they exist.
-                initARPUCharts(); // Assuming this is part of the original dashboard
-                initChurnRateCharts(); // Assuming this is part of the original dashboard
             } else if (sectionId === 'customer-base-section') {
                 initCustomerTable();
             } else if (sectionId === 'assigned-tasks-section') {
@@ -1088,7 +1085,9 @@
             } else if (sectionId === 'freelancer-base-section') {
                 initFreelancerTable();
             } else if (sectionId === 'reports-section') {
-                initRegistrationReports();
+                // Assuming reports section has its own initialization
+                // For freelancer-dashboard, there is no explicit reports section in the original file
+                // If you add one, you'd call its init function here.
             }
         }
 
@@ -1138,10 +1137,6 @@
                 $('#customerTable').DataTable().destroy();
             }
             initCustomerTable();
-            if ($.fn.DataTable.isDataTable('#fullCustomerTable')) {
-                $('#fullCustomerTable').DataTable().destroy();
-            }
-            initFullCustomerTable();
         }
 
         // Task Modal Functions
@@ -1341,9 +1336,13 @@
 
         // Logout function
         function logout() {
-            showCustomMessage('Logout', 'Logging out... This is a placeholder for actual logout logic.', 'alert');
-            // In a real application, you would clear session data and redirect to a login page.
-            // window.location.href = 'login.html'; 
+            showCustomMessage('Logout', 'Logging out... Redirecting to login page.', 'alert');
+            // In a real application, this would clear session data and perform a redirect.
+            // For the Canvas environment, direct redirection to a non-existent local file
+            // like 'index.html' will cause a 'SyntaxError'.
+            // Therefore, we remove the direct redirect for Canvas compatibility.
+            // If this were a deployed web app, you would uncomment the line below:
+            // setTimeout(() => { window.location.href = 'index.html'; }, 1000); 
         }
 
         // Initialize functionality on page load

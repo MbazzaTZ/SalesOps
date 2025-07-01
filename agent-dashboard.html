@@ -11,6 +11,11 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -87,6 +92,25 @@
             max-height: 90vh; /* Responsive height */
             overflow-y: auto; /* Enable scrolling for long content */
         }
+        /* Sales Team specific styles from sales-team-dashboard.html */
+        .floating-card { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .dashboard-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; }
+        .telecom-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+        .progress-fill-sales { height: 100%; border-radius: 4px; background: #3b82f6; }
+        .details-panel { display: none; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .badge { padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .small-chart-container { position: relative; height: 250px; width: 100%; }
+        .submenu { display: none; padding-left: 1rem; }
+        .submenu.active { display: block; }
+        .has-submenu::after { content: '▸'; margin-left: auto; transition: transform 0.2s; }
+        .has-submenu.open::after { transform: rotate(90deg); }
+        
+        /* Status badges for sales team */
+        .status-suspended { background-color: #fee2e2; color: #b91c1c; }
+        .status-terminated { background-color: #1f2937; color: #f9fafb; }
+        .status-new { background-color: #dbeafe; color: #1e40af; }
     </style>
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
@@ -94,55 +118,56 @@
         <!-- Sidebar Navigation -->
         <div class="w-64 bg-blue-800 text-white p-4 flex flex-col shadow-lg">
             <div class="flex items-center justify-between mb-8 mt-4">
-                <h1 class="text-2xl font-bold">Admin Portal</h1>
+                <h1 class="text-2xl font-bold">Portal</h1>
             </div>
             
-            <!-- Agent Profile (always visible) -->
-            <div class="bg-blue-700 p-4 rounded-xl mb-6 shadow-md">
-                <div class="flex items-center mb-3">
-                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">AD</div>
-                    <div>
-                        <p class="font-medium">Admin User</p>
-                        <p class="text-sm text-blue-200">ADMIN-001</p>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center text-sm">
-                    <span class="status-badge status-active">Online</span>
-                    <span>Full Access</span>
-                </div>
+            <!-- User Profile (dynamic based on role) -->
+            <div id="user-profile-card" class="bg-blue-700 p-4 rounded-xl mb-6 shadow-md">
+                <!-- Content will be dynamically set by JavaScript -->
             </div>
             
             <!-- Navigation Links -->
             <nav class="flex-grow">
-                <ul>
-                    <li class="mb-2">
-                        <a href="#dashboard-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out active" onclick="highlightNavItem(this, 'dashboard-section')">
-                            <i class="fas fa-tachometer-alt mr-3 text-lg"></i> Dashboard
+                <ul id="main-nav-list">
+                    <!-- Navigation items will be dynamically shown/hidden -->
+                    <li class="mb-2" data-roles="admin,agent">
+                        <a href="#dashboard-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'dashboard-section')">
+                            <i class="fas fa-tachometer-alt mr-3 text-lg"></i> <span id="dashboard-nav-text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="mb-2">
+                    <li class="mb-2" data-roles="admin">
                         <a href="#customer-base-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'customer-base-section')">
                             <i class="fas fa-users mr-3 text-lg"></i> Customer Base
                         </a>
                     </li>
-                    <li class="mb-2">
+                    <li class="mb-2" data-roles="admin">
                         <a href="#transactions-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'transactions-section')">
                             <i class="fas fa-exchange-alt mr-3 text-lg"></i> Transactions
                         </a>
                     </li>
-                    <li class="mb-2">
+                    <li class="mb-2" data-roles="admin,agent">
+                        <a href="#commissions-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'commissions-section')">
+                            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> <span id="commissions-nav-text">Commissions</span>
+                        </a>
+                    </li>
+                    <li class="mb-2" data-roles="admin">
                         <a href="#reports-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'reports-section')">
                             <i class="fas fa-file-alt mr-3 text-lg"></i> Reports & Statements
                         </a>
                     </li>
-                    <li class="mb-2">
-                        <a href="#commissions-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'commissions-section')">
-                            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Commissions
+                    <li class="mb-2" data-roles="admin">
+                        <a href="#" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="openMerchantModal()">
+                            <i class="fas fa-store mr-3 text-lg"></i> Merchant View (Admin)
                         </a>
                     </li>
-                    <li class="mb-2">
-                        <a href="#" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="openMerchantModal()">
-                            <i class="fas fa-store mr-3 text-lg"></i> Merchant View
+                    <li class="mb-2" data-roles="merchant">
+                        <a href="#merchant-dashboard-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'merchant-dashboard-section')">
+                            <i class="fas fa-store mr-3 text-lg"></i> My Merchant Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-2" data-roles="admin,sales-team">
+                        <a href="#sales-team-dashboard-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'sales-team-dashboard-section')">
+                            <i class="fas fa-chart-line mr-3 text-lg"></i> <span id="sales-nav-text">Sales Team Dashboard</span>
                         </a>
                     </li>
                 </ul>
@@ -158,10 +183,20 @@
 
         <!-- Main Content Area -->
         <div class="flex-1 p-8 bg-gray-100">
-            <!-- Dashboard Section -->
-            <section id="dashboard-section" class="content-section active mb-12">
+            <!-- Role Switcher (for demonstration only) -->
+            <div class="flex justify-end mb-4">
+                <select id="role-switcher" onchange="switchRole(this.value)" class="p-2 border rounded-lg shadow-sm">
+                    <option value="admin">Admin View</option>
+                    <option value="agent">Agent View</option>
+                    <option value="merchant">Merchant View</option>
+                    <option value="sales-team">Sales Team View</option>
+                </select>
+            </div>
+
+            <!-- Dashboard Section (Admin/Agent) -->
+            <section id="dashboard-section" class="content-section mb-12" data-roles="admin,agent">
                 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
-                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Agent Dashboard Overview</h2>
+                    <h2 id="dashboard-title" class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Agent Dashboard Overview</h2>
                     <div class="flex flex-wrap items-center space-x-4">
                         <div class="bg-white p-3 rounded-lg shadow-sm flex items-center">
                             <span class="text-gray-500 mr-2 text-sm">Last Sync:</span>
@@ -171,7 +206,7 @@
                             <i class="fas fa-sync-alt mr-2"></i> Refresh Data
                         </button>
                         <!-- Admin specific action for dashboard data management -->
-                        <button class="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition duration-200 ease-in-out shadow-md" onclick="showCustomMessage('Admin Action', 'This button would open a panel to configure dashboard data sources or refresh schedules.', 'alert')">
+                        <button class="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition duration-200 ease-in-out shadow-md admin-only" onclick="showCustomMessage('Admin Action', 'This button would open a panel to configure dashboard data sources or refresh schedules.', 'alert')">
                             <i class="fas fa-cogs mr-2"></i> Manage Dashboard Data
                         </button>
                     </div>
@@ -258,8 +293,8 @@
                 </div>
             </section>
 
-            <!-- Customer Base Section -->
-            <section id="customer-base-section" class="content-section mb-12">
+            <!-- Customer Base Section (Admin Only) -->
+            <section id="customer-base-section" class="content-section mb-12" data-roles="admin">
                 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
                     <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Customer Base Management</h2>
                     <div class="flex flex-wrap items-center space-x-4">
@@ -375,8 +410,8 @@
                 </div>
             </section>
 
-            <!-- Transactions Section -->
-            <section id="transactions-section" class="content-section mb-12">
+            <!-- Transactions Section (Admin Only) -->
+            <section id="transactions-section" class="content-section mb-12" data-roles="admin">
                 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
                     <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Transaction Records</h2>
                     <div class="flex flex-wrap items-center space-x-4">
@@ -437,7 +472,6 @@
                                     <td class="py-4 px-6">Cash In</td>
                                     <td class="py-4 px-6">TZS 150.00</td>
                                     <td class="py-4 px-6">TZS 3.00</td>
-                                    <td class="py-4 px-6">TXN48730</td>
                                     <td class="py-4 px-6"><span class="status-badge status-suspect">Suspect</span></td>
                                     <td class="py-4 px-6 text-center">
                                         <div class="flex item-center justify-center space-x-2">
@@ -493,8 +527,8 @@
                 </div>
             </section>
 
-            <!-- Reports & Statements Section -->
-            <section id="reports-section" class="content-section mb-12">
+            <!-- Reports & Statements Section (Admin Only) -->
+            <section id="reports-section" class="content-section mb-12" data-roles="admin">
                 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
                     <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Reports & Statements Generation</h2>
                     <div class="flex flex-wrap items-center space-x-4">
@@ -726,10 +760,10 @@
                 </div>
             </section>
 
-            <!-- Commissions Section -->
-            <section id="commissions-section" class="content-section mb-12">
+            <!-- Commissions Section (Admin/Agent) -->
+            <section id="commissions-section" class="content-section mb-12" data-roles="admin,agent">
                 <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
-                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Commission Management</h2>
+                    <h2 id="commissions-title" class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Commission Management</h2>
                     <div class="flex flex-wrap items-center space-x-4">
                         <select class="bg-gray-100 p-2 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                             <option>This Month</option>
@@ -741,7 +775,7 @@
                             <i class="fas fa-download mr-2"></i> Export Commission Data
                         </button>
                         <!-- Admin action for commission rule management -->
-                        <button class="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition duration-200 ease-in-out shadow-md" onclick="showCustomMessage('Admin Action', 'This button would open a panel to define or modify commission rules and rates.', 'alert')">
+                        <button class="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition duration-200 ease-in-out shadow-md admin-only" onclick="showCustomMessage('Admin Action', 'This button would open a panel to define or modify commission rules and rates.', 'alert')">
                             <i class="fas fa-percent mr-2"></i> Manage Commission Rules
                         </button>
                     </div>
@@ -818,7 +852,7 @@
                                     <th class="py-3 px-6 text-left">Commission Rate</th>
                                     <th class="py-3 px-6 text-left">Commission</th>
                                     <th class="py-3 px-6 text-left">Status</th>
-                                    <th class="py-3 px-6 text-center">Actions</th>
+                                    <th class="py-3 px-6 text-center admin-only">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-700 text-sm font-light">
@@ -829,7 +863,7 @@
                                     <td class="py-4 px-6">2%</td>
                                     <td class="py-4 px-6">TZS 4.00</td>
                                     <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
-                                    <td class="py-4 px-6 text-center">
+                                    <td class="py-4 px-6 text-center admin-only">
                                         <div class="flex item-center justify-center space-x-2">
                                             <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
                                                 <i class="fas fa-eye"></i>
@@ -850,7 +884,7 @@
                                     <td class="py-4 px-6">2%</td>
                                     <td class="py-4 px-6">TZS 3.00</td>
                                     <td class="py-4 px-6"><span class="status-badge status-suspect">Suspect</span></td>
-                                    <td class="py-4 px-6 text-center">
+                                    <td class="py-4 px-6 text-center admin-only">
                                         <div class="flex item-center justify-center space-x-2">
                                             <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
                                                 <i class="fas fa-eye"></i>
@@ -871,7 +905,7 @@
                                     <td class="py-4 px-6">2%</td>
                                     <td class="py-4 px-6">TZS 10.00</td>
                                     <td class="py-4 px-6"><span class="status-badge status-fraud">Fraud</span></td>
-                                    <td class="py-4 px-6 text-center">
+                                    <td class="py-4 px-6 text-center admin-only">
                                         <div class="flex item-center justify-center space-x-2">
                                             <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
                                                 <i class="fas fa-eye"></i>
@@ -890,119 +924,356 @@
                     </div>
                 </div>
             </section>
-        </div>
-    </div>
 
-    <!-- Merchant Dashboard Modal (remains hidden by default, shown on button click) -->
-    <div id="merchant-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden modal-overlay">
-        <div class="bg-white rounded-xl p-8 w-full max-w-6xl modal-content shadow-2xl">
-            <div class="flex justify-between items-center mb-6 border-b pb-4 border-gray-200">
-                <h2 class="text-3xl font-bold text-gray-900">Merchant Dashboard View</h2>
-                <button onclick="closeMerchantModal()" class="text-gray-500 hover:text-gray-700 text-2xl transition duration-200">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <!-- Merchant Dashboard Content -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
-                    <p class="text-gray-600 text-sm">Total Sales</p>
-                    <p class="text-3xl font-bold mt-2 text-gray-900">TZS 8,720</p>
-                    <div class="flex items-center mt-3 text-sm">
-                        <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 18%</span>
-                        <span class="text-gray-500">from avg</span>
+            <!-- Merchant Dashboard Section (Merchant Only) -->
+            <section id="merchant-dashboard-section" class="content-section mb-12" data-roles="merchant">
+                <header class="flex justify-between items-center mb-6 border-b pb-4 border-gray-200">
+                    <h2 class="text-3xl font-bold text-gray-900">My Merchant Dashboard</h2>
+                </header>
+                
+                <!-- Merchant Dashboard Content -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
+                        <p class="text-gray-600 text-sm">Total Sales</p>
+                        <p class="text-3xl font-bold mt-2 text-gray-900">TZS 8,720</p>
+                        <div class="flex items-center mt-3 text-sm">
+                            <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 18%</span>
+                            <span class="text-gray-500">from avg</span>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
+                        <p class="text-gray-600 text-sm">Transactions</p>
+                        <p class="text-3xl font-bold mt-2 text-gray-900">126</p>
+                        <div class="flex items-center mt-3 text-sm">
+                            <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 22%</span>
+                            <span class="text-gray-500">from avg</span>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
+                        <p class="text-gray-600 text-sm">Avg. Value</p>
+                        <p class="text-3xl font-bold mt-2 text-gray-900">TZS 69.20</p>
+                        <div class="flex items-center mt-3 text-sm">
+                            <span class="text-red-600 mr-2"><i class="fas fa-arrow-down"></i> 3%</span>
+                            <span class="text-gray-500">from avg</span>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
+                        <p class="text-gray-600 text-sm">Fees</p>
+                        <p class="text-3xl font-bold mt-2 text-gray-900">TZS 261.60</p>
+                        <div class="flex items-center mt-3 text-sm">
+                            <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 18%</span>
+                            <span class="text-gray-500">from avg</span>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
-                    <p class="text-gray-600 text-sm">Transactions</p>
-                    <p class="text-3xl font-bold mt-2 text-gray-900">126</p>
-                    <div class="flex items-center mt-3 text-sm">
-                        <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 22%</span>
-                        <span class="text-gray-500">from avg</span>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-blue-100 mb-8">
+                    <h3 class="text-2xl font-semibold mb-6 text-gray-800">Settlement Overview</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                            <p class="text-gray-600">Next Settlement</p>
+                            <p class="text-2xl font-bold mt-2 text-gray-900">July 5, 2023</p>
+                            <p class="text-3xl font-bold text-green-700 mt-1">TZS 8,458.40</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                            <p class="text-gray-600">Last Settlement</p>
+                            <p class="text-2xl font-bold mt-2 text-gray-900">June 5, 2023</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-1">TZS 7,456.80</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                            <p class="text-gray-600">Pending Balance</p>
+                            <p class="text-2xl font-bold mt-2 text-gray-900">TZS 8,458.40</p>
+                            <p class="text-sm text-gray-500 mt-1">Will be settled on July 5</p>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
-                    <p class="text-gray-600 text-sm">Avg. Value</p>
-                    <p class="text-3xl font-bold mt-2 text-gray-900">TZS 69.20</p>
-                    <div class="flex items-center mt-3 text-sm">
-                        <span class="text-red-600 mr-2"><i class="fas fa-arrow-down"></i> 3%</span>
-                        <span class="text-gray-500">from avg</span>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-blue-100">
+                    <h3 class="text-2xl font-semibold mb-6 text-gray-800">Recent Merchant Transactions</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse text-left">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                    <th class="py-3 px-6 text-left">Date & Time</th>
+                                    <th class="py-3 px-6 text-left">Agent</th>
+                                    <th class="py-3 px-6 text-left">Type</th>
+                                    <th class="py-3 px-6 text-left">Amount</th>
+                                    <th class="py-3 px-6 text-left">Fee</th>
+                                    <th class="py-3 px-6 text-left">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700 text-sm font-light">
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Today, 10:30 AM</td>
+                                    <td class="py-4 px-6">Sarah Miller (AG-2001)</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 200.00</td>
+                                    <td class="py-4 px-6">TZS 6.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Today, 9:15 AM</td>
+                                    <td class="py-4 px-6">David Wilson (AG-2002)</td>
+                                    <td class="py-4 px-6">Cash In</td>
+                                    <td class="py-4 px-6">TZS 150.00</td>
+                                    <td class="py-4 px-6">TZS 4.50</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-suspect">Suspect</span></td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Yesterday, 4:45 PM</td>
+                                    <td class="py-4 px-6">Sarah Miller (AG-2001)</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 500.00</td>
+                                    <td class="py-4 px-6">TZS 15.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-fraud">Fraud</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
-                    <p class="text-gray-600 text-sm">Fees</p>
-                    <p class="text-3xl font-bold mt-2 text-gray-900">TZS 261.60</p>
-                    <div class="flex items-center mt-3 text-sm">
-                        <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 18%</span>
-                        <span class="text-gray-500">from avg</span>
+            </section>
+
+            <!-- Sales Team Dashboard Section (Admin/Sales Team) -->
+            <section id="sales-team-dashboard-section" class="content-section mb-12" data-roles="admin,sales-team">
+                <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-bold text-gray-800">Sales Performance Dashboard</h2>
+                    <div class="flex items-center">
+                        <div class="relative mr-4">
+                            <select id="salesTimePeriod" class="bg-gray-100 p-2 rounded-lg border">
+                                <option value="daily">Today</option>
+                                <option value="weekly">This Week</option>
+                                <option value="monthly">This Month</option>
+                            </select>
+                        </div>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-download mr-2"></i> Export
+                        </button>
+                        <!-- Admin specific action for sales team data management -->
+                        <button class="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition duration-200 ease-in-out shadow-md admin-only" onclick="showCustomMessage('Admin Action', 'This button would open a panel to configure sales targets or team assignments.', 'alert')">
+                            <i class="fas fa-cogs mr-2"></i> Manage Sales Data
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Sales KPIs Section -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Customer Registration Card -->
+                    <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-500 font-medium">Customer Registration</p>
+                                <h3 class="text-2xl font-bold mt-1">1,248 <span class="text-sm text-gray-500">/ 1,500 target</span></h3>
+                                <p class="text-blue-600 font-medium mt-1">83% <span class="text-sm text-gray-500">achievement</span></p>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i class="fas fa-user-plus text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-blue-600" style="width: 83%"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 text-sm text-gray-500">
+                            <span>Active: 1,128 (90%)</span>
+                            <span>Inactive: 120 (10%)</span>
+                        </div>
+                    </div>
+
+                    <!-- Freelancer Management Card -->
+                    <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-500 font-medium">Freelancer Base</p>
+                                <h3 class="text-2xl font-bold mt-1">187 <span class="text-sm text-gray-500">total</span></h3>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i class="fas fa-user-tie text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-center text-sm mb-3">
+                            <div>
+                                <p class="font-semibold">142</p>
+                                <p class="text-gray-500">Active</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">25</p>
+                                <p class="text-gray-500">New</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">20</p>
+                                <p class="text-gray-500">Other</p>
+                            </div>
+                        </div>
+                        <button onclick="showCustomMessage('Admin Action', 'This would open a modal to add a new freelancer or manage existing ones.', 'alert')" class="w-full mt-2 bg-blue-600 text-white py-1 rounded-lg hover:bg-blue-700 text-sm admin-only">
+                            <i class="fas fa-plus mr-1"></i> Add Freelancer
+                        </button>
+                        <button onclick="showCustomMessage('Sales Team View', 'You can view freelancer details, but cannot add new ones.', 'alert')" class="w-full mt-2 bg-gray-400 text-white py-1 rounded-lg text-sm sales-team-only">
+                            <i class="fas fa-eye mr-1"></i> View Freelancers
+                        </button>
+                    </div>
+
+                    <!-- Conversion Rate Card -->
+                    <div class="dashboard-card bg-white p-6 rounded-xl shadow-md relative">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-gray-500 font-medium">Conversion Rate</p>
+                                <h3 class="text-2xl font-bold mt-1">24.7%</h3>
+                                <p class="text-green-500 font-medium mt-1">+2.1% <span class="text-sm text-gray-500">vs last month</span></p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i class="fas fa-exchange-alt text-purple-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <div>
+                                <p class="font-semibold">Leads</p>
+                                <p class="text-gray-500">5,042</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Conversions</p>
+                                <p class="text-gray-500">1,248</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Value</p>
+                                <p class="text-gray-500">TZS 42,180</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="bg-white p-8 rounded-xl shadow-lg border border-blue-100 mb-8">
-                <h3 class="text-2xl font-semibold mb-6 text-gray-800">Settlement Overview</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                        <p class="text-gray-600">Next Settlement</p>
-                        <p class="text-2xl font-bold mt-2 text-gray-900">July 5, 2023</p>
-                        <p class="text-3xl font-bold text-green-700 mt-1">TZS 8,458.40</p>
+
+                <!-- ARPU Trend Section -->
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-file-invoice-dollar mr-2 text-blue-600"></i> ARPU Trend Analysis
+                    </h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="chart-container">
+                            <canvas id="arpuTrendChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="arpuByPlanChart"></canvas>
+                        </div>
                     </div>
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                        <p class="text-gray-600">Last Settlement</p>
-                        <p class="text-2xl font-bold mt-2 text-gray-900">June 5, 2023</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-1">TZS 7,456.80</p>
-                    </div>
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
-                        <p class="text-gray-600">Pending Balance</p>
-                        <p class="text-2xl font-bold mt-2 text-gray-900">TZS 8,458.40</p>
-                        <p class="text-sm text-gray-500 mt-1">Will be settled on July 5</p>
+                    <div class="overflow-x-auto">
+                        <table id="arpuTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Plan Type</th>
+                                    <th class="p-3 text-left">Current ARPU</th>
+                                    <th class="p-3 text-left">QoQ Change</th>
+                                    <th class="p-3 text-left">YoY Change</th>
+                                    <th class="p-3 text-left">Customer Count</th>
+                                    <th class="p-3 text-center admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">5G Unlimited</td>
+                                    <td class="p-3">TZS 12.50</td>
+                                    <td class="p-3"><span class="text-green-500">+3.2%</span></td>
+                                    <td class="p-3"><span class="text-green-500">+8.7%</span></td>
+                                    <td class="p-3">3,058</td>
+                                    <td class="p-3 text-center admin-only">
+                                        <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit ARPU Data" onclick="showCustomMessage('Admin Action', 'Edit ARPU data for 5G Unlimited plan.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Fiber 1Gbps</td>
+                                    <td class="p-3">TZS 15.20</td>
+                                    <td class="p-3"><span class="text-green-500">+1.8%</span></td>
+                                    <td class="p-3"><span class="text-green-500">+5.3%</span></td>
+                                    <td class="p-3">2,184</td>
+                                    <td class="p-3 text-center admin-only">
+                                        <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit ARPU Data" onclick="showCustomMessage('Admin Action', 'Edit ARPU data for Fiber 1Gbps plan.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Business Plan</td>
+                                    <td class="p-3">TZS 45.80</td>
+                                    <td class="p-3"><span class="text-red-500">-1.2%</span></td>
+                                    <td class="p-3"><span class="text-green-500">+2.1%</span></td>
+                                    <td class="p-3">874</td>
+                                    <td class="p-3 text-center admin-only">
+                                        <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit ARPU Data" onclick="showCustomMessage('Admin Action', 'Edit ARPU data for Business Plan.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-            
-            <div class="bg-white p-8 rounded-xl shadow-lg border border-blue-100">
-                <h3 class="text-2xl font-semibold mb-6 text-gray-800">Recent Merchant Transactions</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse text-left">
-                        <thead>
-                            <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                                <th class="py-3 px-6 text-left">Date & Time</th>
-                                <th class="py-3 px-6 text-left">Agent</th>
-                                <th class="py-3 px-6 text-left">Type</th>
-                                <th class="py-3 px-6 text-left">Amount</th>
-                                <th class="py-3 px-6 text-left">Fee</th>
-                                <th class="py-3 px-6 text-left">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-gray-700 text-sm font-light">
-                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
-                                <td class="py-4 px-6">Today, 10:30 AM</td>
-                                <td class="py-4 px-6">Sarah Miller (AG-2001)</td>
-                                <td class="py-4 px-6">Cash Out</td>
-                                <td class="py-4 px-6">TZS 200.00</td>
-                                <td class="py-4 px-6">TZS 6.00</td>
-                                <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
-                            </tr>
-                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
-                                <td class="py-4 px-6">Today, 9:15 AM</td>
-                                <td class="py-4 px-6">David Wilson (AG-2002)</td>
-                                <td class="py-4 px-6">Cash In</td>
-                                <td class="py-4 px-6">TZS 150.00</td>
-                                <td class="py-4 px-6">TZS 4.50</td>
-                                <td class="py-4 px-6"><span class="status-badge status-suspect">Suspect</span></td>
-                            </tr>
-                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
-                                <td class="py-4 px-6">Yesterday, 4:45 PM</td>
-                                <td class="py-4 px-6">Sarah Miller (AG-2001)</td>
-                                <td class="py-4 px-6">Cash Out</td>
-                                <td class="py-4 px-6">TZS 500.00</td>
-                                <td class="py-4 px-6">TZS 15.00</td>
-                                <td class="py-4 px-6"><span class="status-badge status-fraud">Fraud</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                <!-- Churn Rate Section -->
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-user-slash mr-2 text-blue-600"></i> Churn Rate Analysis
+                    </h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="chart-container">
+                            <canvas id="churnTrendChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="churnReasonsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="churnTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Segment</th>
+                                    <th class="p-3 text-left">Churn Rate</th>
+                                    <th class="p-3 text-left">At Risk</th>
+                                    <th class="p-3 text-left">Retention Rate</th>
+                                    <th class="p-3 text-left">LTV (TZS)</th>
+                                    <th class="p-3 text-center admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">5G Unlimited</td>
+                                    <td class="p-3">1.5%</td>
+                                    <td class="p-3">142</td>
+                                    <td class="p-3">92.5%</td>
+                                    <td class="p-3">TZS 1,240</td>
+                                    <td class="p-3 text-center admin-only">
+                                        <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Churn Data" onclick="showCustomMessage('Admin Action', 'Edit churn data for 5G Unlimited segment.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Fiber 1Gbps</td>
+                                    <td class="p-3">1.2%</td>
+                                    <td class="p-3">98</td>
+                                    <td class="p-3">94.1%</td>
+                                    <td class="p-3">TZS 1,580</td>
+                                    <td class="p-3 text-center admin-only">
+                                        <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Churn Data" onclick="showCustomMessage('Admin Action', 'Edit churn data for Fiber 1Gbps segment.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Business Plan</td>
+                                    <td class="p-3">2.8%</td>
+                                    <td class="p-3">56</td>
+                                    <td class="p-3">88.7%</td>
+                                    <td class="p-3">TZS 3,420</td>
+                                    <td class="p-3 text-center admin-only">
+                                        <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Churn Data" onclick="showCustomMessage('Admin Action', 'Edit churn data for Business Plan segment.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 
@@ -1103,6 +1374,210 @@
 
     <!-- JavaScript -->
     <script>
+        let currentUserRole = 'admin'; // Default role for demonstration
+
+        // Global Chart instances to prevent re-initialization issues
+        let dailyPerformanceChartInstance = null;
+        let commissionChartInstance = null;
+        let arpuTrendChartInstance = null;
+        let arpuByPlanChartInstance = null;
+        let churnTrendChartInstance = null;
+        let churnReasonsChartInstance = null;
+        let freelancerTableInstance = null;
+        let customerTableInstance = null;
+        let fullCustomerTableInstance = null;
+        let registrationTrendChartInstance = null;
+        let registrationStatusChartInstance = null;
+
+
+        // Function to update the user profile card in the sidebar
+        function updateProfileCard(role) {
+            const profileCard = document.getElementById('user-profile-card');
+            if (role === 'admin') {
+                profileCard.innerHTML = `
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">AD</div>
+                        <div>
+                            <p class="font-medium">Admin User</p>
+                            <p class="text-sm text-blue-200">ADMIN-001</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="status-badge status-active">Online</span>
+                        <span>Full Access</span>
+                    </div>
+                `;
+            } else if (role === 'agent') {
+                profileCard.innerHTML = `
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">AG</div>
+                        <div>
+                            <p class="font-medium">Sarah Miller</p>
+                            <p class="text-sm text-blue-200">AG-2001</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="status-badge status-active">Active</span>
+                        <span>Tier 2 Agent</span>
+                    </div>
+                `;
+            } else if (role === 'merchant') {
+                profileCard.innerHTML = `
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">MC</div>
+                        <div>
+                            <p class="font-medium">QuickPay Store</p>
+                            <p class="text-sm text-blue-200">MCH-5001</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="status-badge status-active">Active</span>
+                        <span>Retail Merchant</span>
+                    </div>
+                `;
+            } else if (role === 'sales-team') {
+                profileCard.innerHTML = `
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">ST</div>
+                        <div>
+                            <p class="font-medium">Sales Team Lead</p>
+                            <p class="text-sm text-blue-200">STL-001</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="status-badge status-active">Active</span>
+                        <span>Sales Manager</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to render UI based on the current user role
+        function renderUIForRole(role) {
+            currentUserRole = role; // Update the global role
+
+            // Update profile card
+            updateProfileCard(role);
+
+            // Update navigation items visibility
+            document.querySelectorAll('#main-nav-list li').forEach(navItem => {
+                const rolesData = navItem.getAttribute('data-roles');
+                if (rolesData) {
+                    const allowedRoles = rolesData.split(',');
+                    if (allowedRoles.includes(role)) {
+                        navItem.style.display = 'block';
+                    } else {
+                        navItem.style.display = 'none';
+                    }
+                }
+            });
+
+            // Hide/show admin-only buttons within sections
+            document.querySelectorAll('.admin-only').forEach(element => {
+                if (role === 'admin') {
+                    element.style.display = 'inline-flex'; // Or 'block' depending on element type
+                } else {
+                    element.style.display = 'none';
+                }
+            });
+
+            // Hide/show sales-team-only buttons within sections
+            document.querySelectorAll('.sales-team-only').forEach(element => {
+                if (role === 'sales-team') {
+                    element.style.display = 'inline-flex'; // Or 'block' depending on element type
+                } else {
+                    element.style.display = 'none';
+                }
+            });
+
+            // Deactivate all sections and explicitly hide those not allowed for the role
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active'); // Remove active class
+                const rolesData = section.getAttribute('data-roles');
+                if (rolesData) {
+                    const allowedRoles = rolesData.split(',');
+                    if (!allowedRoles.includes(role)) {
+                        section.style.display = 'none'; // Explicitly hide sections not allowed
+                    } else {
+                        section.style.display = ''; // Remove inline display to let CSS handle it
+                    }
+                }
+            });
+
+            // Update specific text for agent/merchant/sales team dashboards
+            const dashboardTitle = document.getElementById('dashboard-title');
+            if (dashboardTitle) {
+                if (role === 'agent') {
+                    dashboardTitle.textContent = 'My Performance Dashboard';
+                    document.getElementById('dashboard-nav-text').textContent = 'My Performance';
+                } else {
+                    dashboardTitle.textContent = 'Agent Dashboard Overview';
+                    document.getElementById('dashboard-nav-text').textContent = 'Dashboard';
+                }
+            }
+            const commissionsTitle = document.getElementById('commissions-title');
+            if (commissionsTitle) {
+                if (role === 'agent') {
+                    commissionsTitle.textContent = 'My Commissions';
+                    document.getElementById('commissions-nav-text').textContent = 'My Commissions';
+                } else {
+                    commissionsTitle.textContent = 'Commission Management';
+                    document.getElementById('commissions-nav-text').textContent = 'Commissions';
+                }
+            }
+            const salesNavText = document.getElementById('sales-nav-text');
+            if (salesNavText) {
+                if (role === 'sales-team') {
+                    salesNavText.textContent = 'My Sales Dashboard';
+                } else {
+                    salesNavText.textContent = 'Sales Team Dashboard';
+                }
+            }
+
+
+            // Handle initial active section based on role
+            let defaultSectionId = '';
+            let defaultNavItem = null;
+
+            if (role === 'admin') {
+                defaultSectionId = 'dashboard-section';
+                defaultNavItem = document.querySelector('.nav-item[href="#' + defaultSectionId + '"]');
+            } else if (role === 'agent') {
+                defaultSectionId = 'dashboard-section'; // Agents see their performance dashboard
+                defaultNavItem = document.querySelector('.nav-item[href="#' + defaultSectionId + '"]');
+            } else if (role === 'merchant') {
+                defaultSectionId = 'merchant-dashboard-section'; // Merchants see their dedicated dashboard
+                defaultNavItem = document.querySelector('.nav-item[href="#' + defaultSectionId + '"]');
+            } else if (role === 'sales-team') {
+                defaultSectionId = 'sales-team-dashboard-section'; // Sales team sees their dedicated dashboard
+                defaultNavItem = document.querySelector('.nav-item[href="#' + defaultSectionId + '"]');
+            }
+
+            // Activate the default section for the role
+            if (document.getElementById(defaultSectionId)) {
+                document.getElementById(defaultSectionId).classList.add('active');
+            }
+
+            // Deactivate all nav items first
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            // Activate the default nav item for the role
+            if (defaultNavItem) {
+                defaultNavItem.classList.add('active');
+            }
+
+            // Re-initialize charts for the visible sections
+            if (defaultSectionId === 'dashboard-section') {
+                initDailyPerformanceChart();
+            } else if (defaultSectionId === 'commissions-section') {
+                initCommissionChart();
+            } else if (defaultSectionId === 'sales-team-dashboard-section') {
+                initSalesTeamChartsAndTables();
+            }
+            // No charts in merchant-dashboard-section currently, but if there were, they'd be initialized here.
+        }
+
         // Function to highlight active navigation item and show/hide sections
         function highlightNavItem(element, sectionId) {
             // Remove 'active' class from all nav items
@@ -1128,6 +1603,8 @@
                 initDailyPerformanceChart();
             } else if (sectionId === 'commissions-section') {
                 initCommissionChart();
+            } else if (sectionId === 'sales-team-dashboard-section') {
+                initSalesTeamChartsAndTables();
             }
             // Add more conditions here if other sections have charts
         }
@@ -1151,9 +1628,15 @@
             button.classList.add('active');
         }
 
-        // Merchant modal functions
+        // Merchant modal functions (only used for Admin view now)
         function openMerchantModal() {
-            document.getElementById('merchant-modal').classList.remove('hidden');
+            // For admin, open the modal. For merchant, the content is directly displayed.
+            if (currentUserRole === 'admin') {
+                document.getElementById('merchant-modal').classList.remove('hidden');
+            } else {
+                // If a merchant somehow clicks this, they are already on their dashboard.
+                // Or you could show a message: showCustomMessage('Access Denied', 'You are already viewing your merchant dashboard.', 'alert');
+            }
         }
 
         function closeMerchantModal() {
@@ -1305,11 +1788,11 @@
         // Initialize Daily Performance Chart
         function initDailyPerformanceChart() {
             const dailyCtx = document.getElementById('dailyPerformanceChart');
-            // Check if a chart instance already exists on the canvas
-            if (Chart.getChart(dailyCtx)) {
-                Chart.getChart(dailyCtx).destroy(); // Destroy existing chart to prevent re-initialization issues
+            // Destroy existing chart instance if it exists
+            if (dailyPerformanceChartInstance) {
+                dailyPerformanceChartInstance.destroy();
             }
-            new Chart(dailyCtx, {
+            dailyPerformanceChartInstance = new Chart(dailyCtx, {
                 type: 'bar',
                 data: {
                     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -1377,11 +1860,11 @@
         // Initialize Commission Chart
         function initCommissionChart() {
             const commissionCtx = document.getElementById('commissionChart');
-            // Check if a chart instance already exists on the canvas
-            if (Chart.getChart(commissionCtx)) {
-                Chart.getChart(commissionCtx).destroy(); // Destroy existing chart
+            // Destroy existing chart instance if it exists
+            if (commissionChartInstance) {
+                commissionChartInstance.destroy();
             }
-            new Chart(commissionCtx, {
+            commissionChartInstance = new Chart(commissionCtx, {
                 type: 'bar',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -1442,20 +1925,188 @@
             });
         }
 
-        // Initialize charts and set up initial navigation highlight on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set initial active nav item (Dashboard) and show its section
-            const initialNavItem = document.querySelector('.nav-item.active');
-            if (initialNavItem) {
-                const initialSectionId = initialNavItem.getAttribute('href').substring(1); // Get ID without '#'
-                highlightNavItem(initialNavItem, initialSectionId);
-            } else {
-                // Fallback: if no active class, default to dashboard
-                const dashboardNavItem = document.querySelector('.nav-item[href="#dashboard-section"]');
-                if (dashboardNavItem) {
-                    highlightNavItem(dashboardNavItem, 'dashboard-section');
-                }
+        // Initialize ARPU Charts (Sales Team Dashboard)
+        function initARPUCharts() {
+            // ARPU Trend Chart
+            const arpuTrendCtx = document.getElementById('arpuTrendChart');
+            if (arpuTrendChartInstance) {
+                arpuTrendChartInstance.destroy();
             }
+            arpuTrendChartInstance = new Chart(arpuTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Overall ARPU (TZS)',
+                        data: [10.2, 10.5, 10.8, 11.2, 11.5, 11.7, 12.0],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ARPU Trend (Last 7 Months)',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return 'TZS ' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // ARPU By Plan Chart
+            const arpuPlanCtx = document.getElementById('arpuByPlanChart');
+            if (arpuByPlanChartInstance) {
+                arpuByPlanChartInstance.destroy();
+            }
+            arpuByPlanChartInstance = new Chart(arpuPlanCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['5G Unlimited', 'Fiber 1Gbps', 'Business Plan'],
+                    datasets: [{
+                        label: 'Current ARPU (TZS)',
+                        data: [12.5, 15.2, 45.8],
+                        backgroundColor: ['#3b82f6', '#10b981', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ARPU by Plan Type',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return 'TZS ' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize Churn Rate Charts (Sales Team Dashboard)
+        function initChurnRateCharts() {
+            // Churn Trend Chart
+            const churnTrendCtx = document.getElementById('churnTrendChart');
+            if (churnTrendChartInstance) {
+                churnTrendChartInstance.destroy();
+            }
+            churnTrendChartInstance = new Chart(churnTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Churn Rate (%)',
+                        data: [2.1, 2.0, 1.9, 1.8, 1.7, 1.8, 1.8],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Churn Rate Trend (Last 7 Months)',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 3
+                        }
+                    }
+                }
+            });
+
+            // Churn Reasons Chart
+            const churnReasonsCtx = document.getElementById('churnReasonsChart');
+            if (churnReasonsChartInstance) {
+                churnReasonsChartInstance.destroy();
+            }
+            churnReasonsChartInstance = new Chart(churnReasonsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Price', 'Service', 'Competitor', 'Relocation', 'Other'],
+                    datasets: [{
+                        data: [42, 28, 15, 8, 7],
+                        backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6', '#10b981', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Churn Reasons Breakdown',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize Sales Team specific charts and tables
+        function initSalesTeamChartsAndTables() {
+            // Initialize DataTables
+            if ($.fn.DataTable.isDataTable('#arpuTable')) {
+                $('#arpuTable').DataTable().destroy();
+            }
+            $('#arpuTable').DataTable();
+
+            if ($.fn.DataTable.isDataTable('#churnTable')) {
+                $('#churnTable').DataTable().destroy();
+            }
+            $('#churnTable').DataTable();
+            
+            // Initialize charts
+            initARPUCharts();
+            initChurnRateCharts();
+        }
+
+
+        // Function to switch roles (for demonstration purposes)
+        function switchRole(role) {
+            renderUIForRole(role);
+        }
+
+        // Initialize UI on page load based on default role
+        document.addEventListener('DOMContentLoaded', function() {
+            renderUIForRole(currentUserRole); // Render initial UI based on default 'admin' role
         });
     </script>
 </body>

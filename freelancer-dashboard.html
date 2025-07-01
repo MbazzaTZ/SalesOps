@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freelancer Dashboard</title>
+    <title>Freelancer Dashboard - Admin View</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,10 +11,16 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- DataTables (Needed for tables, even if not explicitly used in original freelancer-dashboard) -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* Original Freelancer Dashboard styles */
         .status-badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -59,15 +65,6 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
         }
-        .nav-item.active {
-            background-color: #1e40af;
-        }
-        .content-section {
-            display: none;
-        }
-        .content-section.active {
-            display: block;
-        }
         .priority-high {
             background-color: #fee2e2;
             color: #b91c1c;
@@ -80,74 +77,135 @@
             background-color: #dcfce7;
             color: #166534;
         }
+
+        /* Admin/Sectional View Specific Styles */
+        .nav-item.active {
+            background-color: #1e40af; /* Darker blue for active state */
+        }
+        .content-section {
+            display: none; /* Hide all sections by default */
+        }
+        .content-section.active {
+            display: block; /* Show only the active section */
+        }
+        /* Modal styles */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1000; /* Ensure modals are on top */
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content { 
+            background-color: #fefefe; 
+            margin: auto; /* Centering */
+            padding: 20px; 
+            border: 1px solid #888; 
+            width: 90%; 
+            max-width: 700px; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative; /* For close button positioning */
+        }
+        .close-button { 
+            color: #aaa; 
+            float: right; 
+            font-size: 28px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            position: absolute; /* Position relative to modal-content */
+            top: 10px;
+            right: 20px;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
-    <div class="flex">
+    <div class="flex min-h-screen">
         <!-- Sidebar Navigation -->
-        <div class="w-64 bg-blue-800 text-white min-h-screen p-4">
+        <div class="w-64 bg-blue-800 text-white p-4 flex flex-col shadow-lg">
             <div class="flex items-center justify-between mb-8 mt-4">
-                <h1 class="text-xl font-bold">Freelancer Portal</h1>
+                <h1 class="text-2xl font-bold">Freelancer Admin</h1>
             </div>
             
-            <!-- Freelancer Profile -->
-            <div class="bg-blue-700 p-4 rounded-lg mb-6">
+            <!-- Admin Profile -->
+            <div class="bg-blue-700 p-4 rounded-xl mb-6 shadow-md">
                 <div class="flex items-center mb-3">
-                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">AJ</div>
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">AD</div>
                     <div>
-                        <p class="font-medium">Alex Johnson</p>
-                        <p class="text-sm text-blue-200">FL-1001</p>
+                        <p class="font-medium">Admin User</p>
+                        <p class="text-sm text-blue-200">ADMIN-001</p>
                     </div>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span class="status-badge status-active">Active</span>
-                    <span class="text-sm">Metro Region</span>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="status-badge status-active">Online</span>
+                    <span>Full Access</span>
                 </div>
             </div>
             
-            <nav>
+            <nav class="flex-grow">
                 <ul>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700 active" onclick="showSection('dashboard')">
-                            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                        <a href="#dashboard-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'dashboard-section')">
+                            <i class="fas fa-tachometer-alt mr-3 text-lg"></i> Dashboard
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('customer-base')">
-                            <i class="fas fa-users mr-2"></i> Customer Base
+                        <a href="#customer-base-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'customer-base-section')">
+                            <i class="fas fa-users mr-3 text-lg"></i> Customer Base
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('assigned-tasks')">
-                            <i class="fas fa-tasks mr-2"></i> Assigned Tasks
+                        <a href="#assigned-tasks-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'assigned-tasks-section')">
+                            <i class="fas fa-tasks mr-3 text-lg"></i> Assigned Tasks
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('commissions')">
-                            <i class="fas fa-money-bill-wave mr-2"></i> Commissions
+                        <a href="#commissions-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="showSection(this, 'commissions-section')">
+                            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Commissions
                         </a>
                     </li>
                 </ul>
             </nav>
+            <!-- Logout Button -->
+            <div class="mt-auto pt-6 border-t border-blue-700">
+                <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="logout()">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
+            </div>
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 p-8">
-            <!-- Dashboard Section -->
-            <div id="dashboard" class="content-section active">
-                <header class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">Freelancer Dashboard</h2>
-                    <div class="flex items-center space-x-4">
-                        <div class="bg-white p-2 rounded-lg shadow">
-                            <span class="text-gray-500 mr-2">Last Sync:</span>
-                            <span class="font-medium">Today, 10:45 AM</span>
-                        </div>
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-sync-alt mr-2"></i> Refresh
-                        </button>
+            <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                <h2 class="text-3xl font-bold text-gray-800">Freelancer Dashboard</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white p-2 rounded-lg shadow">
+                        <span class="text-gray-500 mr-2">Last Sync:</span>
+                        <span class="font-medium">Today, 10:45 AM</span>
                     </div>
-                </header>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-sync-alt mr-2"></i> Refresh
+                    </button>
+                    <button onclick="showCustomMessage('Admin Action', 'This button would open a panel to manage overall dashboard settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                        <i class="fas fa-cogs mr-2"></i> Manage Dashboard
+                    </button>
+                </div>
+            </header>
 
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
                 <!-- Status Overview -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-white p-4 rounded-xl shadow">
@@ -157,28 +215,40 @@
                             <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 8%</span>
                             <span class="text-sm text-gray-500">from last month</span>
                         </div>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Total Customers data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage
+                        </button>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow">
                         <p class="text-gray-500">Active Customers</p>
                         <p class="text-2xl font-bold mt-1">115</p>
                         <p class="text-sm text-gray-500 mt-2">90% active rate</p>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Active Customers data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage
+                        </button>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow">
                         <p class="text-gray-500">This Month's ARPU</p>
-                        <p class="text-2xl font-bold mt-1">$12.75</p>
+                        <p class="text-2xl font-bold mt-1">TZS 12.75</p>
                         <div class="flex items-center mt-2">
                             <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 5.2%</span>
                             <span class="text-sm text-gray-500">from last month</span>
                         </div>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage This Month\'s ARPU data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage
+                        </button>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow">
                         <p class="text-gray-500">Estimated Commission</p>
-                        <p class="text-2xl font-bold mt-1">$1,280</p>
+                        <p class="text-2xl font-bold mt-1">TZS 1,280</p>
                         <p class="text-sm text-gray-500 mt-2">Based on current performance</p>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Estimated Commission data.', 'alert')" class="w-full mt-2 bg-purple-600 text-white py-1 rounded-lg hover:bg-purple-700 text-sm">
+                            <i class="fas fa-cogs mr-1"></i> Manage
+                        </button>
                     </div>
                 </div>
 
-                <!-- Main Dashboard -->
+                <!-- Main Dashboard Content (Charts and Reports) -->
                 <div class="bg-white p-6 rounded-xl shadow mb-8">
                     <h3 class="text-xl font-semibold mb-6 flex items-center">
                         <i class="fas fa-chart-bar mr-2 text-blue-600"></i> Today's Performance
@@ -231,12 +301,12 @@
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-gray-500">ARPU Generated</p>
-                                <p class="text-2xl font-bold mt-1">$14.20</p>
+                                <p class="text-2xl font-bold mt-1">TZS 14.20</p>
                                 <p class="text-sm text-gray-500 mt-2">Above average</p>
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <p class="text-gray-500">Commission Earned</p>
-                                <p class="text-2xl font-bold mt-1">$85.20</p>
+                                <p class="text-2xl font-bold mt-1">TZS 85.20</p>
                                 <p class="text-sm text-gray-500 mt-2">From yesterday's sales</p>
                             </div>
                         </div>
@@ -263,34 +333,37 @@
                             </div>
                             <div>
                                 <div class="flex justify-between mb-2">
-                                    <span class="font-medium">Commission: $1,120</span>
-                                    <span class="text-gray-500">Target: $1,600</span>
+                                    <span class="font-medium">Commission: TZS 1,120</span>
+                                    <span class="text-gray-500">Target: TZS 1,600</span>
                                 </div>
                                 <div class="progress-bar">
                                     <div class="progress-fill bg-green-500" style="width: 70%"></div>
                                 </div>
                                 <div class="flex justify-between mt-2 text-sm">
                                     <span class="text-green-600">On track</span>
-                                    <span class="text-gray-500">$480 remaining</span>
+                                    <span class="text-gray-500">TZS 480 remaining</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Customer Base Section -->
-            <div id="customer-base" class="content-section">
-                <header class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">Customer Base</h2>
+            <section id="customer-base-section" class="content-section">
+                <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-bold text-gray-800">Customer Base</h2>
                     <div class="flex items-center space-x-4">
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <button onclick="openCustomerModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                             <i class="fas fa-user-plus mr-2"></i> New Customer
                         </button>
                         <div class="relative">
                             <input type="text" placeholder="Search customers..." class="pl-10 pr-4 py-2 rounded-lg border">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Customer Base settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                            <i class="fas fa-cogs mr-2"></i> Manage Data
+                        </button>
                     </div>
                 </header>
 
@@ -306,16 +379,17 @@
                     </div>
                     
                     <div class="overflow-x-auto">
-                        <table class="w-full border-collapse">
+                        <table id="customerTable" class="w-full border-collapse">
                             <thead>
                                 <tr class="bg-gray-100">
                                     <th class="p-3 text-left">Customer Name</th>
                                     <th class="p-3 text-left">Customer ID</th>
                                     <th class="p-3 text-left">Plan</th>
                                     <th class="p-3 text-left">Status</th>
-                                    <th class="p-3 text-left">ARPU</th>
+                                    <th class="p-3 text-left">ARPU (TZS)</th>
                                     <th class="p-3 text-left">Registered By</th>
                                     <th class="p-3 text-left">Registration Date</th>
+                                    <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -324,45 +398,85 @@
                                     <td class="p-3">CUST-5001</td>
                                     <td class="p-3">5G Unlimited</td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">$12.50</td>
+                                    <td class="p-3">TZS 12.50</td>
                                     <td class="p-3">Alex Johnson (FL-1001)</td>
                                     <td class="p-3">2023-05-15</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer John Smith.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer John Smith')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">Sarah Johnson</td>
                                     <td class="p-3">CUST-5002</td>
                                     <td class="p-3">Fiber 1Gbps</td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">$15.20</td>
+                                    <td class="p-3">TZS 15.20</td>
                                     <td class="p-3">Sarah Williams (FL-1002)</td>
                                     <td class="p-3">2023-06-22</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer Sarah Johnson.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer Sarah Johnson')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">Michael Brown</td>
                                     <td class="p-3">CUST-5003</td>
                                     <td class="p-3">Business Plan</td>
                                     <td class="p-3"><span class="status-badge status-inactive">Inactive</span></td>
-                                    <td class="p-3">$45.80</td>
+                                    <td class="p-3">TZS 45.80</td>
                                     <td class="p-3">Michael Brown (FL-1003)</td>
                                     <td class="p-3">2023-04-10</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer Michael Brown.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer Michael Brown')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">Emily Davis</td>
                                     <td class="p-3">CUST-5004</td>
                                     <td class="p-3">5G Unlimited</td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">$12.50</td>
+                                    <td class="p-3">TZS 12.50</td>
                                     <td class="p-3">Alex Johnson (FL-1001)</td>
                                     <td class="p-3">2023-07-05</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer Emily Davis.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer Emily Davis')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">Robert Wilson</td>
                                     <td class="p-3">CUST-5005</td>
                                     <td class="p-3">Fiber 1Gbps</td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">$15.20</td>
+                                    <td class="p-3">TZS 15.20</td>
                                     <td class="p-3">Sarah Williams (FL-1002)</td>
                                     <td class="p-3">2023-07-12</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Customer" onclick="showCustomMessage('Admin Action', 'Edit customer Robert Wilson.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Customer" onclick="confirmDelete('Customer Robert Wilson')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -379,14 +493,14 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Assigned Tasks Section -->
-            <div id="assigned-tasks" class="content-section">
-                <header class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">Assigned Tasks</h2>
+            <section id="assigned-tasks-section" class="content-section">
+                <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-bold text-gray-800">Assigned Tasks</h2>
                     <div class="flex items-center space-x-4">
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <button onclick="openTaskModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                             <i class="fas fa-plus mr-2"></i> New Task
                         </button>
                         <select class="bg-gray-100 p-2 rounded-lg border">
@@ -395,12 +509,15 @@
                             <option>In Progress</option>
                             <option>Completed</option>
                         </select>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Task settings.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                            <i class="fas fa-cogs mr-2"></i> Manage Data
+                        </button>
                     </div>
                 </header>
 
                 <div class="bg-white p-6 rounded-xl shadow">
                     <div class="overflow-x-auto">
-                        <table class="w-full border-collapse">
+                        <table id="tasksTable" class="w-full border-collapse">
                             <thead>
                                 <tr class="bg-gray-100">
                                     <th class="p-3 text-left">Task</th>
@@ -408,7 +525,7 @@
                                     <th class="p-3 text-left">Priority</th>
                                     <th class="p-3 text-left">Due Date</th>
                                     <th class="p-3 text-left">Status</th>
-                                    <th class="p-3 text-left">Actions</th>
+                                    <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -418,12 +535,12 @@
                                     <td class="p-3"><span class="badge priority-high">High</span></td>
                                     <td class="p-3">Today</td>
                                     <td class="p-3"><span class="status-badge status-active">In Progress</span></td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Follow up with 5G leads.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-green-600 hover:text-green-800">
-                                            <i class="fas fa-check"></i>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Follow up with 5G leads')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -433,12 +550,12 @@
                                     <td class="p-3"><span class="badge priority-medium">Medium</span></td>
                                     <td class="p-3">Tomorrow</td>
                                     <td class="p-3"><span class="status-badge status-inactive">Pending</span></td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Improve ARPU in Metro region.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-green-600 hover:text-green-800">
-                                            <i class="fas fa-check"></i>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Improve ARPU in Metro region')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -448,12 +565,12 @@
                                     <td class="p-3"><span class="badge priority-low">Low</span></td>
                                     <td class="p-3">Next Week</td>
                                     <td class="p-3"><span class="status-badge status-inactive">Pending</span></td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Reduce churn in Business segment.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-green-600 hover:text-green-800">
-                                            <i class="fas fa-check"></i>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Reduce churn in Business segment')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -463,12 +580,12 @@
                                     <td class="p-3"><span class="badge priority-medium">Medium</span></td>
                                     <td class="p-3">Tomorrow</td>
                                     <td class="p-3"><span class="status-badge status-active">In Progress</span></td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Process new customer contracts.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-green-600 hover:text-green-800">
-                                            <i class="fas fa-check"></i>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Process new customer contracts')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -478,12 +595,12 @@
                                     <td class="p-3"><span class="badge priority-low">Low</span></td>
                                     <td class="p-3">Next Week</td>
                                     <td class="p-3"><span class="status-badge status-inactive">Pending</span></td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Task" onclick="showCustomMessage('Admin Action', 'Edit task: Customer satisfaction survey.', 'alert')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="text-green-600 hover:text-green-800">
-                                            <i class="fas fa-check"></i>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Task" onclick="confirmDelete('Task: Customer satisfaction survey')">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -502,12 +619,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Commissions Section -->
-            <div id="commissions" class="content-section">
-                <header class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">Commissions</h2>
+            <section id="commissions-section" class="content-section">
+                <header class="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-bold text-gray-800">Commissions</h2>
                     <div class="flex items-center space-x-4">
                         <select class="bg-gray-100 p-2 rounded-lg border">
                             <option>This Month</option>
@@ -518,6 +635,9 @@
                         <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                             <i class="fas fa-download mr-2"></i> Export
                         </button>
+                        <button onclick="showCustomMessage('Admin Action', 'Manage Commission settings and rules.', 'alert')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                            <i class="fas fa-cogs mr-2"></i> Manage Data
+                        </button>
                     </div>
                 </header>
 
@@ -527,7 +647,7 @@
                             <h3 class="text-lg font-semibold">Current Month</h3>
                             <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">Estimated</span>
                         </div>
-                        <p class="text-3xl font-bold">$1,280</p>
+                        <p class="text-3xl font-bold">TZS 1,280</p>
                         <div class="flex items-center mt-2">
                             <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 12%</span>
                             <span class="text-sm text-gray-500">from last month</span>
@@ -535,7 +655,7 @@
                         <div class="mt-4">
                             <div class="flex justify-between mb-1">
                                 <span class="text-gray-500">Target</span>
-                                <span>$1,600</span>
+                                <span>TZS 1,600</span>
                             </div>
                             <div class="progress-bar">
                                 <div class="progress-fill bg-blue-600" style="width: 80%"></div>
@@ -545,32 +665,32 @@
                     
                     <div class="bg-white p-6 rounded-xl shadow">
                         <h3 class="text-lg font-semibold mb-4">Last Month</h3>
-                        <p class="text-3xl font-bold">$1,142</p>
+                        <p class="text-3xl font-bold">TZS 1,142</p>
                         <p class="text-sm text-gray-500 mt-2">Paid on 5th July</p>
                         <div class="mt-4">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Base Customers</span>
-                                <span>$842</span>
+                                <span>TZS 842</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">New Signups</span>
-                                <span>$300</span>
+                                <span>TZS 300</span>
                             </div>
                         </div>
                     </div>
                     
                     <div class="bg-white p-6 rounded-xl shadow">
                         <h3 class="text-lg font-semibold mb-4">Performance Bonus</h3>
-                        <p class="text-3xl font-bold">$180</p>
+                        <p class="text-3xl font-bold">TZS 180</p>
                         <p class="text-sm text-gray-500 mt-2">Estimated for this month</p>
                         <div class="mt-4">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">ARPU Bonus</span>
-                                <span>$80</span>
+                                <span>TZS 80</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Retention Bonus</span>
-                                <span>$100</span>
+                                <span>TZS 100</span>
                             </div>
                         </div>
                     </div>
@@ -583,80 +703,546 @@
                     </div>
                     
                     <div class="overflow-x-auto">
-                        <table class="w-full border-collapse">
+                        <table id="commissionTable" class="w-full border-collapse">
                             <thead>
                                 <tr class="bg-gray-100">
                                     <th class="p-3 text-left">Customer</th>
                                     <th class="p-3 text-left">Plan</th>
-                                    <th class="p-3 text-left">ARPU</th>
+                                    <th class="p-3 text-left">ARPU (TZS)</th>
                                     <th class="p-3 text-left">Commission Rate</th>
-                                    <th class="p-3 text-left">Commission</th>
+                                    <th class="p-3 text-left">Commission (TZS)</th>
                                     <th class="p-3 text-left">Status</th>
+                                    <th class="p-3 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">John Smith</td>
                                     <td class="p-3">5G Unlimited</td>
-                                    <td class="p-3">$12.50</td>
+                                    <td class="p-3">TZS 12.50</td>
                                     <td class="p-3">5%</td>
-                                    <td class="p-3">$6.25</td>
+                                    <td class="p-3">TZS 6.25</td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Commission" onclick="showCustomMessage('Admin Action', 'Edit commission for John Smith.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Commission" onclick="confirmDelete('Commission for John Smith')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">Sarah Johnson</td>
                                     <td class="p-3">Fiber 1Gbps</td>
-                                    <td class="p-3">$15.20</td>
+                                    <td class="p-3">TZS 15.20</td>
                                     <td class="p-3">5%</td>
-                                    <td class="p-3">$7.60</td>
+                                    <td class="p-3">TZS 7.60</td>
                                     <td class="p-3"><span class="status-badge status-active">Active</span></td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Commission" onclick="showCustomMessage('Admin Action', 'Edit commission for Sarah Johnson.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Commission" onclick="confirmDelete('Commission for Sarah Johnson')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr class="border-b hover:bg-gray-50">
                                     <td class="p-3">Michael Brown</td>
                                     <td class="p-3">Business Plan</td>
-                                    <td class="p-3">$45.80</td>
+                                    <td class="p-3">TZS 45.80</td>
                                     <td class="p-3">10%</td>
-                                    <td class="p-3">$22.90</td>
+                                    <td class="p-3">TZS 22.90</td>
                                     <td class="p-3"><span class="status-badge status-inactive">Inactive</span></td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800 mr-2" title="Edit Commission" onclick="showCustomMessage('Admin Action', 'Edit commission for Michael Brown.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800" title="Remove Commission" onclick="confirmDelete('Commission for Michael Brown')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Freelancer Registration Modal -->
+    <div id="freelancerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeFreelancerModal()">&times;</span>
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-user-plus mr-2 text-blue-600"></i> Register New Freelancer
+            </h3>
+            <form class="space-y-4" onsubmit="saveFreelancer(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">First Name</label>
+                        <input type="text" id="freelancer-first-name" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">Last Name</label>
+                        <input type="text" id="freelancer-last-name" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Email</label>
+                    <input type="email" id="freelancer-email" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Phone Number</label>
+                    <input type="tel" id="freelancer-phone" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">Region</label>
+                        <select id="freelancer-region" class="w-full p-2 border rounded-lg">
+                            <option>Metro</option>
+                            <option>Suburban</option>
+                            <option>Rural</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">District</label>
+                        <input type="text" id="freelancer-district" class="w-full p-2 border rounded-lg">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Specialization</label>
+                    <select id="freelancer-specialization" class="w-full p-2 border rounded-lg">
+                        <option>Sales</option>
+                        <option>Technical Support</option>
+                        <option>Customer Onboarding</option>
+                        <option>Retention Specialist</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Status</label>
+                    <select id="freelancer-status" class="w-full p-2 border rounded-lg">
+                        <option>New</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeFreelancerModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Register Freelancer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Customer Registration Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeCustomerModal()">&times;</span>
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-users mr-2 text-blue-600"></i> Register New Customer
+            </h3>
+            <form class="space-y-4" onsubmit="saveCustomer(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1">Customer Name</label>
+                        <input type="text" id="customer-name" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-1">Customer ID</label>
+                        <input type="text" id="customer-id" class="w-full p-2 border rounded-lg" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Plan</label>
+                    <select id="customer-plan" class="w-full p-2 border rounded-lg">
+                        <option>5G Unlimited</option>
+                        <option>Fiber 1Gbps</option>
+                        <option>Business Plan</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Status</label>
+                    <select id="customer-status" class="w-full p-2 border rounded-lg">
+                        <option>Active</option>
+                        <option>Inactive</option>
+                        <option>Suspended</option>
+                        <option>Terminated</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">ARPU (TZS)</label>
+                    <input type="number" step="0.01" id="customer-arpu" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Registered By (Freelancer ID)</label>
+                    <input type="text" id="customer-registered-by" class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Registration Date</label>
+                    <input type="date" id="customer-reg-date" class="w-full p-2 border rounded-lg" required>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeCustomerModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Register Customer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeTaskModal()">&times;</span>
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-tasks mr-2 text-blue-600"></i> Create New Task
+            </h3>
+            <form class="space-y-4" onsubmit="saveTask(event)">
+                <div>
+                    <label class="block text-gray-700 mb-1">Task Type</label>
+                    <select id="task-type" class="w-full p-2 border rounded-lg">
+                        <option>Customer Follow-up</option>
+                        <option>New Registration</option>
+                        <option>Churn Prevention</option>
+                        <option>ARPU Improvement</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Assign To</label>
+                    <select id="assign-to" class="w-full p-2 border rounded-lg" onchange="toggleFreelancerSelection()">
+                        <option>Sales Manager</option>
+                        <option>Freelancer Team</option>
+                        <option>Specific Freelancer</option>
+                    </select>
+                </div>
+                <div id="freelancerSelection" style="display: none;">
+                    <label class="block text-gray-700 mb-1">Select Freelancer</label>
+                    <select id="select-freelancer" class="w-full p-2 border rounded-lg">
+                        <option>Alex Johnson (FL-1001)</option>
+                        <option>Sarah Williams (FL-1002)</option>
+                        <option>Michael Brown (FL-1003)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Priority</label>
+                    <select id="task-priority" class="w-full p-2 border rounded-lg">
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-1">Due Date</label>
+                    <input type="date" id="task-due-date" class="w-full p-2 border rounded-lg">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeTaskModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Assign Task
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation/Alert Message Box -->
+    <div id="custom-message-box" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeCustomMessageBox()">&times;</span>
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="message-box-title"></h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500" id="message-box-text"></p>
+            </div>
+            <div class="items-center px-4 py-3 flex justify-center space-x-4">
+                <button id="message-box-cancel" class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    Cancel
+                </button>
+                <button id="message-box-confirm" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    OK
+                </button>
             </div>
         </div>
     </div>
 
     <!-- JavaScript -->
     <script>
-        // Navigation functionality
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
+        // Global Chart instances to prevent re-initialization issues
+        let dailyPerformanceChartInstance = null;
+        let commissionChartInstance = null;
+        let customerTableInstance = null;
+        let tasksTableInstance = null;
+        let freelancerTableInstance = null; // New instance for freelancer table
+
+        // Function to show custom modal messages (replaces alert/confirm)
+        let confirmCallback = null; // To store the callback for confirmation
+
+        function showCustomMessage(title, message, type = 'alert', onConfirm = null) {
+            const messageBox = document.getElementById('custom-message-box');
+            document.getElementById('message-box-title').textContent = title;
+            document.getElementById('message-box-text').textContent = message;
             
-            // Show selected section
-            document.getElementById(sectionId).classList.add('active');
-            
-            // Update active nav item
+            const confirmButton = document.getElementById('message-box-confirm');
+            const cancelButton = document.getElementById('message-box-cancel');
+
+            if (type === 'confirm') {
+                confirmButton.style.display = 'inline-block';
+                cancelButton.style.display = 'inline-block';
+                confirmButton.textContent = 'Confirm';
+                confirmButton.onclick = () => {
+                    if (confirmCallback) confirmCallback(true);
+                    messageBox.style.display = 'none';
+                };
+                cancelButton.onclick = () => {
+                    if (confirmCallback) confirmCallback(false);
+                    messageBox.style.display = 'none';
+                };
+                confirmCallback = onConfirm;
+            } else { // 'alert' type
+                confirmButton.style.display = 'inline-block';
+                cancelButton.style.display = 'none';
+                confirmButton.textContent = 'OK';
+                confirmButton.onclick = () => {
+                    messageBox.style.display = 'none';
+                };
+                confirmCallback = null;
+            }
+            messageBox.style.display = 'flex'; // Use flex to center
+        }
+
+        function closeCustomMessageBox() {
+            document.getElementById('custom-message-box').style.display = 'none';
+        }
+
+        function confirmDelete(itemName) {
+            showCustomMessage(
+                'Confirm Deletion',
+                `Are you sure you want to delete ${itemName}? This action cannot be undone.`,
+                'confirm',
+                (result) => {
+                    if (result) {
+                        console.log(`Deleting ${itemName}... (simulated)`);
+                        showCustomMessage('Deleted!', `${itemName} has been deleted.`, 'alert');
+                        // In a real app, you'd send a DELETE request to your backend here
+                        // For demonstration, you might want to remove the row from the table dynamically
+                    } else {
+                        console.log(`Deletion of ${itemName} cancelled.`);
+                        showCustomMessage('Cancelled', `Deletion of ${itemName} was cancelled.`, 'alert');
+                    }
+                }
+            );
+        }
+
+        // Toggle submenus in navigation
+        function toggleSubmenu(submenuId, element) {
+            const submenu = document.getElementById(submenuId);
+            element.classList.toggle('open');
+            submenu.classList.toggle('active');
+        }
+
+        // Handles navigation by showing the selected section and updating active nav item.
+        function showSection(element, sectionId) {
+            // Remove 'active' class from all nav items
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            event.currentTarget.classList.add('active');
+            // Add 'active' class to the clicked nav item
+            element.classList.add('active');
+
+            // Hide all content sections
+            document.querySelectorAll('section.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
             
-            // Initialize charts when section is shown
-            if (sectionId === 'dashboard') {
+            // Show the selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Initialize charts/tables specific to the section when it becomes active
+            if (sectionId === 'dashboard-section') {
                 initDailyPerformanceChart();
-            } else if (sectionId === 'commissions') {
+                // The dashboard section contains ARPU and Churn charts in the original file,
+                // so ensure they are initialized if they exist.
+                initARPUCharts(); // Assuming this is part of the original dashboard
+                initChurnRateCharts(); // Assuming this is part of the original dashboard
+            } else if (sectionId === 'customer-base-section') {
+                initCustomerTable();
+            } else if (sectionId === 'assigned-tasks-section') {
+                initTasksTable();
+            } else if (sectionId === 'commissions-section') {
                 initCommissionChart();
+                initCommissionTable(); // Initialize commission table if it's a DataTable
+            } else if (sectionId === 'freelancer-base-section') {
+                initFreelancerTable();
+            } else if (sectionId === 'reports-section') {
+                initRegistrationReports();
             }
         }
 
-        // Initialize Daily Performance Chart
+        // Freelancer Modal Functions
+        function openFreelancerModal() {
+            document.getElementById('freelancerModal').style.display = 'flex'; // Use flex for centering
+        }
+
+        function closeFreelancerModal() {
+            document.getElementById('freelancerModal').style.display = 'none';
+        }
+
+        function saveFreelancer(event) {
+            event.preventDefault(); // Prevent default form submission
+            const firstName = document.getElementById('freelancer-first-name').value;
+            const lastName = document.getElementById('freelancer-last-name').value;
+            // In a real application, you would send this data to a backend API
+            console.log('Saving Freelancer:', { firstName, lastName });
+            showCustomMessage('Freelancer Registered!', `${firstName} ${lastName} has been registered.`, 'alert');
+            closeFreelancerModal();
+            // Optionally, refresh the freelancer table
+            if ($.fn.DataTable.isDataTable('#freelancerTable')) {
+                $('#freelancerTable').DataTable().destroy();
+            }
+            initFreelancerTable();
+        }
+
+        // Customer Modal Functions
+        function openCustomerModal() {
+            document.getElementById('customerModal').style.display = 'flex'; // Use flex for centering
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('customerModal').style.display = 'none';
+        }
+
+        function saveCustomer(event) {
+            event.preventDefault(); // Prevent default form submission
+            const customerName = document.getElementById('customer-name').value;
+            const customerId = document.getElementById('customer-id').value;
+            // In a real application, you would send this data to a backend API
+            console.log('Saving Customer:', { customerName, customerId });
+            showCustomMessage('Customer Registered!', `${customerName} (ID: ${customerId}) has been registered.`, 'alert');
+            closeCustomerModal();
+            // Optionally, refresh the customer table
+            if ($.fn.DataTable.isDataTable('#customerTable')) {
+                $('#customerTable').DataTable().destroy();
+            }
+            initCustomerTable();
+            if ($.fn.DataTable.isDataTable('#fullCustomerTable')) {
+                $('#fullCustomerTable').DataTable().destroy();
+            }
+            initFullCustomerTable();
+        }
+
+        // Task Modal Functions
+        function openTaskModal() {
+            document.getElementById('taskModal').style.display = 'flex'; // Use flex for centering
+        }
+
+        function closeTaskModal() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+
+        function toggleFreelancerSelection() {
+            const assignTo = document.getElementById('assign-to').value;
+            if (assignTo === 'Specific Freelancer') {
+                document.getElementById('freelancerSelection').style.display = 'block';
+            } else {
+                document.getElementById('freelancerSelection').style.display = 'none';
+            }
+        }
+
+        function saveTask(event) {
+            event.preventDefault(); // Prevent default form submission
+            const taskType = document.getElementById('task-type').value;
+            const assignTo = document.getElementById('assign-to').value;
+            const taskPriority = document.getElementById('task-priority').value;
+            const taskDueDate = document.getElementById('task-due-date').value;
+
+            console.log('Assigning Task:', { taskType, assignTo, taskPriority, taskDueDate });
+            showCustomMessage('Task Assigned!', `Task "${taskType}" assigned to ${assignTo}.`, 'alert');
+            closeTaskModal();
+            // Optionally, refresh the tasks table
+            if ($.fn.DataTable.isDataTable('#tasksTable')) {
+                $('#tasksTable').DataTable().destroy();
+            }
+            initTasksTable();
+        }
+
+        // Initialize DataTables
+        function initFreelancerTable() {
+            if (freelancerTableInstance) {
+                freelancerTableInstance.destroy();
+            }
+            freelancerTableInstance = $('#freelancerTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true,
+                initComplete: function() {
+                    this.api().columns(4).every(function() { // Column 4 is 'Status'
+                        const column = this;
+                        const select = $('#freelancerFilter');
+                        
+                        select.off('change').on('change', function() { // Remove previous event listener
+                            const val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val === 'all' ? '' : '^' + val + '$', true, false).draw();
+                        });
+                    });
+                }
+            });
+        }
+
+        function initCustomerTable() {
+            if (customerTableInstance) {
+                customerTableInstance.destroy();
+            }
+            customerTableInstance = $('#customerTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true
+            });
+        }
+
+        function initTasksTable() {
+            if (tasksTableInstance) {
+                tasksTableInstance.destroy();
+            }
+            tasksTableInstance = $('#tasksTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true
+            });
+        }
+
+        function initCommissionTable() {
+            // Check if DataTable is already initialized on #commissionTable
+            if ($.fn.DataTable.isDataTable('#commissionTable')) {
+                $('#commissionTable').DataTable().destroy();
+            }
+            $('#commissionTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel'],
+                responsive: true
+            });
+        }
+
+        // Initialize Chart.js Charts
         function initDailyPerformanceChart() {
-            const dailyCtx = document.getElementById('dailyPerformanceChart').getContext('2d');
-            new Chart(dailyCtx, {
+            const dailyCtx = document.getElementById('dailyPerformanceChart');
+            if (dailyPerformanceChartInstance) {
+                dailyPerformanceChartInstance.destroy();
+            }
+            dailyPerformanceChartInstance = new Chart(dailyCtx, {
                 type: 'line',
                 data: {
                     labels: ['8AM', '10AM', '12PM', '2PM', '4PM', '6PM'],
@@ -702,10 +1288,12 @@
             });
         }
 
-        // Initialize Commission Chart
         function initCommissionChart() {
-            const commissionCtx = document.getElementById('commissionChart').getContext('2d');
-            new Chart(commissionCtx, {
+            const commissionCtx = document.getElementById('commissionChart');
+            if (commissionChartInstance) {
+                commissionChartInstance.destroy();
+            }
+            commissionChartInstance = new Chart(commissionCtx, {
                 type: 'bar',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
@@ -729,14 +1317,49 @@
                                 size: 14
                             }
                         }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function(value) {
+                                    return 'TZS ' + value;
+                                }
+                            }
+                        }
                     }
                 }
             });
         }
 
-        // Initialize charts on page load
+        // Placeholder functions for charts/tables that exist in Sales Team Dashboard but not Freelancer
+        // These will prevent errors if the code tries to initialize them when they don't exist in this DOM.
+        function initARPUCharts() { /* No ARPU charts in freelancer dashboard */ }
+        function initChurnRateCharts() { /* No Churn charts in freelancer dashboard */ }
+        function initRegistrationReports() { /* No Registration Reports charts/tables in freelancer dashboard */ }
+        function initFullCustomerTable() { /* No Full Customer Table in freelancer dashboard */ }
+
+
+        // Logout function
+        function logout() {
+            showCustomMessage('Logout', 'Logging out... This is a placeholder for actual logout logic.', 'alert');
+            // In a real application, you would clear session data and redirect to a login page.
+            // window.location.href = 'login.html'; 
+        }
+
+        // Initialize functionality on page load
         document.addEventListener('DOMContentLoaded', function() {
-            initDailyPerformanceChart();
+            // Set initial active nav item (Dashboard) and show its section
+            const initialNavItem = document.querySelector('.nav-item[href="#dashboard-section"]');
+            if (initialNavItem) {
+                showSection(initialNavItem, 'dashboard-section');
+            } else {
+                // Fallback: if no active class, default to dashboard
+                const defaultDashboard = document.getElementById('dashboard-section');
+                if (defaultDashboard) {
+                    defaultDashboard.classList.add('active');
+                    initDailyPerformanceChart(); // Initialize dashboard charts if it's the default
+                }
+            }
         });
     </script>
 </body>

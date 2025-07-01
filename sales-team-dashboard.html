@@ -272,6 +272,140 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- ARPU Trend Section (part of Dashboard) -->
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-file-invoice-dollar mr-2 text-blue-600"></i> ARPU Trend Analysis
+                    </h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="chart-container">
+                            <canvas id="arpuTrendChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="arpuByPlanChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="arpuTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Plan Type</th>
+                                    <th class="p-3 text-left">Current ARPU (TZS)</th>
+                                    <th class="p-3 text-left">QoQ Change</th>
+                                    <th class="p-3 text-left">YoY Change</th>
+                                    <th class="p-3 text-left">Customer Count</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">5G Unlimited</td>
+                                    <td class="p-3">TZS 12.50</td>
+                                    <td class="p-3"><span class="text-green-500">+3.2%</span></td>
+                                    <td class="p-3"><span class="text-green-500">+8.7%</span></td>
+                                    <td class="p-3">3,058</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit ARPU Data" onclick="showCustomMessage('Admin Action', 'Edit ARPU data for 5G Unlimited plan.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Fiber 1Gbps</td>
+                                    <td class="p-3">TZS 15.20</td>
+                                    <td class="p-3"><span class="text-green-500">+1.8%</span></td>
+                                    <td class="p-3"><span class="text-green-500">+5.3%</span></td>
+                                    <td class="p-3">2,184</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit ARPU Data" onclick="showCustomMessage('Admin Action', 'Edit ARPU data for Fiber 1Gbps plan.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Business Plan</td>
+                                    <td class="p-3">TZS 45.80</td>
+                                    <td class="p-3"><span class="text-red-500">-1.2%</span></td>
+                                    <td class="p-3"><span class="text-green-500">+2.1%</span></td>
+                                    <td class="p-3">874</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit ARPU Data" onclick="showCustomMessage('Admin Action', 'Edit ARPU data for Business Plan.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Churn Rate Section (part of Dashboard) -->
+                <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-user-slash mr-2 text-blue-600"></i> Churn Rate Analysis
+                    </h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="chart-container">
+                            <canvas id="churnTrendChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="churnReasonsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table id="churnTable" class="w-full">
+                            <thead>
+                                <tr class="bg-gray-100">
+                                    <th class="p-3 text-left">Segment</th>
+                                    <th class="p-3 text-left">Churn Rate</th>
+                                    <th class="p-3 text-left">At Risk</th>
+                                    <th class="p-3 text-left">Retention Rate</th>
+                                    <th class="p-3 text-left">LTV (TZS)</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3">5G Unlimited</td>
+                                    <td class="p-3">1.5%</td>
+                                    <td class="p-3">142</td>
+                                    <td class="p-3">92.5%</td>
+                                    <td class="p-3">TZS 1,240</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit Churn Data" onclick="showCustomMessage('Admin Action', 'Edit churn data for 5G Unlimited segment.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Fiber 1Gbps</td>
+                                    <td class="p-3">1.2%</td>
+                                    <td class="p-3">98</td>
+                                    <td class="p-3">94.1%</td>
+                                    <td class="p-3">TZS 1,580</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit Churn Data" onclick="showCustomMessage('Admin Action', 'Edit churn data for Fiber 1Gbps segment.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3">Business Plan</td>
+                                    <td class="p-3">2.8%</td>
+                                    <td class="p-3">56</td>
+                                    <td class="p-3">88.7%</td>
+                                    <td class="p-3">TZS 3,420</td>
+                                    <td class="p-3 text-center">
+                                        <button class="text-green-600 hover:text-green-800" title="Edit Churn Data" onclick="showCustomMessage('Admin Action', 'Edit churn data for Business Plan segment.', 'alert')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
 
             <!-- Freelancer Base Section -->
@@ -786,8 +920,8 @@
                                         </td>
                                     </tr>
                                     <tr class="border-b">
-                                        <td class="p-3">CUST-5003</td>
                                         <td class="p-3">Michael Brown</td>
+                                        <td class="p-3">CUST-5003</td>
                                         <td class="p-3">Business Plan</td>
                                         <td class="p-3"><span class="badge status-inactive">Inactive</span></td>
                                         <td class="p-3">TZS 45.80</td>
@@ -1397,7 +1531,7 @@
             if (arpuByPlanChartInstance) {
                 arpuByPlanChartInstance.destroy();
             }
-            arpuByPlanChartInstance = new Chart(arpuPlanCtx, {
+            arpuPlanChartInstance = new Chart(arpuPlanCtx, {
                 type: 'bar',
                 data: {
                     labels: ['5G Unlimited', 'Fiber 1Gbps', 'Business Plan'],
@@ -1566,8 +1700,20 @@
 
         // Initialize dashboard charts and tables
         function initDashboardChartsAndTables() {
-            // No specific charts directly on the main sales dashboard, but if there were, they'd be initialized here.
-            // The ARPU and Churn charts are in their own sections.
+            // Initialize DataTables
+            if ($.fn.DataTable.isDataTable('#arpuTable')) {
+                $('#arpuTable').DataTable().destroy();
+            }
+            $('#arpuTable').DataTable();
+
+            if ($.fn.DataTable.isDataTable('#churnTable')) {
+                $('#churnTable').DataTable().destroy();
+            }
+            $('#churnTable').DataTable();
+            
+            // Initialize charts
+            initARPUCharts();
+            initChurnRateCharts();
         }
 
         // Logout function

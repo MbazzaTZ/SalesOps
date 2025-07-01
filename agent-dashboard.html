@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent & Merchant Portal</title>
+    <title>Agent & Merchant Portal - Admin View</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* Custom styles for status badges */
         .status-badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -41,11 +42,13 @@
             background-color: #e5e7eb;
             color: #4b5563;
         }
+        /* Chart container for responsive charts */
         .chart-container {
             position: relative;
             height: 300px;
             width: 100%;
         }
+        /* Progress bar styling */
         .progress-bar {
             height: 8px;
             border-radius: 4px;
@@ -56,151 +59,183 @@
             height: 100%;
             border-radius: 4px;
         }
-        .content-section {
-            display: none;
-        }
-        .content-section.active {
-            display: block;
-        }
+        /* Active navigation item highlighting */
         .nav-item.active {
-            background-color: #1e40af;
+            background-color: #1e40af; /* Darker blue for active state */
         }
+        /* Active tab button highlighting */
         .tab-button.active {
             background-color: #1e40af;
             color: white;
         }
+        /* Content section display - only active section is shown */
+        .content-section {
+            display: none; /* Hide all sections by default */
+        }
+        .content-section.active {
+            display: block; /* Show only the active section */
+        }
+        /* Modal overlay styling */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000; /* High z-index to appear on top */
+        }
+        /* Modal content styling */
+        .modal-content {
+            z-index: 1001; /* Higher than overlay */
+            max-width: 90%; /* Responsive width */
+            max-height: 90vh; /* Responsive height */
+            overflow-y: auto; /* Enable scrolling for long content */
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="flex">
+<body class="bg-gray-100 font-sans text-gray-800">
+    <div class="flex min-h-screen">
         <!-- Sidebar Navigation -->
-        <div class="w-64 bg-blue-800 text-white min-h-screen p-4">
+        <div class="w-64 bg-blue-800 text-white p-4 flex flex-col shadow-lg">
             <div class="flex items-center justify-between mb-8 mt-4">
-                <h1 class="text-xl font-bold">Agent Portal</h1>
+                <h1 class="text-2xl font-bold">Admin Portal</h1>
             </div>
             
-            <!-- Agent Profile -->
-            <div class="bg-blue-700 p-4 rounded-lg mb-6">
+            <!-- Agent Profile (always visible) -->
+            <div class="bg-blue-700 p-4 rounded-xl mb-6 shadow-md">
                 <div class="flex items-center mb-3">
-                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">SM</div>
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-xl font-bold mr-3">AD</div>
                     <div>
-                        <p class="font-medium">Sarah Miller</p>
-                        <p class="text-sm text-blue-200">AG-2001</p>
+                        <p class="font-medium">Admin User</p>
+                        <p class="text-sm text-blue-200">ADMIN-001</p>
                     </div>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span class="status-badge status-active">Active</span>
-                    <span class="text-sm">Tier 2 Agent</span>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="status-badge status-active">Online</span>
+                    <span>Full Access</span>
                 </div>
             </div>
             
-            <nav>
+            <!-- Navigation Links -->
+            <nav class="flex-grow">
                 <ul>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700 active" onclick="showSection('dashboard')">
-                            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                        <a href="#dashboard-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out active" onclick="highlightNavItem(this, 'dashboard-section')">
+                            <i class="fas fa-tachometer-alt mr-3 text-lg"></i> Dashboard
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('customer-base')">
-                            <i class="fas fa-users mr-2"></i> Customer Base
+                        <a href="#customer-base-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'customer-base-section')">
+                            <i class="fas fa-users mr-3 text-lg"></i> Customer Base
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('transactions')">
-                            <i class="fas fa-exchange-alt mr-2"></i> Transactions
+                        <a href="#transactions-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'transactions-section')">
+                            <i class="fas fa-exchange-alt mr-3 text-lg"></i> Transactions
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('reports')">
-                            <i class="fas fa-file-alt mr-2"></i> Reports & Statements
+                        <a href="#reports-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'reports-section')">
+                            <i class="fas fa-file-alt mr-3 text-lg"></i> Reports & Statements
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="nav-item block p-2 rounded hover:bg-blue-700" onclick="showSection('commissions')">
-                            <i class="fas fa-money-bill-wave mr-2"></i> Commissions
+                        <a href="#commissions-section" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="highlightNavItem(this, 'commissions-section')">
+                            <i class="fas fa-money-bill-wave mr-3 text-lg"></i> Commissions
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="nav-item block p-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out" onclick="openMerchantModal()">
+                            <i class="fas fa-store mr-3 text-lg"></i> Merchant View
                         </a>
                     </li>
                 </ul>
             </nav>
+            
+            <!-- Logout Button -->
+            <div class="mt-auto pt-6 border-t border-blue-700">
+                <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="flex-1 p-8">
+        <!-- Main Content Area -->
+        <div class="flex-1 p-8 bg-gray-100">
             <!-- Dashboard Section -->
-            <div id="dashboard" class="content-section active">
-                <header class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">Agent Dashboard</h2>
-                    <div class="flex items-center space-x-4">
-                        <div class="bg-white p-2 rounded-lg shadow">
-                            <span class="text-gray-500 mr-2">Last Sync:</span>
-                            <span class="font-medium">Today, 10:45 AM</span>
+            <section id="dashboard-section" class="content-section active mb-12">
+                <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Agent Dashboard Overview</h2>
+                    <div class="flex flex-wrap items-center space-x-4">
+                        <div class="bg-white p-3 rounded-lg shadow-sm flex items-center">
+                            <span class="text-gray-500 mr-2 text-sm">Last Sync:</span>
+                            <span class="font-semibold text-gray-700">Today, 10:45 AM</span>
                         </div>
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-sync-alt mr-2"></i> Refresh
+                        <button class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out shadow-md">
+                            <i class="fas fa-sync-alt mr-2"></i> Refresh Data
+                        </button>
+                        <!-- Admin specific action for dashboard data management -->
+                        <button class="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition duration-200 ease-in-out shadow-md" onclick="showCustomMessage('Admin Action', 'This button would open a panel to configure dashboard data sources or refresh schedules.', 'alert')">
+                            <i class="fas fa-cogs mr-2"></i> Manage Dashboard Data
                         </button>
                     </div>
                 </header>
 
-                <!-- Today's Transaction Summary -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Cash Out Amount</p>
-                        <p class="text-2xl font-bold mt-1">$2,450</p>
-                        <div class="flex items-center mt-2">
-                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 12%</span>
-                            <span class="text-sm text-gray-500">from avg</span>
+                <!-- Today's Transaction Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-blue-50">
+                        <p class="text-gray-500 text-sm">Cash Out Amount</p>
+                        <p class="text-3xl font-bold mt-2 text-gray-900">TZS 2,450</p>
+                        <div class="flex items-center mt-3 text-sm">
+                            <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
+                            <span class="text-gray-500">from average</span>
                         </div>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Cash In Amount</p>
-                        <p class="text-2xl font-bold mt-1">$1,780</p>
-                        <div class="flex items-center mt-2">
-                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 5%</span>
-                            <span class="text-sm text-gray-500">from avg</span>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-blue-50">
+                        <p class="text-gray-500 text-sm">Cash In Amount</p>
+                        <p class="text-3xl font-bold mt-2 text-gray-900">TZS 1,780</p>
+                        <div class="flex items-center mt-3 text-sm">
+                            <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 5%</span>
+                            <span class="text-gray-500">from average</span>
                         </div>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Transactions</p>
-                        <p class="text-2xl font-bold mt-1">42</p>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-blue-50">
+                        <p class="text-gray-500 text-sm">Total Transactions</p>
+                        <p class="text-3xl font-bold mt-2 text-gray-900">42</p>
                         <p class="text-sm text-gray-500 mt-2">28 cash out, 14 cash in</p>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow">
-                        <p class="text-gray-500">Estimated Commission</p>
-                        <p class="text-2xl font-bold mt-1">$128.50</p>
-                        <div class="flex items-center mt-2">
-                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 8%</span>
-                            <span class="text-sm text-gray-500">from avg</span>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-blue-50">
+                        <p class="text-gray-500 text-sm">Estimated Commission</p>
+                        <p class="text-3xl font-bold mt-2 text-gray-900">TZS 128.50</p>
+                        <div class="flex items-center mt-3 text-sm">
+                            <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 8%</span>
+                            <span class="text-gray-500">from average</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Daily Performance -->
-                <div class="bg-white p-6 rounded-xl shadow mb-8">
-                    <h3 class="text-xl font-semibold mb-6 flex items-center">
-                        <i class="fas fa-chart-line mr-2 text-blue-600"></i> Daily Performance
+                <!-- Daily Performance & Transaction Summary -->
+                <div class="bg-white p-8 rounded-xl shadow-lg mb-10 border border-blue-50">
+                    <h3 class="text-2xl font-bold mb-6 flex items-center text-gray-800">
+                        <i class="fas fa-chart-line mr-3 text-blue-600"></i> Daily Performance Overview
                     </h3>
                     
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- Transaction Summary -->
                         <div>
-                            <h4 class="font-medium mb-3">Transaction Summary</h4>
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <div class="grid grid-cols-2 gap-4">
+                            <h4 class="font-semibold text-xl mb-4 text-gray-700">Transaction Details Today</h4>
+                            <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                                <div class="grid grid-cols-2 gap-6 mb-4">
                                     <div>
-                                        <p class="text-gray-500">Cash Out</p>
-                                        <p class="text-xl font-bold">$2,450</p>
+                                        <p class="text-gray-600">Cash Out</p>
+                                        <p class="text-2xl font-bold text-gray-900">TZS 2,450</p>
                                         <p class="text-sm text-gray-500">28 transactions</p>
                                     </div>
                                     <div>
-                                        <p class="text-gray-500">Cash In</p>
-                                        <p class="text-xl font-bold">$1,780</p>
+                                        <p class="text-gray-600">Cash In</p>
+                                        <p class="text-2xl font-bold text-gray-900">TZS 1,780</p>
                                         <p class="text-sm text-gray-500">14 transactions</p>
                                     </div>
                                 </div>
-                                <div class="mt-4">
-                                    <p class="text-gray-500">Total Commission</p>
-                                    <p class="text-2xl font-bold">$128.50</p>
+                                <div>
+                                    <p class="text-gray-600">Total Commission Earned</p>
+                                    <p class="text-3xl font-bold text-green-700">TZS 128.50</p>
                                     <p class="text-sm text-gray-500">0.5% cash in, 3% cash out</p>
                                 </div>
                             </div>
@@ -208,389 +243,525 @@
                         
                         <!-- Performance Chart -->
                         <div>
-                            <div class="flex justify-between items-center mb-3">
-                                <h4 class="font-medium">Weekly Transaction Volume</h4>
-                                <div class="flex space-x-2">
-                                    <button class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">Cash In</button>
-                                    <button class="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded">Cash Out</button>
+                            <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-semibold text-xl text-gray-700">Weekly Transaction Volume</h4>
+                                <div class="flex space-x-3">
+                                    <button class="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition duration-200">Cash In</button>
+                                    <button class="px-3 py-1 text-sm bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition duration-200">Cash Out</button>
                                 </div>
                             </div>
-                            <div class="chart-container">
+                            <div class="chart-container bg-gray-50 p-4 rounded-lg shadow-inner">
                                 <canvas id="dailyPerformanceChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Customer Base Section -->
-            <div id="customer-base" class="content-section">
-                <header class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">Customer Base</h2>
-                    <div class="flex items-center space-x-4">
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-user-plus mr-2"></i> Add Customer
+            <section id="customer-base-section" class="content-section mb-12">
+                <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Customer Base Management</h2>
+                    <div class="flex flex-wrap items-center space-x-4">
+                        <button class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition duration-200 ease-in-out shadow-md" onclick="openAddEditCustomerModal()">
+                            <i class="fas fa-user-plus mr-2"></i> Add New Customer
                         </button>
                         <div class="relative">
-                            <input type="text" placeholder="Search customers..." class="pl-10 pr-4 py-2 rounded-lg border">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            <input type="text" placeholder="Search customers..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                         </div>
                     </div>
                 </header>
 
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-semibold">Registered Customers</h3>
-                        <select class="bg-gray-100 p-2 rounded-lg border">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-blue-50">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                        <h3 class="text-2xl font-semibold text-gray-800">Registered Customers List</h3>
+                        <select class="bg-gray-100 p-2 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                             <option>All Statuses</option>
                             <option>Active</option>
                             <option>Inactive</option>
+                            <option>Flagged</option>
                         </select>
                     </div>
                     
                     <div class="overflow-x-auto">
-                        <table class="w-full border-collapse">
+                        <table class="w-full border-collapse text-left">
                             <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">Customer Name</th>
-                                    <th class="p-3 text-left">Phone</th>
-                                    <th class="p-3 text-left">Registration Date</th>
-                                    <th class="p-3 text-left">Last Transaction</th>
-                                    <th class="p-3 text-left">Status</th>
-                                    <th class="p-3 text-left">Actions</th>
+                                <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                    <th class="py-3 px-6 text-left">Customer Name</th>
+                                    <th class="py-3 px-6 text-left">Phone</th>
+                                    <th class="py-3 px-6 text-left">Registration Date</th>
+                                    <th class="py-3 px-6 text-left">Last Transaction</th>
+                                    <th class="py-3 px-6 text-left">Status</th>
+                                    <th class="py-3 px-6 text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">John Smith</td>
-                                    <td class="p-3">+1 555-1234</td>
-                                    <td class="p-3">2023-05-15</td>
-                                    <td class="p-3">Today, $200</td>
-                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="text-green-600 hover:text-green-800">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
+                            <tbody class="text-gray-700 text-sm font-light">
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">John Smith</td>
+                                    <td class="py-4 px-6">+1 555-1234</td>
+                                    <td class="py-4 px-6">2023-05-15</td>
+                                    <td class="py-4 px-6">Today, TZS 200</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-active">Active</span></td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Customer" onclick="openAddEditCustomerModal('John Smith', '+1 555-1234', '2023-05-15', 'Active')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Customer" onclick="confirmDelete('John Smith')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Sarah Johnson</td>
-                                    <td class="p-3">+1 555-5678</td>
-                                    <td class="p-3">2023-06-22</td>
-                                    <td class="p-3">Yesterday, $150</td>
-                                    <td class="p-3"><span class="status-badge status-active">Active</span></td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="text-green-600 hover:text-green-800">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Sarah Johnson</td>
+                                    <td class="py-4 px-6">+1 555-5678</td>
+                                    <td class="py-4 px-6">2023-06-22</td>
+                                    <td class="py-4 px-6">Yesterday, TZS 150</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-active">Active</span></td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Customer" onclick="openAddEditCustomerModal('Sarah Johnson', '+1 555-5678', '2023-06-22', 'Active')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Customer" onclick="confirmDelete('Sarah Johnson')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Michael Brown</td>
-                                    <td class="p-3">+1 555-9012</td>
-                                    <td class="p-3">2023-04-10</td>
-                                    <td class="p-3">2 weeks ago, $500</td>
-                                    <td class="p-3"><span class="status-badge status-inactive">Inactive</span></td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800 mr-2">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="text-green-600 hover:text-green-800">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Michael Brown</td>
+                                    <td class="py-4 px-6">+1 555-9012</td>
+                                    <td class="py-4 px-6">2023-04-10</td>
+                                    <td class="py-4 px-6">2 weeks ago, TZS 500</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-inactive">Inactive</span></td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Customer" onclick="openAddEditCustomerModal('Michael Brown', '+1 555-9012', '2023-04-10', 'Inactive')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Customer" onclick="confirmDelete('Michael Brown')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
+                                <!-- More customers would go here -->
                             </tbody>
                         </table>
                     </div>
                     
-                    <div class="flex justify-between items-center mt-4">
-                        <span class="text-sm text-gray-500">Showing 1 to 3 of 28 customers</span>
+                    <div class="flex flex-col sm:flex-row justify-between items-center mt-6">
+                        <span class="text-sm text-gray-600">Showing 1 to 3 of 28 customers</span>
                         <div class="flex space-x-2">
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Previous</button>
-                            <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">1</button>
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">2</button>
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">3</button>
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Next</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">Previous</button>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md">1</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">2</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">3</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">Next</button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Transactions Section -->
-            <div id="transactions" class="content-section">
-                <header class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">Transactions</h2>
-                    <div class="flex items-center space-x-4">
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-plus mr-2"></i> New Transaction
+            <section id="transactions-section" class="content-section mb-12">
+                <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Transaction Records</h2>
+                    <div class="flex flex-wrap items-center space-x-4">
+                        <button class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition duration-200 ease-in-out shadow-md" onclick="openAddEditTransactionModal()">
+                            <i class="fas fa-plus mr-2"></i> Record New Transaction
                         </button>
-                        <select class="bg-gray-100 p-2 rounded-lg border">
+                        <select class="bg-gray-100 p-2 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                             <option>All Transactions</option>
                             <option>Cash In</option>
                             <option>Cash Out</option>
+                            <option>Suspect</option>
+                            <option>Fraud</option>
                         </select>
                     </div>
                 </header>
 
-                <div class="bg-white p-6 rounded-xl shadow">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-blue-50">
                     <div class="overflow-x-auto">
-                        <table class="w-full border-collapse">
+                        <table class="w-full border-collapse text-left">
                             <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">Date</th>
-                                    <th class="p-3 text-left">Customer</th>
-                                    <th class="p-3 text-left">Type</th>
-                                    <th class="p-3 text-left">Amount</th>
-                                    <th class="p-3 text-left">Commission</th>
-                                    <th class="p-3 text-left">Reference</th>
-                                    <th class="p-3 text-left">Actions</th>
+                                <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                    <th class="py-3 px-6 text-left">Date & Time</th>
+                                    <th class="py-3 px-6 text-left">Customer</th>
+                                    <th class="py-3 px-6 text-left">Type</th>
+                                    <th class="py-3 px-6 text-left">Amount</th>
+                                    <th class="py-3 px-6 text-left">Commission</th>
+                                    <th class="py-3 px-6 text-left">Reference ID</th>
+                                    <th class="py-3 px-6 text-left">Status</th>
+                                    <th class="py-3 px-6 text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Today, 10:30 AM</td>
-                                    <td class="p-3">John Smith</td>
-                                    <td class="p-3">Cash Out</td>
-                                    <td class="p-3">$200.00</td>
-                                    <td class="p-3">$4.00</td>
-                                    <td class="p-3">TXN48729</td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
+                            <tbody class="text-gray-700 text-sm font-light">
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Today, 10:30 AM</td>
+                                    <td class="py-4 px-6">John Smith</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 200.00</td>
+                                    <td class="py-4 px-6">TZS 4.00</td>
+                                    <td class="py-4 px-6">TXN48729</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Transaction" onclick="openAddEditTransactionModal('TXN48729', 'Cash Out', '200.00', 'John Smith', 'Clean')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Transaction" onclick="confirmDelete('TXN48729')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Today, 9:15 AM</td>
-                                    <td class="p-3">Sarah Johnson</td>
-                                    <td class="p-3">Cash In</td>
-                                    <td class="p-3">$150.00</td>
-                                    <td class="p-3">$3.00</td>
-                                    <td class="p-3">TXN48730</td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Today, 9:15 AM</td>
+                                    <td class="py-4 px-6">Sarah Johnson</td>
+                                    <td class="py-4 px-6">Cash In</td>
+                                    <td class="py-4 px-6">TZS 150.00</td>
+                                    <td class="py-4 px-6">TZS 3.00</td>
+                                    <td class="py-4 px-6">TXN48730</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-suspect">Suspect</span></td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Transaction" onclick="openAddEditTransactionModal('TXN48730', 'Cash In', '150.00', 'Sarah Johnson', 'Suspect')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Transaction" onclick="confirmDelete('TXN48730')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Yesterday, 4:45 PM</td>
-                                    <td class="p-3">Michael Brown</td>
-                                    <td class="p-3">Cash Out</td>
-                                    <td class="p-3">$500.00</td>
-                                    <td class="p-3">$10.00</td>
-                                    <td class="p-3">TXN48601</td>
-                                    <td class="p-3">
-                                        <button class="text-blue-600 hover:text-blue-800">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Yesterday, 4:45 PM</td>
+                                    <td class="py-4 px-6">Michael Brown</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 500.00</td>
+                                    <td class="py-4 px-6">TZS 10.00</td>
+                                    <td class="py-4 px-6">TXN48601</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-fraud">Fraud</span></td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Transaction" onclick="openAddEditTransactionModal('TXN48601', 'Cash Out', '500.00', 'Michael Brown', 'Fraud')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Transaction" onclick="confirmDelete('TXN48601')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- More transactions would go here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row justify-between items-center mt-6">
+                        <span class="text-sm text-gray-600">Showing 1 to 3 of 42 transactions</span>
+                        <div class="flex space-x-2">
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">Previous</button>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md">1</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">2</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">3</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports & Statements Section -->
+            <section id="reports-section" class="content-section mb-12">
+                <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Reports & Statements Generation</h2>
+                    <div class="flex flex-wrap items-center space-x-4">
+                        <div class="flex bg-gray-100 rounded-lg p-1 shadow-sm">
+                            <button class="px-4 py-2 rounded-lg tab-button active transition duration-200" onclick="changeReportTab(this, 'agent-statement')">Agent Statement</button>
+                            <button class="px-4 py-2 rounded-lg tab-button transition duration-200" onclick="changeReportTab(this, 'customer-statement')">Customer Statement</button>
+                        </div>
+                        <button class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out shadow-md">
+                            <i class="fas fa-download mr-2"></i> Export Report
+                        </button>
+                        <!-- Admin action for report configuration -->
+                        <button class="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition duration-200 ease-in-out shadow-md" onclick="showCustomMessage('Admin Action', 'This button would open a panel to define new report types, configure data sources, or set up automated report generation.', 'alert')">
+                            <i class="fas fa-cogs mr-2"></i> Configure Reports
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Date Filters for Reports -->
+                <div class="bg-white p-8 rounded-xl shadow-lg mb-10 border border-blue-50">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Filter Report Data</h3>
+                    <div class="flex flex-wrap items-center gap-6">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-gray-600 font-medium">Date Range:</span>
+                            <div class="flex bg-gray-100 rounded-lg p-1 shadow-inner">
+                                <button class="px-3 py-1 text-sm rounded-lg tab-button active transition duration-200">Today</button>
+                                <button class="px-3 py-1 text-sm rounded-lg tab-button transition duration-200">Yesterday</button>
+                                <button class="px-3 py-1 text-sm rounded-lg tab-button transition duration-200">Weekly</button>
+                                <button class="px-3 py-1 text-sm rounded-lg tab-button transition duration-200">Monthly</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-gray-600 font-medium">Custom Range:</span>
+                            <input type="date" class="p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                            <span class="text-gray-500">to</span>
+                            <input type="date" class="p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out shadow-md">Apply Filter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent Statement Tab Content -->
+                <div id="agent-statement" class="report-tab active bg-white p-8 rounded-xl shadow-lg border border-blue-50">
+                    <h3 class="text-2xl font-semibold mb-6 text-gray-800">Agent Statement Details</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse text-left">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                    <th class="py-3 px-6 text-left">Date</th>
+                                    <th class="py-3 px-6 text-left">Customer</th>
+                                    <th class="py-3 px-6 text-left">Type</th>
+                                    <th class="py-3 px-6 text-left">Amount</th>
+                                    <th class="py-3 px-6 text-left">Commission</th>
+                                    <th class="py-3 px-6 text-left">Status</th>
+                                    <th class="py-3 px-6 text-left">Reference ID</th>
+                                    <th class="py-3 px-6 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700 text-sm font-light">
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Today, 10:30 AM</td>
+                                    <td class="py-4 px-6">John Smith</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 200.00</td>
+                                    <td class="py-4 px-6">TZS 4.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
+                                    <td class="py-4 px-6">TXN48729</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Entry" onclick="showCustomMessage('Admin Action', 'Edit report entry for TXN48729', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Entry" onclick="confirmDelete('report entry for TXN48729')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Today, 9:15 AM</td>
+                                    <td class="py-4 px-6">Sarah Johnson</td>
+                                    <td class="py-4 px-6">Cash In</td>
+                                    <td class="py-4 px-6">TZS 150.00</td>
+                                    <td class="py-4 px-6">TZS 3.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-suspect">Suspect</span></td>
+                                    <td class="py-4 px-6">TXN48730</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Entry" onclick="showCustomMessage('Admin Action', 'Edit report entry for TXN48730', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Entry" onclick="confirmDelete('report entry for TXN48730')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Yesterday, 4:45 PM</td>
+                                    <td class="py-4 px-6">Michael Brown</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 500.00</td>
+                                    <td class="py-4 px-6">TZS 10.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-fraud">Fraud</span></td>
+                                    <td class="py-4 px-6">TXN48601</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Entry" onclick="showCustomMessage('Admin Action', 'Edit report entry for TXN48601', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Entry" onclick="confirmDelete('report entry for TXN48601')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- More report entries would go here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row justify-between items-center mt-6">
+                        <span class="text-sm text-gray-600">Showing 1 to 3 of 42 entries</span>
+                        <div class="flex space-x-2">
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">Previous</button>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md">1</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">2</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">3</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition duration-150">Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Statement Tab Content -->
+                <div id="customer-statement" class="report-tab hidden bg-white p-8 rounded-xl shadow-lg border border-blue-50">
+                    <h3 class="text-2xl font-semibold mb-6 text-gray-800">Customer Statement Details</h3>
+                    <div class="mb-6">
+                        <select class="bg-gray-100 p-3 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm w-full md:w-1/2 lg:w-1/3">
+                            <option>Select Customer</option>
+                            <option>John Smith</option>
+                            <option>Sarah Johnson</option>
+                            <option>Michael Brown</option>
+                        </select>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse text-left">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                    <th class="py-3 px-6 text-left">Date</th>
+                                    <th class="py-3 px-6 text-left">Type</th>
+                                    <th class="py-3 px-6 text-left">Amount</th>
+                                    <th class="py-3 px-6 text-left">Status</th>
+                                    <th class="py-3 px-6 text-left">Reference ID</th>
+                                    <th class="py-3 px-6 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700 text-sm font-light">
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Today, 10:30 AM</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 200.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
+                                    <td class="py-4 px-6">TXN48729</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Entry" onclick="showCustomMessage('Admin Action', 'Edit customer report entry for TXN48729', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Entry" onclick="confirmDelete('customer report entry for TXN48729')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Yesterday, 2:15 PM</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 350.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
+                                    <td class="py-4 px-6">TXN48655</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Entry" onclick="showCustomMessage('Admin Action', 'Edit customer report entry for TXN48655', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Entry" onclick="confirmDelete('customer report entry for TXN48655')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">2023-07-05</td>
+                                    <td class="py-4 px-6">Cash In</td>
+                                    <td class="py-4 px-6">TZS 150.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
+                                    <td class="py-4 px-6">TXN48501</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Entry" onclick="showCustomMessage('Admin Action', 'Edit customer report entry for TXN48501', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Entry" onclick="confirmDelete('customer report entry for TXN48501')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    
-                    <div class="flex justify-between items-center mt-4">
-                        <span class="text-sm text-gray-500">Showing 1 to 3 of 42 transactions</span>
-                        <div class="flex space-x-2">
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Previous</button>
-                            <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">1</button>
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">2</button>
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">3</button>
-                            <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Next</button>
-                        </div>
-                    </div>
                 </div>
-            </div>
-
-            <!-- Reports & Statements Section -->
-            <div id="reports" class="content-section">
-                <header class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">Reports & Statements</h2>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex bg-gray-100 rounded-lg p-1">
-                            <button class="px-3 py-1 rounded-lg tab-button active" onclick="changeReportTab('agent-statement')">Agent Statement</button>
-                            <button class="px-3 py-1 rounded-lg tab-button" onclick="changeReportTab('customer-statement')">Customer Statement</button>
-                        </div>
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-download mr-2"></i> Export
-                        </button>
-                    </div>
-                </header>
-
-                <!-- Date Filters -->
-                <div class="bg-white p-4 rounded-xl shadow mb-6">
-                    <div class="flex flex-wrap items-center gap-4">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-gray-500">Date Range:</span>
-                            <div class="flex bg-gray-100 rounded-lg p-1">
-                                <button class="px-3 py-1 rounded-lg tab-button active">Today</button>
-                                <button class="px-3 py-1 rounded-lg tab-button">Yesterday</button>
-                                <button class="px-3 py-1 rounded-lg tab-button">Weekly</button>
-                                <button class="px-3 py-1 rounded-lg tab-button">Monthly</button>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-gray-500">Custom Range:</span>
-                            <input type="date" class="p-2 border rounded-lg">
-                            <span>to</span>
-                            <input type="date" class="p-2 border rounded-lg">
-                            <button class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700">Apply</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Agent Statement Tab -->
-                <div id="agent-statement" class="report-tab active">
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <div class="overflow-x-auto">
-                            <table class="w-full border-collapse">
-                                <thead>
-                                    <tr class="bg-gray-100">
-                                        <th class="p-3 text-left">Date</th>
-                                        <th class="p-3 text-left">Customer</th>
-                                        <th class="p-3 text-left">Type</th>
-                                        <th class="p-3 text-left">Amount</th>
-                                        <th class="p-3 text-left">Commission</th>
-                                        <th class="p-3 text-left">Status</th>
-                                        <th class="p-3 text-left">Reference</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="p-3">Today, 10:30 AM</td>
-                                        <td class="p-3">John Smith</td>
-                                        <td class="p-3">Cash Out</td>
-                                        <td class="p-3">$200.00</td>
-                                        <td class="p-3">$4.00</td>
-                                        <td class="p-3"><span class="status-badge status-clean">Clean</span></td>
-                                        <td class="p-3">TXN48729</td>
-                                    </tr>
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="p-3">Today, 9:15 AM</td>
-                                        <td class="p-3">Sarah Johnson</td>
-                                        <td class="p-3">Cash In</td>
-                                        <td class="p-3">$150.00</td>
-                                        <td class="p-3">$3.00</td>
-                                        <td class="p-3"><span class="status-badge status-suspect">Suspect</span></td>
-                                        <td class="p-3">TXN48730</td>
-                                    </tr>
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="p-3">Yesterday, 4:45 PM</td>
-                                        <td class="p-3">Michael Brown</td>
-                                        <td class="p-3">Cash Out</td>
-                                        <td class="p-3">$500.00</td>
-                                        <td class="p-3">$10.00</td>
-                                        <td class="p-3"><span class="status-badge status-fraud">Fraud</span></td>
-                                        <td class="p-3">TXN48601</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="text-sm text-gray-500">Showing 1 to 3 of 42 transactions</span>
-                            <div class="flex space-x-2">
-                                <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Previous</button>
-                                <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">1</button>
-                                <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">2</button>
-                                <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">3</button>
-                                <button class="px-3 py-1 border rounded-lg hover:bg-gray-100">Next</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Customer Statement Tab -->
-                <div id="customer-statement" class="report-tab">
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <div class="mb-4">
-                            <select class="bg-gray-100 p-2 rounded-lg border">
-                                <option>Select Customer</option>
-                                <option>John Smith</option>
-                                <option>Sarah Johnson</option>
-                                <option>Michael Brown</option>
-                            </select>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full border-collapse">
-                                <thead>
-                                    <tr class="bg-gray-100">
-                                        <th class="p-3 text-left">Date</th>
-                                        <th class="p-3 text-left">Type</th>
-                                        <th class="p-3 text-left">Amount</th>
-                                        <th class="p-3 text-left">Status</th>
-                                        <th class="p-3 text-left">Reference</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="p-3">Today, 10:30 AM</td>
-                                        <td class="p-3">Cash Out</td>
-                                        <td class="p-3">$200.00</td>
-                                        <td class="p-3"><span class="status-badge status-clean">Clean</span></td>
-                                        <td class="p-3">TXN48729</td>
-                                    </tr>
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="p-3">Yesterday, 2:15 PM</td>
-                                        <td class="p-3">Cash Out</td>
-                                        <td class="p-3">$350.00</td>
-                                        <td class="p-3"><span class="status-badge status-clean">Clean</span></td>
-                                        <td class="p-3">TXN48655</td>
-                                    </tr>
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="p-3">2023-07-05</td>
-                                        <td class="p-3">Cash In</td>
-                                        <td class="p-3">$150.00</td>
-                                        <td class="p-3"><span class="status-badge status-clean">Clean</span></td>
-                                        <td class="p-3">TXN48501</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </section>
 
             <!-- Commissions Section -->
-            <div id="commissions" class="content-section">
-                <header class="flex justify-between items-center mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800">Commissions</h2>
-                    <div class="flex items-center space-x-4">
-                        <select class="bg-gray-100 p-2 rounded-lg border">
+            <section id="commissions-section" class="content-section mb-12">
+                <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">Commission Management</h2>
+                    <div class="flex flex-wrap items-center space-x-4">
+                        <select class="bg-gray-100 p-2 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                             <option>This Month</option>
                             <option>Last Month</option>
                             <option>Last Quarter</option>
                             <option>This Year</option>
                         </select>
-                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-download mr-2"></i> Export
+                        <button class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out shadow-md">
+                            <i class="fas fa-download mr-2"></i> Export Commission Data
+                        </button>
+                        <!-- Admin action for commission rule management -->
+                        <button class="bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-700 transition duration-200 ease-in-out shadow-md" onclick="showCustomMessage('Admin Action', 'This button would open a panel to define or modify commission rules and rates.', 'alert')">
+                            <i class="fas fa-percent mr-2"></i> Manage Commission Rules
                         </button>
                     </div>
                 </header>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-white p-6 rounded-xl shadow">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-blue-50">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-semibold">Current Month</h3>
-                            <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">Estimated</span>
+                            <h3 class="text-xl font-semibold text-gray-800">Current Month</h3>
+                            <span class="text-sm bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">Estimated</span>
                         </div>
-                        <p class="text-3xl font-bold">$1,280</p>
-                        <div class="flex items-center mt-2">
-                            <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 12%</span>
-                            <span class="text-sm text-gray-500">from last month</span>
+                        <p class="text-4xl font-bold text-gray-900">TZS 1,280</p>
+                        <div class="flex items-center mt-3 text-sm">
+                            <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
+                            <span class="text-gray-500">from last month</span>
                         </div>
-                        <div class="mt-4">
-                            <div class="flex justify-between mb-1">
-                                <span class="text-gray-500">Target</span>
-                                <span>$1,600</span>
+                        <div class="mt-5">
+                            <div class="flex justify-between mb-2 text-gray-600">
+                                <span class="font-medium">Target</span>
+                                <span>TZS 1,600</span>
                             </div>
                             <div class="progress-bar">
                                 <div class="progress-fill bg-blue-600" style="width: 80%"></div>
@@ -598,195 +769,235 @@
                         </div>
                     </div>
                     
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <h3 class="text-lg font-semibold mb-4">Last Month</h3>
-                        <p class="text-3xl font-bold">$1,142</p>
-                        <p class="text-sm text-gray-500 mt-2">Paid on 5th July</p>
-                        <div class="mt-4">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">Base Customers</span>
-                                <span>$842</span>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-blue-50">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Last Month</h3>
+                        <p class="text-4xl font-bold text-gray-900">TZS 1,142</p>
+                        <p class="text-sm text-gray-500 mt-3">Paid on 5th July</p>
+                        <div class="mt-5 space-y-2">
+                            <div class="flex justify-between text-gray-600 text-base">
+                                <span class="font-medium">Base Customers</span>
+                                <span>TZS 842</span>
                             </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">New Signups</span>
-                                <span>$300</span>
+                            <div class="flex justify-between text-gray-600 text-base">
+                                <span class="font-medium">New Signups</span>
+                                <span>TZS 300</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="bg-white p-6 rounded-xl shadow">
-                        <h3 class="text-lg font-semibold mb-4">Performance Bonus</h3>
-                        <p class="text-3xl font-bold">$180</p>
-                        <p class="text-sm text-gray-500 mt-2">Estimated for this month</p>
-                        <div class="mt-4">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">ARPU Bonus</span>
-                                <span>$80</span>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-blue-50">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Performance Bonus</h3>
+                        <p class="text-4xl font-bold text-gray-900">TZS 180</p>
+                        <p class="text-sm text-gray-500 mt-3">Estimated for this month</p>
+                        <div class="mt-5 space-y-2">
+                            <div class="flex justify-between text-gray-600 text-base">
+                                <span class="font-medium">ARPU Bonus</span>
+                                <span>TZS 80</span>
                             </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">Retention Bonus</span>
-                                <span>$100</span>
+                            <div class="flex justify-between text-gray-600 text-base">
+                                <span class="font-medium">Retention Bonus</span>
+                                <span>TZS 100</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-xl font-semibold mb-4">Commission Breakdown</h3>
-                    <div class="chart-container mb-6">
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-blue-50">
+                    <h3 class="text-2xl font-semibold mb-6 text-gray-800">Detailed Commission Breakdown</h3>
+                    <div class="chart-container mb-8 bg-gray-50 p-4 rounded-lg shadow-inner">
                         <canvas id="commissionChart"></canvas>
                     </div>
                     
                     <div class="overflow-x-auto">
-                        <table class="w-full border-collapse">
+                        <table class="w-full border-collapse text-left">
                             <thead>
-                                <tr class="bg-gray-100">
-                                    <th class="p-3 text-left">Customer</th>
-                                    <th class="p-3 text-left">Transaction Type</th>
-                                    <th class="p-3 text-left">Amount</th>
-                                    <th class="p-3 text-left">Commission Rate</th>
-                                    <th class="p-3 text-left">Commission</th>
-                                    <th class="p-3 text-left">Status</th>
+                                <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                    <th class="py-3 px-6 text-left">Customer</th>
+                                    <th class="py-3 px-6 text-left">Transaction Type</th>
+                                    <th class="py-3 px-6 text-left">Amount</th>
+                                    <th class="py-3 px-6 text-left">Commission Rate</th>
+                                    <th class="py-3 px-6 text-left">Commission</th>
+                                    <th class="py-3 px-6 text-left">Status</th>
+                                    <th class="py-3 px-6 text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">John Smith</td>
-                                    <td class="p-3">Cash Out</td>
-                                    <td class="p-3">$200.00</td>
-                                    <td class="p-3">2%</td>
-                                    <td class="p-3">$4.00</td>
-                                    <td class="p-3"><span class="status-badge status-clean">Clean</span></td>
+                            <tbody class="text-gray-700 text-sm font-light">
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">John Smith</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 200.00</td>
+                                    <td class="py-4 px-6">2%</td>
+                                    <td class="py-4 px-6">TZS 4.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Commission" onclick="showCustomMessage('Admin Action', 'Edit commission for John Smith, TXN TZS 200', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Commission Entry" onclick="confirmDelete('commission entry for John Smith')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Sarah Johnson</td>
-                                    <td class="p-3">Cash In</td>
-                                    <td class="p-3">$150.00</td>
-                                    <td class="p-3">2%</td>
-                                    <td class="p-3">$3.00</td>
-                                    <td class="p-3"><span class="status-badge status-suspect">Suspect</span></td>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Sarah Johnson</td>
+                                    <td class="py-4 px-6">Cash In</td>
+                                    <td class="py-4 px-6">TZS 150.00</td>
+                                    <td class="py-4 px-6">2%</td>
+                                    <td class="py-4 px-6">TZS 3.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-suspect">Suspect</span></td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Commission" onclick="showCustomMessage('Admin Action', 'Edit commission for Sarah Johnson, TXN TZS 150', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Commission Entry" onclick="confirmDelete('commission entry for Sarah Johnson')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-3">Michael Brown</td>
-                                    <td class="p-3">Cash Out</td>
-                                    <td class="p-3">$500.00</td>
-                                    <td class="p-3">2%</td>
-                                    <td class="p-3">$10.00</td>
-                                    <td class="p-3"><span class="status-badge status-fraud">Fraud</span></td>
+                                <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                    <td class="py-4 px-6">Michael Brown</td>
+                                    <td class="py-4 px-6">Cash Out</td>
+                                    <td class="py-4 px-6">TZS 500.00</td>
+                                    <td class="py-4 px-6">2%</td>
+                                    <td class="py-4 px-6">TZS 10.00</td>
+                                    <td class="py-4 px-6"><span class="status-badge status-fraud">Fraud</span></td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex item-center justify-center space-x-2">
+                                            <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition duration-150" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-200 transition duration-150" title="Edit Commission" onclick="showCustomMessage('Admin Action', 'Edit commission for Michael Brown, TXN TZS 500', 'alert')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition duration-150" title="Remove Commission Entry" onclick="confirmDelete('commission entry for Michael Brown')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 
-    <!-- Merchant Dashboard Modal -->
-    <div id="merchant-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-xl p-6 w-full max-w-6xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Merchant Dashboard</h2>
-                <button onclick="closeMerchantModal()" class="text-gray-500 hover:text-gray-700">
+    <!-- Merchant Dashboard Modal (remains hidden by default, shown on button click) -->
+    <div id="merchant-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden modal-overlay">
+        <div class="bg-white rounded-xl p-8 w-full max-w-6xl modal-content shadow-2xl">
+            <div class="flex justify-between items-center mb-6 border-b pb-4 border-gray-200">
+                <h2 class="text-3xl font-bold text-gray-900">Merchant Dashboard View</h2>
+                <button onclick="closeMerchantModal()" class="text-gray-500 hover:text-gray-700 text-2xl transition duration-200">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
             <!-- Merchant Dashboard Content -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white p-4 rounded-xl shadow border border-blue-100">
-                    <p class="text-gray-500">Total Sales</p>
-                    <p class="text-2xl font-bold mt-1">$8,720</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 18%</span>
-                        <span class="text-sm text-gray-500">from avg</span>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
+                    <p class="text-gray-600 text-sm">Total Sales</p>
+                    <p class="text-3xl font-bold mt-2 text-gray-900">TZS 8,720</p>
+                    <div class="flex items-center mt-3 text-sm">
+                        <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 18%</span>
+                        <span class="text-gray-500">from avg</span>
                     </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow border border-blue-100">
-                    <p class="text-gray-500">Transactions</p>
-                    <p class="text-2xl font-bold mt-1">126</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 22%</span>
-                        <span class="text-sm text-gray-500">from avg</span>
+                <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
+                    <p class="text-gray-600 text-sm">Transactions</p>
+                    <p class="text-3xl font-bold mt-2 text-gray-900">126</p>
+                    <div class="flex items-center mt-3 text-sm">
+                        <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 22%</span>
+                        <span class="text-gray-500">from avg</span>
                     </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow border border-blue-100">
-                    <p class="text-gray-500">Avg. Value</p>
-                    <p class="text-2xl font-bold mt-1">$69.20</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-red-500 mr-1"><i class="fas fa-arrow-down"></i> 3%</span>
-                        <span class="text-sm text-gray-500">from avg</span>
+                <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
+                    <p class="text-gray-600 text-sm">Avg. Value</p>
+                    <p class="text-3xl font-bold mt-2 text-gray-900">TZS 69.20</p>
+                    <div class="flex items-center mt-3 text-sm">
+                        <span class="text-red-600 mr-2"><i class="fas fa-arrow-down"></i> 3%</span>
+                        <span class="text-gray-500">from avg</span>
                     </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow border border-blue-100">
-                    <p class="text-gray-500">Fees</p>
-                    <p class="text-2xl font-bold mt-1">$261.60</p>
-                    <div class="flex items-center mt-2">
-                        <span class="text-green-500 mr-1"><i class="fas fa-arrow-up"></i> 18%</span>
-                        <span class="text-sm text-gray-500">from avg</span>
+                <div class="bg-blue-50 p-6 rounded-xl shadow-md border border-blue-100">
+                    <p class="text-gray-600 text-sm">Fees</p>
+                    <p class="text-3xl font-bold mt-2 text-gray-900">TZS 261.60</p>
+                    <div class="flex items-center mt-3 text-sm">
+                        <span class="text-green-600 mr-2"><i class="fas fa-arrow-up"></i> 18%</span>
+                        <span class="text-gray-500">from avg</span>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white p-6 rounded-xl shadow border border-blue-100 mb-6">
-                <h3 class="text-xl font-semibold mb-4">Settlement Overview</h3>
+            <div class="bg-white p-8 rounded-xl shadow-lg border border-blue-100 mb-8">
+                <h3 class="text-2xl font-semibold mb-6 text-gray-800">Settlement Overview</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <p class="text-gray-500">Next Settlement</p>
-                        <p class="text-xl font-bold mt-1">July 5, 2023</p>
-                        <p class="text-2xl font-bold text-green-600">$8,458.40</p>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                        <p class="text-gray-600">Next Settlement</p>
+                        <p class="text-2xl font-bold mt-2 text-gray-900">July 5, 2023</p>
+                        <p class="text-3xl font-bold text-green-700 mt-1">TZS 8,458.40</p>
                     </div>
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <p class="text-gray-500">Last Settlement</p>
-                        <p class="text-xl font-bold mt-1">June 5, 2023</p>
-                        <p class="text-2xl font-bold">$7,456.80</p>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                        <p class="text-gray-600">Last Settlement</p>
+                        <p class="text-2xl font-bold mt-2 text-gray-900">June 5, 2023</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1">TZS 7,456.80</p>
                     </div>
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <p class="text-gray-500">Pending Balance</p>
-                        <p class="text-xl font-bold mt-1">$8,458.40</p>
-                        <p class="text-sm text-gray-500">Will be settled on July 5</p>
+                    <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                        <p class="text-gray-600">Pending Balance</p>
+                        <p class="text-2xl font-bold mt-2 text-gray-900">TZS 8,458.40</p>
+                        <p class="text-sm text-gray-500 mt-1">Will be settled on July 5</p>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white p-6 rounded-xl shadow border border-blue-100">
-                <h3 class="text-xl font-semibold mb-4">Recent Transactions</h3>
+            <div class="bg-white p-8 rounded-xl shadow-lg border border-blue-100">
+                <h3 class="text-2xl font-semibold mb-6 text-gray-800">Recent Merchant Transactions</h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full border-collapse">
+                    <table class="w-full border-collapse text-left">
                         <thead>
-                            <tr class="bg-gray-100">
-                                <th class="p-3 text-left">Date</th>
-                                <th class="p-3 text-left">Agent</th>
-                                <th class="p-3 text-left">Type</th>
-                                <th class="p-3 text-left">Amount</th>
-                                <th class="p-3 text-left">Fee</th>
-                                <th class="p-3 text-left">Status</th>
+                            <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6 text-left">Date & Time</th>
+                                <th class="py-3 px-6 text-left">Agent</th>
+                                <th class="py-3 px-6 text-left">Type</th>
+                                <th class="py-3 px-6 text-left">Amount</th>
+                                <th class="py-3 px-6 text-left">Fee</th>
+                                <th class="py-3 px-6 text-left">Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3">Today, 10:30 AM</td>
-                                <td class="p-3">Sarah Miller (AG-2001)</td>
-                                <td class="p-3">Cash Out</td>
-                                <td class="p-3">$200.00</td>
-                                <td class="p-3">$6.00</td>
-                                <td class="p-3"><span class="status-badge status-clean">Clean</span></td>
+                        <tbody class="text-gray-700 text-sm font-light">
+                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                <td class="py-4 px-6">Today, 10:30 AM</td>
+                                <td class="py-4 px-6">Sarah Miller (AG-2001)</td>
+                                <td class="py-4 px-6">Cash Out</td>
+                                <td class="py-4 px-6">TZS 200.00</td>
+                                <td class="py-4 px-6">TZS 6.00</td>
+                                <td class="py-4 px-6"><span class="status-badge status-clean">Clean</span></td>
                             </tr>
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3">Today, 9:15 AM</td>
-                                <td class="p-3">David Wilson (AG-2002)</td>
-                                <td class="p-3">Cash In</td>
-                                <td class="p-3">$150.00</td>
-                                <td class="p-3">$4.50</td>
-                                <td class="p-3"><span class="status-badge status-suspect">Suspect</span></td>
+                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                <td class="py-4 px-6">Today, 9:15 AM</td>
+                                <td class="py-4 px-6">David Wilson (AG-2002)</td>
+                                <td class="py-4 px-6">Cash In</td>
+                                <td class="py-4 px-6">TZS 150.00</td>
+                                <td class="py-4 px-6">TZS 4.50</td>
+                                <td class="py-4 px-6"><span class="status-badge status-suspect">Suspect</span></td>
                             </tr>
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3">Yesterday, 4:45 PM</td>
-                                <td class="p-3">Sarah Miller (AG-2001)</td>
-                                <td class="p-3">Cash Out</td>
-                                <td class="p-3">$500.00</td>
-                                <td class="p-3">$15.00</td>
-                                <td class="p-3"><span class="status-badge status-fraud">Fraud</span></td>
+                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                <td class="py-4 px-6">Yesterday, 4:45 PM</td>
+                                <td class="py-4 px-6">Sarah Miller (AG-2001)</td>
+                                <td class="py-4 px-6">Cash Out</td>
+                                <td class="py-4 px-6">TZS 500.00</td>
+                                <td class="py-4 px-6">TZS 15.00</td>
+                                <td class="py-4 px-6"><span class="status-badge status-fraud">Fraud</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -795,43 +1006,149 @@
         </div>
     </div>
 
+    <!-- Add/Edit Customer Modal -->
+    <div id="customer-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden modal-overlay">
+        <div class="bg-white rounded-xl p-8 w-full max-w-2xl modal-content shadow-2xl">
+            <div class="flex justify-between items-center mb-6 border-b pb-4 border-gray-200">
+                <h2 id="customer-modal-title" class="text-2xl font-bold text-gray-900">Add New Customer</h2>
+                <button onclick="closeCustomerModal()" class="text-gray-500 hover:text-gray-700 text-xl transition duration-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="saveCustomer(event)">
+                <div class="mb-4">
+                    <label for="customer-name" class="block text-gray-700 text-sm font-semibold mb-2">Customer Name:</label>
+                    <input type="text" id="customer-name" name="customer-name" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., Jane Doe" required>
+                </div>
+                <div class="mb-4">
+                    <label for="customer-phone" class="block text-gray-700 text-sm font-semibold mb-2">Phone Number:</label>
+                    <input type="tel" id="customer-phone" name="customer-phone" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., +1 555-123-4567" required>
+                </div>
+                <div class="mb-4">
+                    <label for="customer-reg-date" class="block text-gray-700 text-sm font-semibold mb-2">Registration Date:</label>
+                    <input type="date" id="customer-reg-date" name="customer-reg-date" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label for="customer-status" class="block text-gray-700 text-sm font-semibold mb-2">Status:</label>
+                    <select id="customer-status" name="customer-status" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Flagged">Flagged</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeCustomerModal()" class="bg-gray-300 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-400 transition duration-200 ease-in-out font-semibold">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out font-semibold shadow-md">Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Transaction Modal -->
+    <div id="transaction-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden modal-overlay">
+        <div class="bg-white rounded-xl p-8 w-full max-w-2xl modal-content shadow-2xl">
+            <div class="flex justify-between items-center mb-6 border-b pb-4 border-gray-200">
+                <h2 id="transaction-modal-title" class="text-2xl font-bold text-gray-900">Record New Transaction</h2>
+                <button onclick="closeTransactionModal()" class="text-gray-500 hover:text-gray-700 text-xl transition duration-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form onsubmit="saveTransaction(event)">
+                <div class="mb-4">
+                    <label for="transaction-ref" class="block text-gray-700 text-sm font-semibold mb-2">Reference ID:</label>
+                    <input type="text" id="transaction-ref" name="transaction-ref" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., TXN12345" required>
+                </div>
+                <div class="mb-4">
+                    <label for="transaction-customer" class="block text-gray-700 text-sm font-semibold mb-2">Customer Name:</label>
+                    <input type="text" id="transaction-customer" name="transaction-customer" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., John Smith" required>
+                </div>
+                <div class="mb-4">
+                    <label for="transaction-type" class="block text-gray-700 text-sm font-semibold mb-2">Transaction Type:</label>
+                    <select id="transaction-type" name="transaction-type" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Cash Out">Cash Out</option>
+                        <option value="Cash In">Cash In</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="transaction-amount" class="block text-gray-700 text-sm font-semibold mb-2">Amount (TZS):</label>
+                    <input type="number" id="transaction-amount" name="transaction-amount" step="0.01" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., 150.00" required>
+                </div>
+                <div class="mb-6">
+                    <label for="transaction-status" class="block text-gray-700 text-sm font-semibold mb-2">Status:</label>
+                    <select id="transaction-status" name="transaction-status" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Clean">Clean</option>
+                        <option value="Suspect">Suspect</option>
+                        <option value="Fraud">Fraud</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeTransactionModal()" class="bg-gray-300 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-400 transition duration-200 ease-in-out font-semibold">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out font-semibold shadow-md">Save Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation/Alert Message Box -->
+    <div id="custom-message-box" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden modal-overlay">
+        <div class="bg-white rounded-xl p-8 w-full max-w-md modal-content shadow-2xl text-center">
+            <h3 id="message-box-title" class="text-xl font-bold mb-4 text-gray-900">Confirmation</h3>
+            <p id="message-box-text" class="text-gray-700 mb-6">Are you sure you want to proceed?</p>
+            <div class="flex justify-center space-x-4">
+                <button id="message-box-cancel" class="bg-gray-300 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-400 transition duration-200 ease-in-out font-semibold">Cancel</button>
+                <button id="message-box-confirm" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition duration-200 ease-in-out font-semibold shadow-md">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script>
-        // Navigation functionality
-        function showSection(sectionId) {
-            // Hide all sections
+        // Function to highlight active navigation item and show/hide sections
+        function highlightNavItem(element, sectionId) {
+            // Remove 'active' class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            // Add 'active' class to the clicked nav item
+            element.classList.add('active');
+
+            // Hide all content sections
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Show selected section
-            document.getElementById(sectionId).classList.add('active');
-            
-            // Update active nav item
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-            
-            // Initialize charts when section is shown
-            if (sectionId === 'dashboard') {
+            // Show the selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Re-initialize charts when their respective sections become active
+            if (sectionId === 'dashboard-section') {
                 initDailyPerformanceChart();
-            } else if (sectionId === 'commissions') {
+            } else if (sectionId === 'commissions-section') {
                 initCommissionChart();
             }
+            // Add more conditions here if other sections have charts
         }
 
-        // Report tab switching
-        function changeReportTab(tabId) {
+        // Function to switch report tabs
+        function changeReportTab(button, tabId) {
+            // Hide all report tabs
             document.querySelectorAll('.report-tab').forEach(tab => {
+                tab.classList.add('hidden');
                 tab.classList.remove('active');
             });
+            // Show the selected report tab
+            document.getElementById(tabId).classList.remove('hidden');
             document.getElementById(tabId).classList.add('active');
             
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.classList.remove('active');
+            // Remove 'active' class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
             });
-            event.currentTarget.classList.add('active');
+            // Add 'active' class to the clicked tab button
+            button.classList.add('active');
         }
 
         // Merchant modal functions
@@ -843,9 +1160,155 @@
             document.getElementById('merchant-modal').classList.add('hidden');
         }
 
+        // Customer Modal functions
+        function openAddEditCustomerModal(name = '', phone = '', regDate = '', status = '') {
+            const modal = document.getElementById('customer-modal');
+            const title = document.getElementById('customer-modal-title');
+            const nameInput = document.getElementById('customer-name');
+            const phoneInput = document.getElementById('customer-phone');
+            const regDateInput = document.getElementById('customer-reg-date');
+            const statusSelect = document.getElementById('customer-status');
+
+            if (name) {
+                title.textContent = 'Edit Customer';
+                nameInput.value = name;
+                phoneInput.value = phone;
+                regDateInput.value = regDate;
+                statusSelect.value = status;
+            } else {
+                title.textContent = 'Add New Customer';
+                nameInput.value = '';
+                phoneInput.value = '';
+                regDateInput.value = ''; // Reset date input
+                statusSelect.value = 'Active'; // Default to active
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('customer-modal').classList.add('hidden');
+        }
+
+        function saveCustomer(event) {
+            event.preventDefault(); // Prevent default form submission
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            const regDate = document.getElementById('customer-reg-date').value;
+            const status = document.getElementById('customer-status').value;
+            
+            // In a real application, you would send this data to a backend API
+            console.log('Saving Customer:', { name, phone, regDate, status });
+            showCustomMessage('Customer Saved!', `Customer "${name}" has been saved successfully.`, 'alert');
+            closeCustomerModal();
+        }
+
+        // Transaction Modal functions
+        function openAddEditTransactionModal(refId = '', type = '', amount = '', customer = '', status = '') {
+            const modal = document.getElementById('transaction-modal');
+            const title = document.getElementById('transaction-modal-title');
+            const refInput = document.getElementById('transaction-ref');
+            const customerInput = document.getElementById('transaction-customer');
+            const typeSelect = document.getElementById('transaction-type');
+            const amountInput = document.getElementById('transaction-amount');
+            const statusSelect = document.getElementById('transaction-status');
+
+            if (refId) {
+                title.textContent = 'Edit Transaction';
+                refInput.value = refId;
+                typeSelect.value = type;
+                amountInput.value = amount;
+                customerInput.value = customer;
+                statusSelect.value = status;
+            } else {
+                title.textContent = 'Record New Transaction';
+                refInput.value = '';
+                typeSelect.value = 'Cash Out'; // Default
+                amountInput.value = '';
+                customerInput.value = '';
+                statusSelect.value = 'Clean'; // Default
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeTransactionModal() {
+            document.getElementById('transaction-modal').classList.add('hidden');
+        }
+
+        function saveTransaction(event) {
+            event.preventDefault(); // Prevent default form submission
+            const refId = document.getElementById('transaction-ref').value;
+            const customer = document.getElementById('transaction-customer').value;
+            const type = document.getElementById('transaction-type').value;
+            const amount = document.getElementById('transaction-amount').value;
+            const status = document.getElementById('transaction-status').value;
+
+            // In a real application, you would send this data to a backend API
+            console.log('Saving Transaction:', { refId, customer, type, amount, status });
+            showCustomMessage('Transaction Saved!', `Transaction "${refId}" has been saved successfully.`, 'alert');
+            closeTransactionModal();
+        }
+
+        // Custom Message Box (replaces alert/confirm)
+        let confirmCallback = null; // To store the callback for confirmation
+
+        function showCustomMessage(title, message, type = 'alert', onConfirm = null) {
+            const messageBox = document.getElementById('custom-message-box');
+            document.getElementById('message-box-title').textContent = title;
+            document.getElementById('message-box-text').textContent = message;
+            
+            const confirmButton = document.getElementById('message-box-confirm');
+            const cancelButton = document.getElementById('message-box-cancel');
+
+            if (type === 'confirm') {
+                confirmButton.classList.remove('hidden');
+                cancelButton.classList.remove('hidden');
+                confirmButton.textContent = 'Confirm'; // Ensure text is 'Confirm'
+                confirmButton.onclick = () => {
+                    if (confirmCallback) confirmCallback(true);
+                    messageBox.classList.add('hidden');
+                };
+                cancelButton.onclick = () => {
+                    if (confirmCallback) confirmCallback(false);
+                    messageBox.classList.add('hidden');
+                };
+                confirmCallback = onConfirm; // Store the callback
+            } else { // 'alert' type
+                confirmButton.classList.remove('hidden');
+                cancelButton.classList.add('hidden'); // Hide cancel button for alerts
+                confirmButton.textContent = 'OK'; // Change text to OK
+                confirmButton.onclick = () => {
+                    messageBox.classList.add('hidden');
+                };
+                confirmCallback = null; // Clear callback for alerts
+            }
+            messageBox.classList.remove('hidden');
+        }
+
+        function confirmDelete(itemName) {
+            showCustomMessage(
+                'Confirm Deletion',
+                `Are you sure you want to delete ${itemName}? This action cannot be undone.`,
+                'confirm',
+                (result) => {
+                    if (result) {
+                        console.log(`Deleting ${itemName}... (simulated)`);
+                        showCustomMessage('Deleted!', `${itemName} has been deleted.`, 'alert');
+                        // In a real app, you'd send a DELETE request to your backend here
+                    } else {
+                        console.log(`Deletion of ${itemName} cancelled.`);
+                        showCustomMessage('Cancelled', `Deletion of ${itemName} was cancelled.`, 'alert');
+                    }
+                }
+            );
+        }
+
         // Initialize Daily Performance Chart
         function initDailyPerformanceChart() {
-            const dailyCtx = document.getElementById('dailyPerformanceChart').getContext('2d');
+            const dailyCtx = document.getElementById('dailyPerformanceChart');
+            // Check if a chart instance already exists on the canvas
+            if (Chart.getChart(dailyCtx)) {
+                Chart.getChart(dailyCtx).destroy(); // Destroy existing chart to prevent re-initialization issues
+            }
             new Chart(dailyCtx, {
                 type: 'bar',
                 data: {
@@ -853,13 +1316,13 @@
                     datasets: [{
                         label: 'Cash In',
                         data: [1200, 1900, 1500, 2000, 1800, 2200, 1700],
-                        backgroundColor: '#10b981',
-                        borderRadius: 4
+                        backgroundColor: '#10b981', // Green
+                        borderRadius: 6
                     }, {
                         label: 'Cash Out',
                         data: [1800, 2100, 1900, 2300, 2500, 1900, 2100],
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 4
+                        backgroundColor: '#3b82f6', // Blue
+                        borderRadius: 6
                     }]
                 },
                 options: {
@@ -868,16 +1331,43 @@
                     plugins: {
                         legend: {
                             position: 'top',
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        title: {
+                            display: false, // Title is handled by H4 tag
                         }
                     },
                     scales: {
                         x: {
                             grid: {
                                 display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    family: 'Inter'
+                                }
                             }
                         },
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'TZS ' + value; // Changed to TZS
+                                },
+                                font: {
+                                    size: 12,
+                                    family: 'Inter'
+                                }
+                            },
+                            grid: {
+                                color: '#e5e7eb' // Light gray grid lines
+                            }
                         }
                     }
                 }
@@ -886,15 +1376,20 @@
 
         // Initialize Commission Chart
         function initCommissionChart() {
-            const commissionCtx = document.getElementById('commissionChart').getContext('2d');
+            const commissionCtx = document.getElementById('commissionChart');
+            // Check if a chart instance already exists on the canvas
+            if (Chart.getChart(commissionCtx)) {
+                Chart.getChart(commissionCtx).destroy(); // Destroy existing chart
+            }
             new Chart(commissionCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
                     datasets: [{
                         label: 'Commission Earned',
-                        data: [980, 1120, 1050, 1240, 1320, 1180],
-                        backgroundColor: '#10b981'
+                        data: [980, 1120, 1050, 1240, 1320, 1180, 1280], // Added July data
+                        backgroundColor: '#10b981', // Green
+                        borderRadius: 6
                     }]
                 },
                 options: {
@@ -908,7 +1403,38 @@
                             display: true,
                             text: 'Monthly Commission Earnings',
                             font: {
-                                size: 14
+                                size: 16,
+                                family: 'Inter',
+                                weight: 'bold'
+                            },
+                            color: '#374151' // Darker gray for title
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'TZS ' + value; // Changed to TZS
+                                },
+                                font: {
+                                    size: 12,
+                                    family: 'Inter'
+                                }
+                            },
+                            grid: {
+                                color: '#e5e7eb'
                             }
                         }
                     }
@@ -916,19 +1442,19 @@
             });
         }
 
-        // Initialize charts on page load
+        // Initialize charts and set up initial navigation highlight on page load
         document.addEventListener('DOMContentLoaded', function() {
-            initDailyPerformanceChart();
-            
-            // Add merchant button to header if not already present
-            if (!document.getElementById('merchant-btn')) {
-                const header = document.querySelector('#dashboard header');
-                const merchantBtn = document.createElement('button');
-                merchantBtn.id = 'merchant-btn';
-                merchantBtn.className = 'bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 ml-4';
-                merchantBtn.innerHTML = '<i class="fas fa-store mr-2"></i> Merchant View';
-                merchantBtn.onclick = openMerchantModal;
-                header.appendChild(merchantBtn);
+            // Set initial active nav item (Dashboard) and show its section
+            const initialNavItem = document.querySelector('.nav-item.active');
+            if (initialNavItem) {
+                const initialSectionId = initialNavItem.getAttribute('href').substring(1); // Get ID without '#'
+                highlightNavItem(initialNavItem, initialSectionId);
+            } else {
+                // Fallback: if no active class, default to dashboard
+                const dashboardNavItem = document.querySelector('.nav-item[href="#dashboard-section"]');
+                if (dashboardNavItem) {
+                    highlightNavItem(dashboardNavItem, 'dashboard-section');
+                }
             }
         });
     </script>
